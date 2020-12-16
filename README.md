@@ -1,9 +1,10 @@
 # Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/esupl/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/esupl/loyverse-sdk)
-[![Build Status](https://img.shields.io/travis/esupl/loyverse-sdk/master.svg?style=flat-square)](https://travis-ci.org/esupl/loyverse-sdk)
-[![Quality Score](https://img.shields.io/scrutinizer/g/esupl/loyverse-sdk.svg?style=flat-square)](https://scrutinizer-ci.com/g/esupl/loyverse-sdk)
-[![Total Downloads](https://img.shields.io/packagist/dt/esupl/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/esupl/loyverse-sdk)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/pashkevich/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/pashkevich/loyverse-sdk)
+[![Build Status](https://img.shields.io/travis/pashkevich/loyverse-sdk/master.svg?style=flat-square)](https://travis-ci.org/pashkevich/loyverse-sdk)
+[![Quality Score](https://img.shields.io/scrutinizer/g/pashkevich/loyverse-sdk.svg?style=flat-square)](https://scrutinizer-ci.com/g/pashkevich/loyverse-sdk)
+[![Total Downloads](https://img.shields.io/packagist/dt/pashkevich/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/pashkevich/loyverse-sdk)
+<a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
 
 A simple to use PHP class to work with the Loyverse API.
 
@@ -42,7 +43,7 @@ If you discover any security related issues, please email siarheipashkveich@gmai
 
 ## Credits
 
-- [Sergey Pashkevich](https://github.com/esupl)
+- [Sergey Pashkevich](https://github.com/siarheipashkevich)
 - [All Contributors](../../contributors)
 
 ## License
