@@ -1,0 +1,45 @@
+{
+    "name": "esupl/loyverse-sdk",
+    "description": "",
+    "keywords": [
+        "esupl",
+        "loyverse-sdk"
+    ],
+    "homepage": "https://github.com/esupl/loyverse-sdk",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sergey Pashkevich",
+            "email": "siarheipashkveich@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.2"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.4",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Esupl\\Loyverse\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Esupl\\Loyverse\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
