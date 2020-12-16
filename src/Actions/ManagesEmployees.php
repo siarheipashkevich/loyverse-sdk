@@ -29,6 +29,6 @@ trait ManagesEmployees
      */
     public function employee(string $employeeId): Employee
     {
-        return new Employee($this->get("employees/$employeeId"));
+        return new Employee($this->get("employees/$employeeId"), $this);
     }
 }

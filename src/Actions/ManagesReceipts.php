@@ -30,6 +30,6 @@ trait ManagesReceipts
      */
     public function receipt(string $receiptId): Receipt
     {
-        return new Receipt($this->get("receipts/$receiptId"));
+        return new Receipt($this->get("receipts/$receiptId"), $this);
     }
 }

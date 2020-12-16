@@ -16,6 +16,7 @@ class Loyverse
     use Actions\ManagesStores;
     use Actions\ManagesReceipts;
     use Actions\ManagesItems;
+    use Actions\ManagesVariants;
 
     /**
      * The Loyverse API Key.

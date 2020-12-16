@@ -2,6 +2,8 @@
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Loyverse;
+
 /**
  * Class Item
  *
@@ -177,4 +179,17 @@ class Item extends Resource
      * @var array
      */
     public array $variants = [];
+
+    /**
+     * Item constructor.
+     *
+     * @param array $attributes
+     * @param Loyverse|null $loyverse
+     */
+    public function __construct(array $attributes, Loyverse $loyverse = null)
+    {
+        parent::__construct($attributes, $loyverse);
+
+        $this->variants = $this->transformCollection($this->variants ?: [], Variant::class);
+    }
 }

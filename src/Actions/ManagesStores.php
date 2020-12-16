@@ -29,6 +29,6 @@ trait ManagesStores
      */
     public function store(string $storeId): Store
     {
-        return new Store($this->get("stores/$storeId"));
+        return new Store($this->get("stores/$storeId"), $this);
     }
 }

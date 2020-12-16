@@ -30,6 +30,30 @@ trait ManagesItems
      */
     public function item(string $itemId): Item
     {
-        return new Item($this->get("items/$itemId"));
+        return new Item($this->get("items/$itemId"), $this);
+    }
+
+    /**
+     * Create or update a single item.
+     *
+     * @param array $data
+     * @return Item
+     */
+    public function createItem(array $data): Item
+    {
+        $item = $this->post('items', $data);
+
+        return new Item($item, $this);
+    }
+
+    /**
+     * Delete a single resource.
+     *
+     * @param string $itemId
+     * @return void
+     */
+    public function deleteItem(string $itemId): void
+    {
+        $this->delete("items/$itemId");
     }
 }
