@@ -14,18 +14,21 @@ use Pashkevich\Loyverse\Exceptions\{FailedActionException, NotFoundException, Ti
 trait MakesHttpRequests
 {
     /**
-     * Make a GET request to Forge servers and return the response.
+     * Make a GET request to Loyverse servers and return the response.
      *
      * @param string $uri
+     * @param array $payload
      * @return mixed
      */
-    public function get(string $uri)
+    public function get(string $uri, array $payload = [])
     {
-        return $this->request('GET', $uri);
+        $options = empty($payload) ? [] : ['query' => $payload];
+
+        return $this->request('GET', $uri, $options);
     }
 
     /**
-     * Make a POST request to Forge servers and return the response.
+     * Make a POST request to Loyverse servers and return the response.
      *
      * @param string $uri
      * @param array $payload
@@ -33,11 +36,13 @@ trait MakesHttpRequests
      */
     public function post(string $uri, array $payload = [])
     {
-        return $this->request('POST', $uri, $payload);
+        $options = empty($payload) ? [] : ['form_params' => $payload];
+
+        return $this->request('POST', $uri, $options);
     }
 
     /**
-     * Make a PUT request to Forge servers and return the response.
+     * Make a PUT request to Loyverse servers and return the response.
      *
      * @param string $uri
      * @param array $payload
@@ -45,11 +50,13 @@ trait MakesHttpRequests
      */
     public function put(string $uri, array $payload = [])
     {
-        return $this->request('PUT', $uri, $payload);
+        $options = empty($payload) ? [] : ['form_params' => $payload];
+
+        return $this->request('PUT', $uri, $options);
     }
 
     /**
-     * Make a DELETE request to Forge servers and return the response.
+     * Make a DELETE request to Loyverse servers and return the response.
      *
      * @param string $uri
      * @param array $payload
@@ -57,20 +64,22 @@ trait MakesHttpRequests
      */
     public function delete(string $uri, array $payload = [])
     {
-        return $this->request('DELETE', $uri, $payload);
+        $options = empty($payload) ? [] : ['form_params' => $payload];
+
+        return $this->request('DELETE', $uri, $options);
     }
 
     /**
-     * Make request to Forge servers and return the response.
+     * Make request to Loyverse servers and return the response.
      *
      * @param string $verb
      * @param string $uri
-     * @param array $payload
+     * @param array $options
      * @return mixed
      */
-    protected function request(string $verb, string $uri, array $payload = [])
+    protected function request(string $verb, string $uri, array $options = [])
     {
-        $response = $this->guzzle->request($verb, $uri, empty($payload) ? [] : ['form_params' => $payload]);
+        $response = $this->guzzle->request($verb, $uri, $options);
 
         if ($response->getStatusCode() != 200) {
             $this->handleRequestError($response);

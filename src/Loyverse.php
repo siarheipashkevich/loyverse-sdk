@@ -40,11 +40,10 @@ class Loyverse
     public int $timeout = 30;
 
     /**
-     * Create a new Forge instance.
+     * Loyverse constructor.
      *
-     * @param string|null $apiKey
+     * @param null $apiKey
      * @param Client|null $guzzle
-     * @return void
      */
     public function __construct($apiKey = null, Client $guzzle = null)
     {
