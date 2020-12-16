@@ -192,4 +192,14 @@ class Item extends Resource
 
         $this->variants = $this->transformCollection($this->variants ?: [], Variant::class);
     }
+
+    /**
+     * Delete the given item.
+     *
+     * @return void
+     */
+    public function delete(): void
+    {
+        $this->loyverse->deleteItem($this->id);
+    }
 }

@@ -129,4 +129,14 @@ class Variant extends Resource
      * @var string
      */
     public string $deletedAt;
+
+    /**
+     * Delete the given variant.
+     *
+     * @return void
+     */
+    public function delete(): void
+    {
+        $this->loyverse->deleteVariant($this->variantId);
+    }
 }
