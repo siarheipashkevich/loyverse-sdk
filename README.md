@@ -1,4 +1,4 @@
-# Very short description of the package
+# Loyverse SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pashkevich/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/pashkevich/loyverse-sdk)
 [![Build Status](https://img.shields.io/travis/pashkevich/loyverse-sdk/master.svg?style=flat-square)](https://travis-ci.org/pashkevich/loyverse-sdk)
