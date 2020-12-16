@@ -2,9 +2,8 @@
 
 namespace Pashkevich\Loyverse;
 
-use Exception;
+use Pashkevich\Loyverse\Exceptions;
 use Psr\Http\Message\ResponseInterface;
-use Pashkevich\Loyverse\Exceptions\{FailedActionException, NotFoundException, TimeoutException, ValidationException};
 
 /**
  * Trait MakesHttpRequests
@@ -98,19 +97,58 @@ trait MakesHttpRequests
      */
     protected function handleRequestError(ResponseInterface $response)
     {
-        if ($response->getStatusCode() === 422) {
-            throw new ValidationException(json_decode((string)$response->getBody(), true));
-        }
+        $errors = json_decode((string)$response->getBody(), true)['errors'] ?? [];
 
-        if ($response->getStatusCode() === 404) {
-            throw new NotFoundException();
-        }
+        $error = $errors[0] ?? [];
 
-        if ($response->getStatusCode() === 400) {
-            throw new FailedActionException(json_decode((string)$response->getBody(), true));
-        }
+        $code = $error['code'] ?? null;
 
-        throw new Exception((string)$response->getBody());
+        switch ($code) {
+            case 'INTERNAL_SERVER_ERROR':
+                throw new Exceptions\InternalServerException();
+
+            case 'BAD_REQUEST':
+                throw new Exceptions\BadRequestException();
+
+            case 'INCORRECT_VALUE_TYPE':
+                throw new Exceptions\IncorrectValueTypeException();
+
+            case 'MISSING_REQUIRED_PARAMETER':
+                throw new Exceptions\MissingRequiredParameterException();
+
+            case 'INVALID_VALUE':
+                throw new Exceptions\InvalidValueException();
+
+            case 'INVALID_RANGE':
+                throw new Exceptions\InvalidRangeException();
+
+            case 'INVALID_CURSOR':
+                throw new Exceptions\InvalidCursorException();
+
+            case 'CONFLICTING_PARAMETERS':
+                throw new Exceptions\ConflictingParametersException();
+
+            case 'UNAUTHORIZED':
+                throw new Exceptions\UnauthorizedException();
+
+            case 'PAYMENT_REQUIRED':
+                throw new Exceptions\PaymentRequiredException();
+
+            case 'FORBIDDEN':
+                throw new Exceptions\ForbiddenException();
+
+            case 'NOT_FOUND':
+                throw new Exceptions\NotFoundException();
+
+            case 'UNSUPPORTED_MEDIA_TYPE':
+                throw new Exceptions\UnsupportedMediaTypeException();
+
+            case 'RATE_LIMITED':
+                throw new Exceptions\RateLimitedException();
+
+            default:
+                throw new Exceptions\UnknownException();
+        }
     }
 
     /**
@@ -137,6 +175,6 @@ trait MakesHttpRequests
             goto beginning;
         }
 
-        throw new TimeoutException($output);
+        throw new Exceptions\TimeoutException($output);
     }
 }

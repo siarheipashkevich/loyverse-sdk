@@ -5,17 +5,17 @@ namespace Pashkevich\Loyverse\Exceptions;
 use Exception;
 
 /**
- * Class NotFoundException
+ * Class InvalidValueException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class NotFoundException extends Exception
+class InvalidValueException extends Exception
 {
     /**
-     * NotFoundException constructor.
+     * InvalidValueException constructor.
      */
     public function __construct()
     {
-        parent::__construct('The resource was not found.');
+        parent::__construct('A parameter\'s value is incorrect.');
     }
 }
