@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Resources;
+namespace Pashkevich\Loyverse\Resources;
 
-use Esupl\Loyverse\Loyverse;
+use Pashkevich\Loyverse\Loyverse;
 
 /**
  * Class Resource
  *
- * @package Esupl\Loyverse\Resources
+ * @package Pashkevich\Loyverse\Resources
  */
 class Resource
 {

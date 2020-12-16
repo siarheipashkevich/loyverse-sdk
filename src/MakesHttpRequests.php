@@ -1,15 +1,15 @@
 <?php
 
-namespace Esupl\Loyverse;
+namespace Pashkevich\Loyverse;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Esupl\Loyverse\Exceptions\{FailedActionException, NotFoundException, TimeoutException, ValidationException};
+use Pashkevich\Loyverse\Exceptions\{FailedActionException, NotFoundException, TimeoutException, ValidationException};
 
 /**
  * Trait MakesHttpRequests
  *
- * @package Esupl\Loyverse
+ * @package Pashkevich\Loyverse
  */
 trait MakesHttpRequests
 {

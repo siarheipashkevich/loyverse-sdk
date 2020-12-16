@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Exceptions;
+namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
 /**
  * Class FailedActionException
  *
- * @package Esupl\Loyverse\Exceptions
+ * @package Pashkevich\Loyverse\Exceptions
  */
 class FailedActionException extends Exception
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Esupl\Loyverse\Tests;
+namespace Pashkevich\Loyverse\Tests;
 
 use Mockery;
 use GuzzleHttp\Client;
-use Esupl\Loyverse\Loyverse;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Pashkevich\Loyverse\Loyverse;
 
 class LoyverseSDKTest extends TestCase
 {

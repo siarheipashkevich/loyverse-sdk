@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Actions;
+namespace Pashkevich\Loyverse\Actions;
 
-use Esupl\Loyverse\Resources\Store;
+use Pashkevich\Loyverse\Resources\Store;
 
 /**
  * Trait ManagesStores
  *
- * @package Esupl\Loyverse\Actions
+ * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesStores
 {

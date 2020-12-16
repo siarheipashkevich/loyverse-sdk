@@ -5,20 +5,21 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/esupl/loyverse-sdk.svg?style=flat-square)](https://scrutinizer-ci.com/g/esupl/loyverse-sdk)
 [![Total Downloads](https://img.shields.io/packagist/dt/esupl/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/esupl/loyverse-sdk)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+A simple to use PHP class to work with the Loyverse API.
 
 ## Installation
 
-You can install the package via composer:
+To install the SDK in your project you need to require the package via composer:
 
 ```bash
-composer require esupl/loyverse-sdk
+composer require pashkevich/loyverse-sdk
 ```
+To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com/) account, and secondly you must create an API token through [Loyverse](https://loyverse.com/) itself.
 
 ## Usage
 
 ``` php
-// Usage description here
+$loyverse = new Pashkevich\Loyverse\Loyverse(TOKEN_HERE);
 ```
 
 ### Testing
@@ -46,8 +47,4 @@ If you discover any security related issues, please email siarheipashkveich@gmai
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## PHP Package Boilerplate
-
-This package was generated using the [PHP Package Boilerplate](https://laravelpackageboilerplate.com).
+Loyverse SDK is open-sourced software licensed under the [MIT license](LICENSE.md).

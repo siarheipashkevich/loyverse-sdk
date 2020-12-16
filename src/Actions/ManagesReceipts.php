@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Actions;
+namespace Pashkevich\Loyverse\Actions;
 
-use Esupl\Loyverse\Resources\Receipt;
+use Pashkevich\Loyverse\Resources\Receipt;
 
 /**
  * Trait ManagesReceipts
  *
- * @package Esupl\Loyverse\Actions
+ * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesReceipts
 {

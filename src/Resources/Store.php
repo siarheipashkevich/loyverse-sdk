@@ -1,11 +1,11 @@
 <?php
 
-namespace Esupl\Loyverse\Resources;
+namespace Pashkevich\Loyverse\Resources;
 
 /**
  * Class Store
  *
- * @package Esupl\Loyverse\Resources
+ * @package Pashkevich\Loyverse\Resources
  */
 class Store extends Resource
 {

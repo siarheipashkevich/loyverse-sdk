@@ -2,11 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e31646d-0e48-43ce-a4d1-a098de7ee9f1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Actions/ManagesItems.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Actions/ManagesReceipts.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Resources/Item.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/loyverse-sdk.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/loyverse-sdk.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.phpunit.result.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.scrutinizer.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Actions/ManagesEmployees.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Actions/ManagesEmployees.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Actions/ManagesItems.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Actions/ManagesItems.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Actions/ManagesReceipts.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Actions/ManagesReceipts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Actions/ManagesStores.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Actions/ManagesStores.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Exceptions/FailedActionException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/FailedActionException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Exceptions/NotFoundException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/NotFoundException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Exceptions/TimeoutException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/TimeoutException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Exceptions/ValidationException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/ValidationException.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Loyverse.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Loyverse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MakesHttpRequests.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/MakesHttpRequests.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/Employee.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/Employee.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/Item.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/Item.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/Receipt.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/Receipt.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/Resource.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/Resource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/Store.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/Store.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/LoyverseSDKTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/LoyverseSDKTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +129,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608107904924</updated>
-      <workItem from="1608107909254" duration="10821000" />
+      <workItem from="1608107909254" duration="12223000" />
     </task>
     <servers />
   </component>

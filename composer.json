@@ -1,11 +1,11 @@
 {
-    "name": "esupl/loyverse-sdk",
-    "description": "",
+    "name": "pashkevich/loyverse-sdk",
+    "description": "A simple to use PHP class to work with the Loyverse API",
     "keywords": [
-        "esupl",
+        "pashkevich",
         "loyverse-sdk"
     ],
-    "homepage": "https://github.com/esupl/loyverse-sdk",
+    "homepage": "https://github.com/siarheipashkevich/loyverse-sdk",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Esupl\\Loyverse\\": "src"
+            "Pashkevich\\Loyverse\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Esupl\\Loyverse\\Tests\\": "tests"
+            "Pashkevich\\Loyverse\\Tests\\": "tests"
         }
     },
     "scripts": {

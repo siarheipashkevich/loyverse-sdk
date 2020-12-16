@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Exceptions;
+namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
 /**
  * Class TimeoutException
  *
- * @package Esupl\Loyverse\Exceptions
+ * @package Pashkevich\Loyverse\Exceptions
  */
 class TimeoutException extends Exception
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Esupl\Loyverse\Resources;
+namespace Pashkevich\Loyverse\Resources;
 
 /**
  * Class Receipt
  *
- * @package Esupl\Loyverse\Resources
+ * @package Pashkevich\Loyverse\Resources
  */
 class Receipt extends Resource
 {

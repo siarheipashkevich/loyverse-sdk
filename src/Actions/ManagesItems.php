@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Actions;
+namespace Pashkevich\Loyverse\Actions;
 
-use Esupl\Loyverse\Resources\Item;
+use Pashkevich\Loyverse\Resources\Item;
 
 /**
  * Trait ManagesItems
  *
- * @package Esupl\Loyverse\Actions
+ * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesItems
 {

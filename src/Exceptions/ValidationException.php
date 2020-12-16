@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Exceptions;
+namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
 /**
  * Class ValidationException
  *
- * @package Esupl\Loyverse\Exceptions
+ * @package Pashkevich\Loyverse\Exceptions
  */
 class ValidationException extends Exception
 {

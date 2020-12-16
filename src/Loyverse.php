@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse;
+namespace Pashkevich\Loyverse;
 
 use GuzzleHttp\Client;
 
 /**
  * Class Loyverse
  *
- * @package Esupl\Loyverse
+ * @package Pashkevich\Loyverse
  */
 class Loyverse
 {

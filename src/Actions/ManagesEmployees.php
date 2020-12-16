@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Actions;
+namespace Pashkevich\Loyverse\Actions;
 
-use Esupl\Loyverse\Resources\Employee;
+use Pashkevich\Loyverse\Resources\Employee;
 
 /**
  * Trait ManagesEmployees
  *
- * @package Esupl\Loyverse\Actions
+ * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesEmployees
 {

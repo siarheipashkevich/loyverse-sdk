@@ -1,13 +1,13 @@
 <?php
 
-namespace Esupl\Loyverse\Exceptions;
+namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
 /**
  * Class NotFoundException
  *
- * @package Esupl\Loyverse\Exceptions
+ * @package Pashkevich\Loyverse\Exceptions
  */
 class NotFoundException extends Exception
 {
