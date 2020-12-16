@@ -44,7 +44,6 @@ If you discover any security related issues, please email siarheipashkveich@gmai
 ## Credits
 
 - [Sergey Pashkevich](https://github.com/siarheipashkevich)
-- [All Contributors](../../contributors)
 
 ## License
 
