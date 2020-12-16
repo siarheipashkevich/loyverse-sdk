@@ -3,7 +3,6 @@
 namespace Esupl\Loyverse;
 
 use GuzzleHttp\Client;
-use Esupl\Loyverse\Actions;
 
 /**
  * Class Loyverse
@@ -15,6 +14,8 @@ class Loyverse
     use MakesHttpRequests;
     use Actions\ManagesEmployees;
     use Actions\ManagesStores;
+    use Actions\ManagesReceipts;
+    use Actions\ManagesItems;
 
     /**
      * The Loyverse API Key.
