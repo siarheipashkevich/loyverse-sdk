@@ -17,10 +17,22 @@ composer require pashkevich/loyverse-sdk
 ```
 To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com/) account, and secondly you must create an API token through [Loyverse](https://loyverse.com/) itself.
 
-## Usage
-
+### Basic Usage
+You can create an instance of the SDK like so:
 ``` php
 $loyverse = new Pashkevich\Loyverse\Loyverse(TOKEN_HERE);
+```
+
+Using the `Loyverse` instance you may perform multiple actions as well as retrieve the different resources Loyverse's API provides:
+``` php
+$employees = $loyverse->employees();
+```
+
+This will give you an array of employees that you have access to, where each employee is represented by an instance of `Pashkevich\Loyverse\Resources\Employee`, this instance has multiple public properties like `$id`, `$name`, `$email`, `$phoneNumber`, and others.
+
+You may also retrieve a single employee using:
+``` php
+$employee = $loyverse->employee(EMPLOYEE_ID_HERE);
 ```
 
 ### Testing
