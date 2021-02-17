@@ -52,6 +52,21 @@ You can also set the desired timeout value:
 $loyverse->setTimeout(120)->createCategory([...]);
 ```
 
+### Managing Receipts
+
+``` php
+$loyverse->receipts(array $parameters);
+$loyverse->receipt(string $receiptNumber);
+$loyverse->createReceipt(array $data);
+$loyverse->createReceiptRefund(string $receiptNumber, array $parameters);
+```
+
+On a `Receipt` instance you may also call:
+
+``` php
+$receipt->refund(array $parameters);
+```
+
 ### Managing Categories
 
 ``` php
