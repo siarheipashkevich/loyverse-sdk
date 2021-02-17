@@ -37,11 +37,11 @@ trait ManagesReceipts
      * Create a refund receipt.
      *
      * @param string $receiptNumber
-     * @param array $parameters
+     * @param array $data
      * @return Receipt
      */
-    public function createReceiptRefund(string $receiptNumber, array $parameters): Receipt
+    public function createReceiptRefund(string $receiptNumber, array $data): Receipt
     {
-        return new Receipt($this->post("receipts/$receiptNumber/refund", $parameters), $this);
+        return new Receipt($this->post("receipts/$receiptNumber/refund", $data), $this);
     }
 }

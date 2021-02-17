@@ -58,13 +58,13 @@ $loyverse->setTimeout(120)->createCategory([...]);
 $loyverse->receipts(array $parameters);
 $loyverse->receipt(string $receiptNumber);
 $loyverse->createReceipt(array $data);
-$loyverse->createReceiptRefund(string $receiptNumber, array $parameters);
+$loyverse->createReceiptRefund(string $receiptNumber, array $data);
 ```
 
 On a `Receipt` instance you may also call:
 
 ``` php
-$receipt->refund(array $parameters);
+$receipt->refund(array $data);
 ```
 
 ### Managing Categories

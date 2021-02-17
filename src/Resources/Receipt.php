@@ -214,11 +214,11 @@ class Receipt extends Resource
     /**
      * Create a refund for the given receipt.
      *
-     * @param array $parameters
+     * @param array $data
      * @return Receipt
      */
-    public function refund(array $parameters): Receipt
+    public function refund(array $data): Receipt
     {
-        return $this->loyverse->createReceiptRefund($this->receiptNumber, $parameters);
+        return $this->loyverse->createReceiptRefund($this->receiptNumber, $data);
     }
 }
