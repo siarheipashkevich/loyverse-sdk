@@ -1,9 +1,9 @@
 # Loyverse SDK
 
 <a href="https://github.com/siarheipashkevich/loyverse-sdk/actions"><img src="https://github.com/siarheipashkevich/loyverse-sdk/workflows/tests/badge.svg" alt="Build Status"></a>
-[![Total Downloads](https://img.shields.io/packagist/dt/pashkevich/loyverse-sdk.svg)](https://packagist.org/packages/pashkevich/loyverse-sdk)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/pashkevich/loyverse-sdk.svg)](https://packagist.org/packages/pashkevich/loyverse-sdk)
-<a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+<a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/dt/pashkevich/loyverse-sdk" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/v/pashkevich/loyverse-sdk" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/l/pashkevich/loyverse-sdk" alt="License"></a>
 
 A simple to use PHP class to work with the Loyverse API.
 
