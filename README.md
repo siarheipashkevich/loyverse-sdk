@@ -35,6 +35,32 @@ You may also retrieve a single employee using:
 $employee = $loyverse->employee(EMPLOYEE_ID_HERE);
 ```
 
+On multiple actions supported by this SDK you may need to pass some parameters, for example when creating a new category:
+``` php
+$category = $loyverse->createCategory([
+    'name' => 'Fruits',
+    'color' => 'ORANGE',
+]);
+```
+
+These parameters will be used in the POST request sent to Loyverse servers, you can find more information about the parameters needed for each action on
+[Loyverse's official API documentation](https://developer.loyverse.com/docs).
+
+You can also set the desired timeout value:
+
+``` php
+$loyverse->setTimeout(120)->createCategory([...]);
+```
+
+### Managing Categories
+
+``` php
+$loyverse->categories(array $data);
+$loyverse->category(string $categoryId);
+$loyverse->createCategory(array $data);
+$loyverse->deleteCategory(string $categoryId);
+```
+
 ### Testing
 
 ``` bash
