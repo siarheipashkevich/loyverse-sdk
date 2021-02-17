@@ -19,7 +19,7 @@ trait ManagesReceipts
      */
     public function receipts(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('receipts')['receipts'], Receipt::class, $parameters);
+        return $this->transformCollection($this->get('receipts', $parameters)['receipts'], Receipt::class);
     }
 
     /**

@@ -14,12 +14,12 @@ trait ManagesItems
     /**
      * Get a list of items.
      *
-     * @param array $payload
+     * @param array $parameters
      * @return Item[]
      */
-    public function items(array $payload = []): array
+    public function items(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('items')['items'], Item::class, $payload);
+        return $this->transformCollection($this->get('items', $parameters)['items'], Item::class);
     }
 
     /**

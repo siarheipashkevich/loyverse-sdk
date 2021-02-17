@@ -12,13 +12,14 @@ use Pashkevich\Loyverse\Resources\Employee;
 trait ManagesEmployees
 {
     /**
-     * Get the collection of employees.
+     * Get a list of employees.
      *
+     * @param array $parameters
      * @return Employee[]
      */
-    public function employees(): array
+    public function employees(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('employees')['employees'], Employee::class);
+        return $this->transformCollection($this->get('employees', $parameters)['employees'], Employee::class);
     }
 
     /**

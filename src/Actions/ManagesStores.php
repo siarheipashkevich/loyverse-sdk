@@ -12,13 +12,14 @@ use Pashkevich\Loyverse\Resources\Store;
 trait ManagesStores
 {
     /**
-     * Get the collection of stores.
+     * Get a list of stores.
      *
+     * @param array $parameters
      * @return Store[]
      */
-    public function stores(): array
+    public function stores(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('stores')['stores'], Store::class);
+        return $this->transformCollection($this->get('stores', $parameters)['stores'], Store::class);
     }
 
     /**

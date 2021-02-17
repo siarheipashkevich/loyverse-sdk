@@ -19,7 +19,7 @@ trait ManagesCategories
      */
     public function categories(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('categories')['categories'], Category::class, $parameters);
+        return $this->transformCollection($this->get('categories', $parameters)['categories'], Category::class);
     }
 
     /**

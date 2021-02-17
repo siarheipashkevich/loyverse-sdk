@@ -20,9 +20,8 @@ trait ManagesPaymentTypes
     public function paymentTypes(array $parameters = []): array
     {
         return $this->transformCollection(
-            $this->get('payment_types')['payment_types'],
+            $this->get('payment_types', $parameters)['payment_types'],
             PaymentType::class,
-            $parameters
         );
     }
 
@@ -34,6 +33,6 @@ trait ManagesPaymentTypes
      */
     public function paymentType(string $paymentTypeId): PaymentType
     {
-        return new PaymentType($this->get("payment_types/$paymentTypeId", $this));
+        return new PaymentType($this->get("payment_types/$paymentTypeId"), $this);
     }
 }

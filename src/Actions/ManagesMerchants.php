@@ -18,6 +18,6 @@ trait ManagesMerchants
      */
     public function merchant(): Merchant
     {
-        return new Merchant($this->get('merchant', $this));
+        return new Merchant($this->get('merchant'), $this);
     }
 }
