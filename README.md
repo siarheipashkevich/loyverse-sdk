@@ -1,8 +1,6 @@
 # Loyverse SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pashkevich/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/pashkevich/loyverse-sdk)
-[![Build Status](https://img.shields.io/travis/pashkevich/loyverse-sdk/master.svg?style=flat-square)](https://travis-ci.org/pashkevich/loyverse-sdk)
-[![Quality Score](https://img.shields.io/scrutinizer/g/pashkevich/loyverse-sdk.svg?style=flat-square)](https://scrutinizer-ci.com/g/pashkevich/loyverse-sdk)
 [![Total Downloads](https://img.shields.io/packagist/dt/pashkevich/loyverse-sdk.svg?style=flat-square)](https://packagist.org/packages/pashkevich/loyverse-sdk)
 <a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
 
