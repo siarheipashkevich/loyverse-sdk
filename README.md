@@ -61,6 +61,13 @@ $loyverse->createCategory(array $data);
 $loyverse->deleteCategory(string $categoryId);
 ```
 
+On a `Category` instance you may also call:
+
+``` php
+$category->update(array $data);
+$category->delete();
+```
+
 ### Testing
 
 ``` bash

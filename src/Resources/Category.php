@@ -55,4 +55,15 @@ class Category extends Resource
     {
         $this->loyverse->deleteCategory($this->id);
     }
+
+    /**
+     * Update the given category.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function update(array $data): void
+    {
+        $this->loyverse->createCategory(array_merge($data, ['id' => $this->id]));
+    }
 }
