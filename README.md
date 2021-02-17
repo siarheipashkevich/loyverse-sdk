@@ -82,6 +82,22 @@ $category->update(array $data);
 $category->delete();
 ```
 
+### Managing Modifiers
+
+``` php
+$loyverse->modifiers(array $parameters);
+$loyverse->modifier(string $modifierId);
+$loyverse->createModifier(array $data);
+$loyverse->deleteModifier(string $modifierId);
+```
+
+On a `Modifier` instance you may also call:
+
+``` php
+$modifier->update(array $data);
+$modifier->delete();
+```
+
 ### Managing Taxes
 
 ``` php
