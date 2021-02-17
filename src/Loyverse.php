@@ -19,6 +19,7 @@ class Loyverse
     use Actions\ManagesVariants;
     use Actions\ManagesMerchants;
     use Actions\ManagesCategories;
+    use Actions\ManagesDiscounts;
 
     /**
      * The Loyverse API Key.
