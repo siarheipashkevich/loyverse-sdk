@@ -82,6 +82,22 @@ $category->update(array $data);
 $category->delete();
 ```
 
+### Managing Discounts
+
+``` php
+$loyverse->discounts(array $parameters);
+$loyverse->discount(string $discountId);
+$loyverse->createDiscount(array $data);
+$loyverse->deleteDiscount(string $discountId);
+```
+
+On a `Discount` instance you may also call:
+
+``` php
+$discount->update(array $data);
+$discount->delete();
+```
+
 ### Managing Modifiers
 
 ``` php

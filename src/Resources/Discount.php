@@ -19,8 +19,6 @@ class Discount extends Resource
     /**
      * The type of the discount.
      *
-     * Enum: "FIXED_PERCENT", "FIXED_AMOUNT", "VARIABLE_PERCENT", "VARIABLE_AMOUNT", "DISCOUNT_BY_POINTS".
-     *
      * @var string
      */
     public string $type;
@@ -80,6 +78,17 @@ class Discount extends Resource
      * @var string
      */
     public string $deletedAt;
+
+    /**
+     * Update the given discount.
+     *
+     * @param array $data
+     * @return Discount
+     */
+    public function update(array $data): Discount
+    {
+        return $this->loyverse->createDiscount(array_merge($data, ['id' => $this->id]));
+    }
 
     /**
      * Delete the given discount.
