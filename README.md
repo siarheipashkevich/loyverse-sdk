@@ -82,6 +82,22 @@ $category->update(array $data);
 $category->delete();
 ```
 
+### Managing Taxes
+
+``` php
+$loyverse->taxes(array $parameters);
+$loyverse->tax(string $taxId);
+$loyverse->createTax(array $data);
+$loyverse->deleteTax(string $taxId);
+```
+
+On a `Tax` instance you may also call:
+
+``` php
+$tax->update(array $data);
+$tax->delete();
+```
+
 ### Managing Payment Types
 
 ``` php
