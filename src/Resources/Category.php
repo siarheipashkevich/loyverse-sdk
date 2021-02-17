@@ -10,7 +10,7 @@ namespace Pashkevich\Loyverse\Resources;
 class Category extends Resource
 {
     /**
-     * The category id. If included in the POST request it will cause an update instead of a creating a new object.
+     * The category id.
      *
      * @var string
      */

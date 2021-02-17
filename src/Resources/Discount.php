@@ -10,7 +10,7 @@ namespace Pashkevich\Loyverse\Resources;
 class Discount extends Resource
 {
     /**
-     * The discount id. If included in the POST request it will cause an update instead of a creating a new object.
+     * The discount id.
      *
      * @var string
      */

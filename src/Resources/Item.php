@@ -12,8 +12,7 @@ use Pashkevich\Loyverse\Loyverse;
 class Item extends Resource
 {
     /**
-     * Read-only internal id of the item.
-     * If included in the POST request it will cause an update instead of a creating a new object.
+     * The read only internal id of the item.
      *
      * @var string
      */
@@ -178,7 +177,7 @@ class Item extends Resource
      *
      * @var array
      */
-    public array $variants = [];
+    public array $variants;
 
     /**
      * Item constructor.
