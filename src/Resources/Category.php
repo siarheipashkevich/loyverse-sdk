@@ -47,23 +47,23 @@ class Category extends Resource
     public string $deletedAt;
 
     /**
-     * Delete the given category.
-     *
-     * @return void
-     */
-    public function delete(): void
-    {
-        $this->loyverse->deleteCategory($this->id);
-    }
-
-    /**
      * Update the given category.
      *
      * @param array $data
-     * @return void
+     * @return Category
      */
-    public function update(array $data): void
+    public function update(array $data): Category
     {
-        $this->loyverse->createCategory(array_merge($data, ['id' => $this->id]));
+        return $this->loyverse->createCategory(array_merge($data, ['id' => $this->id]));
+    }
+
+    /**
+     * Delete the given category.
+     *
+     * @return array
+     */
+    public function delete(): array
+    {
+        return $this->loyverse->deleteCategory($this->id);
     }
 }

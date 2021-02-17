@@ -14,12 +14,12 @@ trait ManagesCategories
     /**
      * Get a list of categories.
      *
-     * @param array $data
+     * @param array $parameters
      * @return Category[]
      */
-    public function categories(array $data = []): array
+    public function categories(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('categories')['categories'], Category::class, $data);
+        return $this->transformCollection($this->get('categories')['categories'], Category::class, $parameters);
     }
 
     /**
@@ -50,10 +50,10 @@ trait ManagesCategories
      * Delete a single resource.
      *
      * @param string $categoryId
-     * @return void
+     * @return array
      */
-    public function deleteCategory(string $categoryId): void
+    public function deleteCategory(string $categoryId): array
     {
-        $this->delete("categories/$categoryId");
+        return $this->delete("categories/$categoryId");
     }
 }

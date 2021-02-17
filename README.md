@@ -55,7 +55,7 @@ $loyverse->setTimeout(120)->createCategory([...]);
 ### Managing Categories
 
 ``` php
-$loyverse->categories(array $data);
+$loyverse->categories(array $parameters);
 $loyverse->category(string $categoryId);
 $loyverse->createCategory(array $data);
 $loyverse->deleteCategory(string $categoryId);
