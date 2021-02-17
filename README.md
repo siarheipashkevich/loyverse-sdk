@@ -49,7 +49,7 @@ These parameters will be used in the POST request sent to Loyverse servers, you 
 You can also set the desired timeout value:
 
 ``` php
-$loyverse->setTimeout(120)->createCategory([...]);
+$loyverse->setTimeout(120)->createCategory(array $data);
 ```
 
 ### Managing Receipts
