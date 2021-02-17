@@ -20,7 +20,7 @@ To work with this package, firstly you **must** have a [Loyverse](https://loyver
 ### Basic Usage
 You can create an instance of the SDK like so:
 ``` php
-$loyverse = new Pashkevich\Loyverse\Loyverse(TOKEN_HERE);
+$loyverse = new Pashkevich\Loyverse\Loyverse(PERSONAL_ACCESS_TOKEN_HERE);
 ```
 
 Using the `Loyverse` instance you may perform multiple actions as well as retrieve the different resources Loyverse's API provides:
