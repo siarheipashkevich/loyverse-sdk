@@ -2,8 +2,10 @@
     "name": "pashkevich/loyverse-sdk",
     "description": "A simple to use PHP class to work with the Loyverse API",
     "keywords": [
-        "pashkevich",
-        "loyverse-sdk"
+        "loyverse",
+        "loyverse-api",
+        "loyverse-sdk",
+        "loyverse-php"
     ],
     "homepage": "https://github.com/siarheipashkevich/loyverse-sdk",
     "license": "MIT",
@@ -16,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.2"
     },
