@@ -68,6 +68,13 @@ $category->update(array $data);
 $category->delete();
 ```
 
+### Managing Payment Types
+
+``` php
+$loyverse->paymentTypes(array $parameters);
+$loyverse->paymentType(string $paymentTypeId);
+```
+
 ### Testing
 
 ``` bash
