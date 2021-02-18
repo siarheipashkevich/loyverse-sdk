@@ -17,30 +17,28 @@ class Category extends Resource
     public string $id;
 
     /**
-     * The name of the category.
+     * The category name.
      *
      * @var string
      */
     public string $name;
 
     /**
-     * The color of the category.
-     *
-     * Enum: "GREY", "RED", "PINK", "ORANGE", "GREEN", "BLUE", "PURPLE".
+     * The category color.
      *
      * @var string
      */
     public string $color = 'GREY';
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */

@@ -45,7 +45,7 @@ class Discount extends Resource
     public float $discountPercent;
 
     /**
-     * The list of store ids where this discount is available. By default discount is available at all stores.
+     * The list of store ids where this discount is available.
      *
      * @var array
      */
@@ -59,21 +59,21 @@ class Discount extends Resource
     public bool $restrictedAccess = false;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was updated.
+     * The time when this resource was updated.
      *
      * @var string
      */
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */
@@ -93,10 +93,10 @@ class Discount extends Resource
     /**
      * Delete the given discount.
      *
-     * @return void
+     * @return array
      */
-    public function delete(): void
+    public function delete(): array
     {
-        $this->loyverse->deleteDiscount($this->id);
+        return $this->loyverse->deleteDiscount($this->id);
     }
 }

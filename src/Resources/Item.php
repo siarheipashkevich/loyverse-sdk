@@ -108,16 +108,12 @@ class Item extends Resource
     /**
      * The visual form of the item that is displayed on the POS.
      *
-     * Enum: "SQUARE" "CIRCLE" "SUN" "OCTAGON".
-     *
      * @var string
      */
     public string $form = 'SQUARE';
 
     /**
      * One of the predefined colors for the item that is displayed on the POS.
-     *
-     * Enum: "GREY" "RED" "PINK" "ORANGE" "YELLOW" "GREEN" "BLUE" "PURPLE".
      *
      * @var string
      */
@@ -152,21 +148,21 @@ class Item extends Resource
     public string $option3Name;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was updated.
+     * The time when this resource was updated.
      *
      * @var string
      */
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */
@@ -206,10 +202,10 @@ class Item extends Resource
     /**
      * Delete the given item.
      *
-     * @return void
+     * @return array
      */
-    public function delete(): void
+    public function delete(): array
     {
-        $this->loyverse->deleteItem($this->id);
+        return $this->loyverse->deleteItem($this->id);
     }
 }

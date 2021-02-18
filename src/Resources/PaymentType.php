@@ -26,30 +26,26 @@ class PaymentType extends Resource
     /**
      * The payment type.
      *
-     * Enum: "CASH", "NONINTEGRATEDCARD", "CHECK", "WORLDPAY", "COINEY", "IZETTLE", "SUMUP", "TYRO", "CHECURITY",
-     * "SMARTPAY", "YOCO", "NICEPAY", "PAYGATE", "EZETAP", "FIRSTDATA", "SOFTBANK", "ONEPAY", "KICC", "MERCADOPAGO",
-     * "OTHER".
-     *
      * @var string
      */
     public string $type;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was updated.
+     * The time when this resource was updated.
      *
      * @var string
      */
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */

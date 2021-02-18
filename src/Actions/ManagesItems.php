@@ -50,10 +50,10 @@ trait ManagesItems
      * Delete a single resource.
      *
      * @param string $itemId
-     * @return void
+     * @return array
      */
-    public function deleteItem(string $itemId): void
+    public function deleteItem(string $itemId): array
     {
-        $this->delete("items/$itemId");
+        return $this->delete("items/$itemId");
     }
 }

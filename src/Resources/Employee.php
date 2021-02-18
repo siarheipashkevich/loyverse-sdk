@@ -52,21 +52,21 @@ class Employee extends Resource
     public bool $isOwner;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was updated.
+     * The time when this resource was updated.
      *
      * @var string
      */
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */

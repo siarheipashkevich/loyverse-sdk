@@ -50,10 +50,10 @@ trait ManagesDiscounts
      * Delete a single resource.
      *
      * @param string $discountId
-     * @return void
+     * @return array
      */
-    public function deleteDiscount(string $discountId): void
+    public function deleteDiscount(string $discountId): array
     {
-        $this->delete("discounts/$discountId");
+        return $this->delete("discounts/$discountId");
     }
 }

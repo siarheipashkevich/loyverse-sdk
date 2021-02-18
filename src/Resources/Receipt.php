@@ -26,8 +26,6 @@ class Receipt extends Resource
     /**
      * The type of the receipt.
      *
-     * Enum: "SALE" "REFUND"
-     *
      * @var string
      */
     public string $receiptType;
@@ -56,9 +54,6 @@ class Receipt extends Resource
     /**
      * By default, it matches the created_at value.
      *
-     * You can set receipt_date to the value that is equal to the date
-     * and time in the past when the receipt was created in another system.
-     *
      * @var string
      */
     public string $receiptDate;
@@ -80,18 +75,12 @@ class Receipt extends Resource
     /**
      * The name of the the source this receipt comes from.
      *
-     * By default it is the name of the application that created the receipt.
-     * For receipts created from Loyverse mobile point of sale application the value is "point of sale".
-     *
      * @var string
      */
     public string $source;
 
     /**
      * The total money amount paid by customer (or returned to customer in case of refund).
-     *
-     * The value includes discounts, taxes, surcharges and tips. The money amount format depends on country
-     * of account registration (for example for Japan there is no decimals in money amounts).
      *
      * @var float
      */
@@ -113,7 +102,6 @@ class Receipt extends Resource
 
     /**
      * The total amount of points deducted from customer's points balance (in case of refund).
-     * The value is always positive.
      *
      * @var float
      */
@@ -135,7 +123,6 @@ class Receipt extends Resource
 
     /**
      * The total amount of all discounts applied in the receipt (including discount by points).
-     * The value is always positive.
      *
      * @var float
      */

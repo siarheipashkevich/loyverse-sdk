@@ -2,6 +2,8 @@
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Loyverse;
+
 /**
  * Class Modifier
  *
@@ -45,7 +47,7 @@ class Modifier extends Resource
     public array $modifierOptions;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
@@ -59,11 +61,24 @@ class Modifier extends Resource
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */
     public string $deletedAt;
+
+    /**
+     * Modifier constructor.
+     *
+     * @param array $attributes
+     * @param Loyverse|null $loyverse
+     */
+    public function __construct(array $attributes, Loyverse $loyverse = null)
+    {
+        parent::__construct($attributes, $loyverse);
+
+        $this->modifierOptions = $this->transformCollection($this->modifierOptions ?: [], ModifierOption::class);
+    }
 
     /**
      * Update the given modifier.
