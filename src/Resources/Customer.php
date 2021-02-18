@@ -153,9 +153,9 @@ class Customer extends Resource
      * Update the given customer.
      *
      * @param array $data
-     * @return Category
+     * @return Customer
      */
-    public function update(array $data): Category
+    public function update(array $data): Customer
     {
         return $this->loyverse->createCustomer(array_merge($data, ['id' => $this->id]));
     }

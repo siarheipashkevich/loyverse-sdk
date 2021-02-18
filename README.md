@@ -14,27 +14,38 @@ To install the SDK in your project you need to require the package via composer:
 ```bash
 composer require pashkevich/loyverse-sdk
 ```
-To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com/) account, and secondly you must create an API token through [Loyverse](https://loyverse.com/) itself.
+
+To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com/) account, and secondly you must
+create an API token through [Loyverse](https://loyverse.com/) itself.
 
 ### Basic Usage
+
 You can create an instance of the SDK like so:
+
 ``` php
 $loyverse = new Pashkevich\Loyverse\Loyverse(PERSONAL_ACCESS_TOKEN_HERE);
 ```
 
-Using the `Loyverse` instance you may perform multiple actions as well as retrieve the different resources Loyverse's API provides:
+Using the `Loyverse` instance you may perform multiple actions as well as retrieve the different resources Loyverse's
+API provides:
+
 ``` php
 $employees = $loyverse->employees();
 ```
 
-This will give you an array of employees that you have access to, where each employee is represented by an instance of `Pashkevich\Loyverse\Resources\Employee`, this instance has multiple public properties like `$id`, `$name`, `$email`, `$phoneNumber`, and others.
+This will give you an array of employees that you have access to, where each employee is represented by an instance
+of `Pashkevich\Loyverse\Resources\Employee`, this instance has multiple public properties like `$id`, `$name`, `$email`
+, `$phoneNumber`, and others.
 
 You may also retrieve a single employee using:
+
 ``` php
 $employee = $loyverse->employee(EMPLOYEE_ID_HERE);
 ```
 
-On multiple actions supported by this SDK you may need to pass some parameters, for example when creating a new category:
+On multiple actions supported by this SDK you may need to pass some parameters, for example when creating a new
+category:
+
 ``` php
 $category = $loyverse->createCategory([
     'name' => 'Fruits',
@@ -42,7 +53,8 @@ $category = $loyverse->createCategory([
 ]);
 ```
 
-These parameters will be used in the POST request sent to Loyverse servers, you can find more information about the parameters needed for each action on
+These parameters will be used in the POST request sent to Loyverse servers, you can find more information about the
+parameters needed for each action on
 [Loyverse's official API documentation](https://developer.loyverse.com/docs).
 
 You can also set the desired timeout value:
@@ -96,6 +108,22 @@ On a `Customer` instance you may also call:
 ``` php
 $customer->update(array $data);
 $customer->delete();
+```
+
+### Managing Suppliers
+
+``` php
+$loyverse->suppliers(array $parameters);
+$loyverse->supplier(string $supplierId);
+$loyverse->createSupplier(array $data);
+$loyverse->deleteSupplier(string $supplierId);
+```
+
+On a `Supplier` instance you may also call:
+
+``` php
+$supplier->update(array $data);
+$supplier->delete();
 ```
 
 ### Managing Discounts
@@ -169,7 +197,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email siarheipashkveich@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email siarheipashkveich@gmail.com instead of using the issue
+tracker.
 
 ## Credits
 

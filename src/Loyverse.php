@@ -24,6 +24,7 @@ class Loyverse
     use Actions\ManagesTaxes;
     use Actions\ManagesModifiers;
     use Actions\ManagesCustomers;
+    use Actions\ManagesSuppliers;
 
     /**
      * The Loyverse API Key.
