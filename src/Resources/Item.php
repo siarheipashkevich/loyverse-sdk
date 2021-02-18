@@ -35,32 +35,30 @@ class Item extends Resource
     /**
      * External reference id for the item.
      *
-     * @var string
+     * @var string|null
      */
-    public string $referenceId;
+    public ?string $referenceId;
 
     /**
      * The category id of the item.
      *
      * @var string|null
      */
-    public ?string $categoryId = null;
+    public ?string $categoryId;
 
     /**
      * If true, the system tracks inventory for this item at all stores.
-     * Make sure you don't accidentally disable track stock.
-     * If you set track_stock to false then all inventory levels of this item are set to 0.
      *
      * @var bool
      */
-    public bool $trackStock = false;
+    public bool $trackStock;
 
     /**
      * If true, a fractional quantity for this item can be specified at the time of a sale (for example 1.5).
      *
      * @var bool
      */
-    public bool $soldByWeight = false;
+    public bool $soldByWeight;
 
     /**
      * If true, the item contains a specified quantity of other items.
@@ -71,81 +69,80 @@ class Item extends Resource
 
     /**
      * If true, the system tracks stock not only for its components but also for this item.
-     * This property can be set only for composite items.
      *
      * @var bool
      */
-    public bool $useProduction = false;
+    public bool $useProduction;
 
     /**
      * The list of components for the item.
      *
      * @var array
      */
-    public array $components = [];
+    public array $components;
 
     /**
      * The primary supplier id.
      *
-     * @var string
+     * @var string|null
      */
-    public string $primarySupplierId;
+    public ?string $primarySupplierId;
 
     /**
      * The list of tax ids applied to this item.
      *
      * @var array
      */
-    public array $taxIds = [];
+    public array $taxIds;
 
     /**
      * The list of modifiers ids applied to this item.
      *
      * @var array
      */
-    public array $modifiersIds = [];
+    public array $modifiersIds;
 
     /**
      * The visual form of the item that is displayed on the POS.
      *
      * @var string
      */
-    public string $form = 'SQUARE';
+    public string $form;
 
     /**
      * One of the predefined colors for the item that is displayed on the POS.
      *
      * @var string
      */
-    public string $color = 'GREY';
+    public string $color;
 
     /**
      * The image url.
      *
-     * @var string
+     * @var string|null
      */
-    public string $imageUrl;
+    public ?string $imageUrl;
 
     /**
      * The name of the first option (for example "Size").
      *
-     * @var string
+     * @var string|null
      */
-    public string $option1Name;
+    public ?string $option1Name;
 
     /**
      * The name of the first option (for example "Color").
      *
-     * @var string
+     * @var string|null
      */
-    public string $option2Name;
+    public ?string $option2Name;
 
     /**
      * The name of the first option (for example "Material").
      *
-     * @var string
+     * @var string|null
      */
-    public string $option3Name;
+    public ?string $option3Name;
 
     /**
      * The time when this resource was created.

@@ -35,37 +35,37 @@ class Variant extends Resource
     /**
      * External reference id for the variant.
      *
-     * @var string
+     * @var string|null
      */
-    public string $referenceVariantId;
+    public ?string $referenceVariantId;
 
     /**
      * The value of the first option for this variant.
      *
-     * @var string
+     * @var string|null
      */
-    public string $option1Value;
+    public ?string $option1Value;
 
     /**
      * The value of the second option for this variant.
      *
-     * @var string
+     * @var string|null
      */
-    public string $option2Value;
+    public ?string $option2Value;
 
     /**
      * The value of the third option for this variant.
      *
-     * @var string
+     * @var string|null
      */
-    public string $option3Value;
+    public ?string $option3Value;
 
     /**
      * The variant barcode.
      *
-     * @var string
+     * @var string|null
      */
-    public string $barcode;
+    public ?string $barcode;
 
     /**
      * The variant cost.
@@ -77,9 +77,9 @@ class Variant extends Resource
     /**
      * The variant purchase cost.
      *
-     * @var float
+     * @var float|null
      */
-    public float $purchaseCost = 0;
+    public ?float $purchaseCost;
 
     /**
      * The default variant pricing type.

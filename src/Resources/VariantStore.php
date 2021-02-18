@@ -26,9 +26,9 @@ class VariantStore extends Resource
     /**
      * The variant price in this store (only if pricing_type in this store is FIXED).
      *
-     * @var float
+     * @var float|null
      */
-    public float $price;
+    public ?float $price;
 
     /**
      * If true, variant is available for sale at this store.
@@ -40,14 +40,14 @@ class VariantStore extends Resource
     /**
      * The variant optimal stock.
      *
-     * @var float
+     * @var float|null
      */
-    public float $optimalStock;
+    public ?float $optimalStock;
 
     /**
      * The low stock threshold for the variant.
      *
-     * @var float
+     * @var float|null
      */
-    public float $lowStock;
+    public ?float $lowStock;
 }
