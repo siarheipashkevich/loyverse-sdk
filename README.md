@@ -5,9 +5,36 @@
 <a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/v/pashkevich/loyverse-sdk" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/l/pashkevich/loyverse-sdk" alt="License"></a>
 
-A simple to use PHP class to work with the Loyverse API.
+- [Official Documentation](#official-documentation)
+    - [Installation](#installation)
+    - [Basic Usage](#basic-usage)
+    - [Managing Categories](#managing-categories)
+    - [Managing Customers](#managing-customers)
+    - [Managing Discounts](#managing-discounts)
+    - [Managing Employees](#managing-employees)
+    - [Managing Inventory](#managing-inventory)
+    - [Managing Items](#managing-items)
+    - [Managing Merchants](#managing-merchants)
+    - [Managing Merchants](#managing-merchants)
+    - [Managing Modifiers](#managing-modifiers)
+    - [Managing Payment Types](#managing-payment-types)
+    - [Managing Pos Devices](#managing-pos-devices)
+    - [Managing Receipts](#managing-receipts)
+    - [Managing Shifts](#managing-shifts)
+    - [Managing Stores](#managing-stores)
+    - [Managing Suppliers](#managing-suppliers)
+    - [Managing Taxes](#managing-taxes)
+    - [Managing Variants](#managing-variants)
+    - [Managing Webhooks](#managing-webhooks)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [Security Vulnerabilities](#security)
+- [Credits](#credits)
+- [License](#license)
 
-## Installation
+## Official Documentation
+
+### Installation
 
 To install the SDK in your project you need to require the package via composer:
 
@@ -285,11 +312,7 @@ $webhook->delete();
 composer test
 ```
 
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
-## Contributing
+### Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
@@ -298,7 +321,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 If you discover any security related issues, please email siarheipashkveich@gmail.com instead of using the issue
 tracker.
 
-## Credits
+### Credits
 
 - [Sergey Pashkevich](https://github.com/siarheipashkevich)
 
