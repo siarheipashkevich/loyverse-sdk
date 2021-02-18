@@ -2,6 +2,8 @@
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Loyverse;
+
 /**
  * Class Variant
  *
@@ -24,7 +26,7 @@ class Variant extends Resource
     public string $itemId;
 
     /**
-     * The variant sku. It should be unique.
+     * The variant sku.
      *
      * @var string
      */
@@ -39,7 +41,6 @@ class Variant extends Resource
 
     /**
      * The value of the first option for this variant.
-     * Required if option1_name is set for the item this variant is attached to.
      *
      * @var string
      */
@@ -47,7 +48,6 @@ class Variant extends Resource
 
     /**
      * The value of the second option for this variant.
-     * Required if option2_name is set for the item this variant is attached to.
      *
      * @var string
      */
@@ -55,7 +55,6 @@ class Variant extends Resource
 
     /**
      * The value of the third option for this variant.
-     * Required if option3_name is set for the item this variant is attached to.
      *
      * @var string
      */
@@ -83,20 +82,14 @@ class Variant extends Resource
     public float $purchaseCost = 0;
 
     /**
-     * The default variant pricing type. If the value is VARIABLE than the price is specified at the time of a sale.
-     * If there are several stores in the account than the price of the variant in each store is equal to this value
-     * by default unless different value is specified in the stores array for a particular store.
-     *
-     * Enum: "FIXED", "VARIABLE".
+     * The default variant pricing type.
      *
      * @var string
      */
     public string $defaultPricingType = 'VARIABLE';
 
     /**
-     * The default variant price (only for pricing_type: FIXED) If there are several stores in the account than
-     * the price of the variant in each store is equal to this value by default unless different value is specified
-     * in the stores array for a particular store.
+     * The default variant price (only for pricing_type: FIXED).
      *
      * @var float|null
      */
@@ -107,28 +100,41 @@ class Variant extends Resource
      *
      * @var array
      */
-    public array $stores = [];
+    public array $stores;
 
     /**
-     * The date/time the resource was created.
+     * The time when this resource was created.
      *
      * @var string
      */
     public string $createdAt;
 
     /**
-     * The date/time the resource was updated.
+     * The time when this resource was updated.
      *
      * @var string
      */
     public string $updatedAt;
 
     /**
-     * The date/time the resource was deleted.
+     * The time when this resource was deleted.
      *
      * @var string
      */
     public string $deletedAt;
+
+    /**
+     * Variant constructor.
+     *
+     * @param array $attributes
+     * @param Loyverse|null $loyverse
+     */
+    public function __construct(array $attributes, Loyverse $loyverse = null)
+    {
+        parent::__construct($attributes, $loyverse);
+
+        $this->stores = $this->transformCollection($this->stores ?: [], VariantStore::class);
+    }
 
     /**
      * Update the given variant.
@@ -144,10 +150,10 @@ class Variant extends Resource
     /**
      * Delete the given variant.
      *
-     * @return void
+     * @return array
      */
-    public function delete(): void
+    public function delete(): array
     {
-        $this->loyverse->deleteVariant($this->variantId);
+        return $this->loyverse->deleteVariant($this->variantId);
     }
 }

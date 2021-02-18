@@ -50,10 +50,10 @@ trait ManagesVariants
      * Delete a single resource.
      *
      * @param string $variantId
-     * @return void
+     * @return array
      */
-    public function deleteVariant(string $variantId): void
+    public function deleteVariant(string $variantId): array
     {
-        $this->delete("variants/$variantId");
+        return $this->delete("variants/$variantId");
     }
 }
