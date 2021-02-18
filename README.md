@@ -57,17 +57,17 @@ Using the `Loyverse` instance you may perform multiple actions as well as retrie
 API provides:
 
 ``` php
-$employees = $loyverse->employees();
+$categories = $loyverse->categories();
 ```
 
-This will give you an array of employees that you have access to, where each employee is represented by an instance
-of `Pashkevich\Loyverse\Resources\Employee`, this instance has multiple public properties like `$id`, `$name`, `$email`
-, `$phoneNumber`, and others.
+This will give you an array of categories that you have access to, where each category is represented by an instance
+of `Pashkevich\Loyverse\Resources\Category`, this instance has multiple public properties like `$id`, `$name`, `$color`
+, and others.
 
-You may also retrieve a single employee using:
+You may also retrieve a single category using:
 
 ``` php
-$employee = $loyverse->employee(EMPLOYEE_ID_HERE);
+$category = $loyverse->category(CATEGORY_ID_HERE);
 ```
 
 On multiple actions supported by this SDK you may need to pass some parameters, for example when creating a new
