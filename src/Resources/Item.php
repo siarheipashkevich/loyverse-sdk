@@ -193,6 +193,17 @@ class Item extends Resource
     }
 
     /**
+     * Update the given item.
+     *
+     * @param array $data
+     * @return Item
+     */
+    public function update(array $data): Item
+    {
+        return $this->loyverse->createItem(array_merge($data, ['id' => $this->id]));
+    }
+
+    /**
      * Delete the given item.
      *
      * @return void

@@ -63,21 +63,6 @@ You can also set the desired timeout value:
 $loyverse->setTimeout(120)->createCategory(array $data);
 ```
 
-### Managing Receipts
-
-``` php
-$loyverse->receipts(array $parameters);
-$loyverse->receipt(string $receiptNumber);
-$loyverse->createReceipt(array $data);
-$loyverse->createReceiptRefund(string $receiptNumber, array $data);
-```
-
-On a `Receipt` instance you may also call:
-
-``` php
-$receipt->refund(array $data);
-```
-
 ### Managing Categories
 
 ``` php
@@ -110,36 +95,6 @@ $customer->update(array $data);
 $customer->delete();
 ```
 
-### Managing Suppliers
-
-``` php
-$loyverse->suppliers(array $parameters);
-$loyverse->supplier(string $supplierId);
-$loyverse->createSupplier(array $data);
-$loyverse->deleteSupplier(string $supplierId);
-```
-
-On a `Supplier` instance you may also call:
-
-``` php
-$supplier->update(array $data);
-$supplier->delete();
-```
-
-### Managing Inventory
-
-``` php
-$loyverse->inventory(array $parameters);
-$loyverse->updateInventory(array $data);
-```
-
-### Managing Shifts
-
-``` php
-$loyverse->shifts(array $parameters);
-$loyverse->shift(string $shiftId);
-```
-
 ### Managing Discounts
 
 ``` php
@@ -156,20 +111,40 @@ $discount->update(array $data);
 $discount->delete();
 ```
 
-### Managing Pos Devices
+### Managing Employees
 
 ``` php
-$loyverse->posDevices(array $parameters);
-$loyverse->posDevice(string $posDeviceId);
-$loyverse->createPosDevice(array $data);
-$loyverse->deletePosDevice(string $posDeviceId);
+$loyverse->employees(array $parameters);
+$loyverse->employee(string $employeeId);
 ```
 
-On a `PosDevice` instance you may also call:
+### Managing Inventory
 
 ``` php
-$posDevice->update(array $data);
-$posDevice->delete();
+$loyverse->inventory(array $parameters);
+$loyverse->updateInventory(array $data);
+```
+
+### Managing Items
+
+``` php
+$loyverse->items(array $parameters);
+$loyverse->item(string $itemId);
+$loyverse->createItem(array $data);
+$loyverse->deleteItem(string $itemId);
+```
+
+On a `Item` instance you may also call:
+
+``` php
+$item->update(array $data);
+$item->delete();
+```
+
+### Managing Merchants
+
+``` php
+$loyverse->merchant();
 ```
 
 ### Managing Modifiers
@@ -188,20 +163,72 @@ $modifier->update(array $data);
 $modifier->delete();
 ```
 
-### Managing Webhooks
+### Managing Payment Types
 
 ``` php
-$loyverse->webhooks(array $parameters);
-$loyverse->webhook(string $webhookId);
-$loyverse->createWebhook(array $data);
-$loyverse->deleteWebhook(string $webhookId);
+$loyverse->paymentTypes(array $parameters);
+$loyverse->paymentType(string $paymentTypeId);
 ```
 
-On a `Webhook` instance you may also call:
+### Managing Pos Devices
 
 ``` php
-$webhook->update(array $data);
-$webhook->delete();
+$loyverse->posDevices(array $parameters);
+$loyverse->posDevice(string $posDeviceId);
+$loyverse->createPosDevice(array $data);
+$loyverse->deletePosDevice(string $posDeviceId);
+```
+
+On a `PosDevice` instance you may also call:
+
+``` php
+$posDevice->update(array $data);
+$posDevice->delete();
+```
+
+### Managing Receipts
+
+``` php
+$loyverse->receipts(array $parameters);
+$loyverse->receipt(string $receiptNumber);
+$loyverse->createReceipt(array $data);
+$loyverse->createReceiptRefund(string $receiptNumber, array $data);
+```
+
+On a `Receipt` instance you may also call:
+
+``` php
+$receipt->refund(array $data);
+```
+
+### Managing Shifts
+
+``` php
+$loyverse->shifts(array $parameters);
+$loyverse->shift(string $shiftId);
+```
+
+### Managing Stores
+
+``` php
+$loyverse->stores(array $parameters);
+$loyverse->store(string $storeId);
+```
+
+### Managing Suppliers
+
+``` php
+$loyverse->suppliers(array $parameters);
+$loyverse->supplier(string $supplierId);
+$loyverse->createSupplier(array $data);
+$loyverse->deleteSupplier(string $supplierId);
+```
+
+On a `Supplier` instance you may also call:
+
+``` php
+$supplier->update(array $data);
+$supplier->delete();
 ```
 
 ### Managing Taxes
@@ -220,11 +247,36 @@ $tax->update(array $data);
 $tax->delete();
 ```
 
-### Managing Payment Types
+### Managing Variants
 
 ``` php
-$loyverse->paymentTypes(array $parameters);
-$loyverse->paymentType(string $paymentTypeId);
+$loyverse->variants(array $parameters);
+$loyverse->variant(string $variantId);
+$loyverse->createVariant(array $data);
+$loyverse->deleteVariant(string $variantId);
+```
+
+On a `Variant` instance you may also call:
+
+``` php
+$variant->update(array $data);
+$variant->delete();
+```
+
+### Managing Webhooks
+
+``` php
+$loyverse->webhooks(array $parameters);
+$loyverse->webhook(string $webhookId);
+$loyverse->createWebhook(array $data);
+$loyverse->deleteWebhook(string $webhookId);
+```
+
+On a `Webhook` instance you may also call:
+
+``` php
+$webhook->update(array $data);
+$webhook->delete();
 ```
 
 ### Testing

@@ -131,6 +131,17 @@ class Variant extends Resource
     public string $deletedAt;
 
     /**
+     * Update the given variant.
+     *
+     * @param array $data
+     * @return Variant
+     */
+    public function update(array $data): Variant
+    {
+        return $this->loyverse->createVariant(array_merge($data, ['id' => $this->variantId]));
+    }
+
+    /**
      * Delete the given variant.
      *
      * @return void
