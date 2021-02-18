@@ -28,7 +28,7 @@ class Category extends Resource
      *
      * @var string
      */
-    public string $color = 'GREY';
+    public string $color;
 
     /**
      * The time when this resource was created.

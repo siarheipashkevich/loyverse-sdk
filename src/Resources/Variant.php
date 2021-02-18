@@ -72,7 +72,7 @@ class Variant extends Resource
      *
      * @var float
      */
-    public float $cost = 0;
+    public float $cost;
 
     /**
      * The variant purchase cost.
@@ -86,14 +86,14 @@ class Variant extends Resource
      *
      * @var string
      */
-    public string $defaultPricingType = 'VARIABLE';
+    public string $defaultPricingType;
 
     /**
      * The default variant price (only for pricing_type: FIXED).
      *
      * @var float|null
      */
-    public ?float $defaultPrice = null;
+    public ?float $defaultPrice;
 
     /**
      * The list of values that are unique for each store.

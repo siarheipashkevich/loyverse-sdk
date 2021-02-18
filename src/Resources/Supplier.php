@@ -26,79 +26,79 @@ class Supplier extends Resource
     /**
      * The supplier contact person name.
      *
-     * @var string
+     * @var string|null
      */
-    public string $contact;
+    public ?string $contact;
 
     /**
      * The supplier email.
      *
-     * @var string
+     * @var string|null
      */
-    public string $email;
+    public ?string $email;
 
     /**
      * The supplier phone number.
      *
-     * @var string
+     * @var string|null
      */
-    public string $phoneNumber;
+    public ?string $phoneNumber;
 
     /**
      * The supplier website page.
      *
-     * @var string
+     * @var string|null
      */
-    public string $website;
+    public ?string $website;
 
     /**
      * The supplier address.
      *
-     * @var string
+     * @var string|null
      */
-    public string $address1;
+    public ?string $address1;
 
     /**
      * The supplier address.
      *
-     * @var string
+     * @var string|null
      */
-    public string $address2;
+    public ?string $address2;
 
     /**
      * The supplier city, town, or village.
      *
-     * @var string
+     * @var string|null
      */
-    public string $city;
+    public ?string $city;
 
     /**
      * The supplier’s region name. Typically a province, a state, or a prefecture..
      *
-     * @var string
+     * @var string|null
      */
-    public string $region;
+    public ?string $region;
 
     /**
-     * The supplier’s postal code, also known as zip, postcode, Eircode, etc..
+     * The supplier’s postal code, also known as zip, postcode, Eircode, etc.
      *
-     * @var string
+     * @var string|null
      */
-    public string $postalCode;
+    public ?string $postalCode;
 
     /**
      * The two-letter country code corresponding to the supplier country in ISO 3166-1-alpha-2 format.
      *
-     * @var string
+     * @var string|null
      */
-    public string $countryCode;
+    public ?string $countryCode;
 
     /**
      * The note about the customer.
      *
-     * @var string
+     * @var string|null
      */
-    public string $note;
+    public ?string $note;
 
     /**
      * The time when this resource was created.
