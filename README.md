@@ -8,7 +8,7 @@
 To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com) account, and secondly you must
 create an API token through [Loyverse](https://loyverse.com) itself.
 
-- [Official Documentation](#official-documentation)
+- [Documentation](#official-documentation)
     - [Installation](#installation)
     - [Basic Usage](#basic-usage)
     - [Managing Categories](#managing-categories)
@@ -35,7 +35,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
 - [Credits](#credits)
 - [License](#license)
 
-## Official Documentation
+## Documentation
 
 ### Installation
 
