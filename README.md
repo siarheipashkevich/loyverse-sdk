@@ -126,6 +126,13 @@ $supplier->update(array $data);
 $supplier->delete();
 ```
 
+### Managing Inventory
+
+``` php
+$loyverse->inventory(array $parameters);
+$loyverse->updateInventory(array $data);
+```
+
 ### Managing Discounts
 
 ``` php
