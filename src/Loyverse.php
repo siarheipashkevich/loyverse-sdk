@@ -26,6 +26,7 @@ class Loyverse
     use Actions\ManagesCustomers;
     use Actions\ManagesSuppliers;
     use Actions\ManagesInventory;
+    use Actions\ManagesShifts;
 
     /**
      * The Loyverse API Key.

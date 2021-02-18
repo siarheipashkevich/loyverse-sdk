@@ -133,6 +133,13 @@ $loyverse->inventory(array $parameters);
 $loyverse->updateInventory(array $data);
 ```
 
+### Managing Shifts
+
+``` php
+$loyverse->shifts(array $parameters);
+$loyverse->shift(string $shiftId);
+```
+
 ### Managing Discounts
 
 ``` php
