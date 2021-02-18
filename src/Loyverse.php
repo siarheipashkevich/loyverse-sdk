@@ -28,6 +28,7 @@ class Loyverse
     use Actions\ManagesInventory;
     use Actions\ManagesShifts;
     use Actions\ManagesPosDevices;
+    use Actions\ManagesWebhooks;
 
     /**
      * The Loyverse API Key.

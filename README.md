@@ -188,6 +188,22 @@ $modifier->update(array $data);
 $modifier->delete();
 ```
 
+### Managing Webhooks
+
+``` php
+$loyverse->webhooks(array $parameters);
+$loyverse->webhook(string $webhookId);
+$loyverse->createWebhook(array $data);
+$loyverse->deleteWebhook(string $webhookId);
+```
+
+On a `Webhook` instance you may also call:
+
+``` php
+$webhook->update(array $data);
+$webhook->delete();
+```
+
 ### Managing Taxes
 
 ``` php
