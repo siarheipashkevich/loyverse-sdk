@@ -82,6 +82,22 @@ $category->update(array $data);
 $category->delete();
 ```
 
+### Managing Customers
+
+``` php
+$loyverse->customers(array $parameters);
+$loyverse->customer(string $customerId);
+$loyverse->createCustomer(array $data);
+$loyverse->deleteCustomer(string $customerId);
+```
+
+On a `Customer` instance you may also call:
+
+``` php
+$customer->update(array $data);
+$customer->delete();
+```
+
 ### Managing Discounts
 
 ``` php
