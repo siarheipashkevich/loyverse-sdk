@@ -42,7 +42,7 @@ class Employee extends Resource
      *
      * @var array
      */
-    public array $stores = [];
+    public array $stores;
 
     /**
      * Determine if the employee is owner.

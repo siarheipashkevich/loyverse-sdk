@@ -49,14 +49,14 @@ class Discount extends Resource
      *
      * @var array
      */
-    public array $stores = [];
+    public array $stores;
 
     /**
      * If true, the password verification is necessary in order to apply this discount on POS.
      *
      * @var bool
      */
-    public bool $restrictedAccess = false;
+    public bool $restrictedAccess;
 
     /**
      * The time when this resource was created.

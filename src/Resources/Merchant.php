@@ -42,7 +42,7 @@ class Merchant extends Resource
      *
      * @var array
      */
-    public array $currency = [];
+    public array $currency;
 
     /**
      * The date and time when the merchant account was created.
