@@ -26,79 +26,79 @@ class Customer extends Resource
     /**
      * The customer's email.
      *
-     * @var string
+     * @var string|null
      */
-    public string $email;
+    public ?string $email;
 
     /**
      * The customer's phone number.
      *
-     * @var string
+     * @var string|null
      */
-    public string $phoneNumber;
+    public ?string $phoneNumber;
 
     /**
      * The customer's address.
      *
-     * @var string
+     * @var string|null
      */
-    public string $address;
+    public ?string $address;
 
     /**
      * The customer's city, town, or village.
      *
-     * @var string
+     * @var string|null
      */
-    public string $city;
+    public ?string $city;
 
     /**
      * The customer’s region name. Typically a province, a state, or a prefecture.
      *
-     * @var string
+     * @var string|null
      */
-    public string $region;
+    public ?string $region;
 
     /**
      * The customer’s postal code, also known as zip, postcode, Eircode, etc.
      *
-     * @var string
+     * @var string|null
      */
-    public string $postalCode;
+    public ?string $postalCode;
 
     /**
      * The two-letter country code corresponding to the customer's country in ISO 3166-1-alpha-2 format.
      *
-     * @var string
+     * @var string|null
      */
-    public string $countryCode;
+    public ?string $countryCode;
 
     /**
      * The customer's code.
      *
-     * @var string
+     * @var string|null
      */
-    public string $customerCode;
+    public ?string $customerCode;
 
     /**
      * The note about the customer.
      *
-     * @var string
+     * @var string|null
      */
-    public string $note;
+    public ?string $note;
 
     /**
      * The date of the first customer visit.
      *
-     * @var string
+     * @var string|null
      */
-    public string $firstVisit;
+    public ?string $firstVisit;
 
     /**
      * The date of the most recent customer visit.
      *
-     * @var string
+     * @var string|null
      */
-    public string $lastVisit;
+    public ?string $lastVisit;
 
     /**
      * The total number of visits.
@@ -145,9 +145,9 @@ class Customer extends Resource
     /**
      * The time when the customer data will be permanently deleted (usually 24 hours after soft deletion).
      *
-     * @var string
+     * @var string|null
      */
-    public string $permanentDeletionAt;
+    public ?string $permanentDeletionAt;
 
     /**
      * Update the given customer.
