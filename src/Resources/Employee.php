@@ -26,16 +26,16 @@ class Employee extends Resource
     /**
      * The email of the employee.
      *
-     * @var string
+     * @var string|null
      */
-    public string $email;
+    public ?string $email;
 
     /**
      * The phone number of the employee.
      *
-     * @var string
+     * @var string|null
      */
-    public string $phoneNumber;
+    public ?string $phoneNumber;
 
     /**
      * The list of store ids where this employee has access.
