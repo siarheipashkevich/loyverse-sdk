@@ -40,9 +40,9 @@ class Category extends Resource
     /**
      * The time when this resource was deleted.
      *
-     * @var string
+     * @var string|null
      */
-    public string $deletedAt;
+    public ?string $deletedAt;
 
     /**
      * Update the given category.

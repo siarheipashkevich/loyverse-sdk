@@ -35,7 +35,7 @@ trait MakesHttpRequests
      */
     public function post(string $uri, array $payload = [])
     {
-        $options = empty($payload) ? [] : ['form_params' => $payload];
+        $options = empty($payload) ? [] : ['json' => $payload];
 
         return $this->request('POST', $uri, $options);
     }
@@ -49,7 +49,7 @@ trait MakesHttpRequests
      */
     public function put(string $uri, array $payload = [])
     {
-        $options = empty($payload) ? [] : ['form_params' => $payload];
+        $options = empty($payload) ? [] : ['json' => $payload];
 
         return $this->request('PUT', $uri, $options);
     }
@@ -63,7 +63,7 @@ trait MakesHttpRequests
      */
     public function delete(string $uri, array $payload = [])
     {
-        $options = empty($payload) ? [] : ['form_params' => $payload];
+        $options = empty($payload) ? [] : ['json' => $payload];
 
         return $this->request('DELETE', $uri, $options);
     }

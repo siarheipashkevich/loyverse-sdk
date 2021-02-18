@@ -138,9 +138,9 @@ class Customer extends Resource
     /**
      * The time when this resource was deleted.
      *
-     * @var string
+     * @var string|null
      */
-    public string $deletedAt;
+    public ?string $deletedAt;
 
     /**
      * The time when the customer data will be permanently deleted (usually 24 hours after soft deletion).

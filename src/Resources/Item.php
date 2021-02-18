@@ -164,9 +164,9 @@ class Item extends Resource
     /**
      * The time when this resource was deleted.
      *
-     * @var string
+     * @var string|null
      */
-    public string $deletedAt;
+    public ?string $deletedAt;
 
     /**
      * The list of variants applied to this item.
