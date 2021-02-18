@@ -156,6 +156,22 @@ $discount->update(array $data);
 $discount->delete();
 ```
 
+### Managing Pos Devices
+
+``` php
+$loyverse->posDevices(array $parameters);
+$loyverse->posDevice(string $posDeviceId);
+$loyverse->createPosDevice(array $data);
+$loyverse->deletePosDevice(string $posDeviceId);
+```
+
+On a `PosDevice` instance you may also call:
+
+``` php
+$posDevice->update(array $data);
+$posDevice->delete();
+```
+
 ### Managing Modifiers
 
 ``` php
