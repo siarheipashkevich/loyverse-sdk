@@ -5,6 +5,9 @@
 <a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/v/pashkevich/loyverse-sdk" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/pashkevich/loyverse-sdk"><img src="https://img.shields.io/packagist/l/pashkevich/loyverse-sdk" alt="License"></a>
 
+To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com) account, and secondly you must
+create an API token through [Loyverse](https://loyverse.com) itself.
+
 - [Official Documentation](#official-documentation)
     - [Installation](#installation)
     - [Basic Usage](#basic-usage)
@@ -41,9 +44,6 @@ To install the SDK in your project you need to require the package via composer:
 ```bash
 composer require pashkevich/loyverse-sdk
 ```
-
-To work with this package, firstly you **must** have a [Loyverse](https://loyverse.com/) account, and secondly you must
-create an API token through [Loyverse](https://loyverse.com/) itself.
 
 ### Basic Usage
 
