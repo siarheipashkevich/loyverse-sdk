@@ -18,7 +18,6 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Inventory](#managing-inventory)
     - [Managing Items](#managing-items)
     - [Managing Merchants](#managing-merchants)
-    - [Managing Merchants](#managing-merchants)
     - [Managing Modifiers](#managing-modifiers)
     - [Managing Payment Types](#managing-payment-types)
     - [Managing Pos Devices](#managing-pos-devices)
