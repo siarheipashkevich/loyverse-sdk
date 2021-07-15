@@ -4,8 +4,8 @@ namespace Pashkevich\Loyverse\Tests;
 
 use Mockery;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\{Utils, Response};
 use Pashkevich\Loyverse\{Loyverse, Exceptions};
 
 /**
@@ -29,7 +29,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->once()->andReturn(200);
-        $response->shouldReceive('getBody')->once()->andReturn('{"employees": [{"key": "value"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"employees": [{"key": "value"}]}'));
 
         $this->assertCount(1, $loyverse->employees());
     }
@@ -45,7 +47,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(500);
-        $response->shouldReceive('getBody')->once()->andReturn('');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor());
 
         $loyverse->employees();
     }
@@ -61,7 +65,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(500);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "INTERNAL_SERVER_ERROR"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "INTERNAL_SERVER_ERROR"}]}'));
 
         $loyverse->employees();
     }
@@ -77,7 +83,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "BAD_REQUEST"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "BAD_REQUEST"}]}'));
 
         $loyverse->employees();
     }
@@ -93,7 +101,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "INCORRECT_VALUE_TYPE"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "INCORRECT_VALUE_TYPE"}]}'));
 
         $loyverse->employees();
     }
@@ -109,7 +119,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "MISSING_REQUIRED_PARAMETER"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "MISSING_REQUIRED_PARAMETER"}]}'));
 
         $loyverse->employees();
     }
@@ -125,7 +137,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "INVALID_VALUE"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "INVALID_VALUE"}]}'));
 
         $loyverse->employees();
     }
@@ -141,7 +155,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "INVALID_RANGE"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "INVALID_RANGE"}]}'));
 
         $loyverse->employees();
     }
@@ -157,7 +173,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "INVALID_CURSOR"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "INVALID_CURSOR"}]}'));
 
         $loyverse->employees();
     }
@@ -173,7 +191,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "CONFLICTING_PARAMETERS"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "CONFLICTING_PARAMETERS"}]}'));
 
         $loyverse->employees();
     }
@@ -189,7 +209,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(401);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "UNAUTHORIZED"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "UNAUTHORIZED"}]}'));
 
         $loyverse->employees();
     }
@@ -205,7 +227,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(402);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "PAYMENT_REQUIRED"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "PAYMENT_REQUIRED"}]}'));
 
         $loyverse->employees();
     }
@@ -221,7 +245,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(403);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "FORBIDDEN"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "FORBIDDEN"}]}'));
 
         $loyverse->employees();
     }
@@ -237,7 +263,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(404);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "NOT_FOUND"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "NOT_FOUND"}]}'));
 
         $loyverse->employees();
     }
@@ -253,7 +281,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(415);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "UNSUPPORTED_MEDIA_TYPE"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "UNSUPPORTED_MEDIA_TYPE"}]}'));
 
         $loyverse->employees();
     }
@@ -269,7 +299,9 @@ class LoyverseSDKTest extends TestCase
         );
 
         $response->shouldReceive('getStatusCode')->andReturn(429);
-        $response->shouldReceive('getBody')->once()->andReturn('{"errors": [{"code": "RATE_LIMITED"}]}');
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"errors": [{"code": "RATE_LIMITED"}]}'));
 
         $loyverse->employees();
     }

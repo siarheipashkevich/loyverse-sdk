@@ -39,12 +39,12 @@ trait ManagesReceipts
      * @param array $data
      * @return Receipt
      */
-    public function createReceipt(array $data): Receipt
-    {
-        $item = $this->post('receipts', $data);
-
-        return new Receipt($item, $this);
-    }
+//    public function createReceipt(array $data): Receipt
+//    {
+//        $item = $this->post('receipts', $data);
+//
+//        return new Receipt($item, $this);
+//    }
 
     /**
      * Create a refund receipt.
