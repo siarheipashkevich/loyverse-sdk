@@ -34,6 +34,19 @@ trait ManagesReceipts
     }
 
     /**
+     * Create a sales receipt.
+     *
+     * @param array $data
+     * @return Receipt
+     */
+    public function createReceipt(array $data): Receipt
+    {
+        $item = $this->post('receipts', $data);
+
+        return new Receipt($item, $this);
+    }
+
+    /**
      * Create a refund receipt.
      *
      * @param string $receiptNumber
