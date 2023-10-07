@@ -13,8 +13,7 @@
     "authors": [
         {
             "name": "Sergey Pashkevich",
-            "email": "siarheipashkveich@gmail.com",
-            "role": "Developer"
+            "email": "siarheipashkveich@gmail.com"
         }
     ],
     "require": {
