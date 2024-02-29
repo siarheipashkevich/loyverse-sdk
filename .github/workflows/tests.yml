@@ -33,7 +33,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-interaction --no-progress
+        run: composer install --no-interaction --no-progress
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
