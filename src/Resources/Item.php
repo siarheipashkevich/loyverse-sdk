@@ -33,6 +33,13 @@ class Item extends Resource
     public string $itemName;
 
     /**
+     * The item description.
+     *
+     * @var string
+     */
+    public string $description;
+
+    /**
      * External reference id for the item.
      *
      * @var string|null

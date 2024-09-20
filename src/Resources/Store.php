@@ -31,6 +31,34 @@ class Store extends Resource
     public string $address;
 
     /**
+     * The city of the store.
+     *
+     * @var string
+     */
+    public string $city;
+
+    /**
+     * The state of the store.
+     *
+     * @var string
+     */
+    public string $state;
+
+    /**
+     * The postal code of the store.
+     *
+     * @var string
+     */
+    public string $postalCode;
+
+    /**
+     * The country of the store.
+     *
+     * @var string
+     */
+    public string $country;
+
+    /**
      * The phone number of the store.
      *
      * @var string

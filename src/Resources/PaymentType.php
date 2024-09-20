@@ -31,6 +31,13 @@ class PaymentType extends Resource
     public string $type;
 
     /**
+     * The list of store ids where this payment type is available.
+     *
+     * @var array
+     */
+    public array $stores;
+
+    /**
      * The time when this resource was created.
      *
      * @var string
