@@ -9,6 +9,7 @@ use Pashkevich\Loyverse\Loyverse;
  *
  * @package Pashkevich\Loyverse\Resources
  */
+#[\AllowDynamicProperties]
 class Resource
 {
     /**
@@ -31,7 +32,7 @@ class Resource
      * @param array $attributes
      * @param Loyverse|null $loyverse
      */
-    public function __construct(array $attributes, Loyverse $loyverse = null)
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         $this->attributes = $attributes;
         $this->loyverse = $loyverse;

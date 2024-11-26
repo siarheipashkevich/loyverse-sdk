@@ -54,10 +54,10 @@ class Loyverse
     /**
      * Loyverse constructor.
      *
-     * @param null $apiKey
+     * @param string|null $apiKey
      * @param Client|null $guzzle
      */
-    public function __construct($apiKey = null, Client $guzzle = null)
+    public function __construct(?string $apiKey = null, ?Client $guzzle = null)
     {
         if (!is_null($apiKey)) {
             $this->setApiKey($apiKey, $guzzle);
@@ -90,7 +90,7 @@ class Loyverse
      * @param Client|null $guzzle
      * @return $this
      */
-    public function setApiKey(string $apiKey, $guzzle = null): self
+    public function setApiKey(string $apiKey, ?Client $guzzle = null): self
     {
         $this->apiKey = $apiKey;
 
