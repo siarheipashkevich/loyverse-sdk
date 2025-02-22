@@ -15,11 +15,16 @@ trait ManagesVariants
      * Get a list of item variants.
      *
      * @param array $parameters
-     * @return Variant[]
+     * @return array{variants: Variant[], cursor: string}
      */
     public function variants(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('variants', $parameters)['variants'], Variant::class);
+        $response = $this->get('variants', $parameters);
+
+        return [
+            'variants' => $this->transformCollection($response['variants'], Variant::class),
+            'cursor' => $response['cursor'],
+        ];
     }
 
     /**

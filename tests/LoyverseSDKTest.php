@@ -31,9 +31,12 @@ class LoyverseSDKTest extends TestCase
         $response->shouldReceive('getStatusCode')->once()->andReturn(200);
         $response->shouldReceive('getBody')
             ->once()
-            ->andReturn(Utils::streamFor('{"employees": [{"key": "value"}]}'));
+            ->andReturn(Utils::streamFor('{"employees": [{"key": "value"}], "cursor": "value"}'));
 
-        $this->assertCount(1, $loyverse->employees());
+        $response = $loyverse->employees();
+
+        $this->assertCount(1, $response['employees']);
+        $this->assertIsString($response['cursor']);
     }
 
     public function test_handling_unknown_exception()

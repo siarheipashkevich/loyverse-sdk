@@ -15,11 +15,16 @@ trait ManagesItems
      * Get a list of items.
      *
      * @param array $parameters
-     * @return Item[]
+     * @return array{items: Item[], cursor: string}
      */
     public function items(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('items', $parameters)['items'], Item::class);
+        $response = $this->get('items', $parameters);
+
+        return [
+            'items' => $this->transformCollection($response['items'], Item::class),
+            'cursor' => $response['cursor'],
+        ];
     }
 
     /**
