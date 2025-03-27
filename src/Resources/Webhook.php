@@ -59,6 +59,13 @@ class Webhook extends Resource
     public string $updatedAt;
 
     /**
+     * The time when this resource was deleted.
+     *
+     * @var string|null
+     */
+    public ?string $deletedAt;
+
+    /**
      * Update the given webhook.
      *
      * @param array $data

@@ -131,9 +131,9 @@ class Receipt extends Resource
     /**
      * The employee id associated with the receipt.
      *
-     * @var string
+     * @var string|null
      */
-    public string $employeeId;
+    public ?string $employeeId;
 
     /**
      * The store id where the receipt was paid.
@@ -145,9 +145,9 @@ class Receipt extends Resource
     /**
      * The POS id where the receipt was paid.
      *
-     * @var string
+     * @var string|null
      */
-    public string $posDeviceId;
+    public ?string $posDeviceId;
 
     /**
      * The dining option selected for the receipt.

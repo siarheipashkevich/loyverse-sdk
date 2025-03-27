@@ -19,7 +19,7 @@ trait ManagesWebhooks
      */
     public function webhooks(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('webhooks', $parameters), Webhook::class);
+        return $this->transformCollection($this->get('webhooks', $parameters)['webhooks'], Webhook::class);
     }
 
     /**
