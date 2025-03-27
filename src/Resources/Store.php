@@ -26,16 +26,16 @@ class Store extends Resource
     /**
      * The email of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $address;
+    public ?string $address;
 
     /**
      * The city of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $city;
+    public ?string $city;
 
     /**
      * The state of the store.
@@ -47,9 +47,9 @@ class Store extends Resource
     /**
      * The postal code of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $postalCode;
+    public ?string $postalCode;
 
     /**
      * The country of the store.
@@ -61,16 +61,16 @@ class Store extends Resource
     /**
      * The phone number of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $phoneNumber;
+    public ?string $phoneNumber;
 
     /**
      * The description of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $description;
+    public ?string $description;
 
     /**
      * The time when this resource was created.
