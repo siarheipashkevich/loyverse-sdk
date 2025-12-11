@@ -47,7 +47,7 @@ class Discount extends Resource
     /**
      * The list of store ids where this discount is available.
      *
-     * @var array
+     * @var string[]
      */
     public array $stores;
 

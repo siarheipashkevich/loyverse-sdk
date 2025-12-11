@@ -33,7 +33,7 @@ class PaymentType extends Resource
     /**
      * The list of store ids where this payment type is available.
      *
-     * @var array
+     * @var string[]
      */
     public array $stores;
 

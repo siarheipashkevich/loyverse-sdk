@@ -35,7 +35,7 @@ class Modifier extends Resource
     /**
      * The list of store ids where this modifier is available.
      *
-     * @var array
+     * @var string[]
      */
     public array $stores;
 

@@ -40,7 +40,7 @@ class Tax extends Resource
     /**
      * The list of store ids where this tax is available.
      *
-     * @var array
+     * @var string[]
      */
     public array $stores;
 

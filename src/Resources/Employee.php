@@ -40,7 +40,7 @@ class Employee extends Resource
     /**
      * The list of store ids where this employee has access.
      *
-     * @var array
+     * @var string[]
      */
     public array $stores;
 
