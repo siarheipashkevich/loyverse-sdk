@@ -23,7 +23,7 @@ trait ManagesItems
 
         return [
             'items' => $this->transformCollection($response['items'], Item::class),
-            'cursor' => $response['cursor'],
+            'cursor' => $response['cursor'] ?? null,
         ];
     }
 

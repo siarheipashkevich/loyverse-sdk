@@ -97,57 +97,57 @@ trait MakesHttpRequests
      */
     protected function handleRequestError(ResponseInterface $response)
     {
-        $errors = json_decode((string)$response->getBody(), true)['errors'] ?? [];
-
+        $body = (string)$response->getBody();
+        $errors = json_decode($body, true)['errors'] ?? [];
         $error = $errors[0] ?? [];
-
         $code = $error['code'] ?? null;
+        $message = $error['message'] ?? 'A parameter\'s value is incorrect.';
 
         switch ($code) {
             case 'INTERNAL_SERVER_ERROR':
-                throw new Exceptions\InternalServerException();
+                throw new Exceptions\InternalServerException($message);
 
             case 'BAD_REQUEST':
-                throw new Exceptions\BadRequestException();
+                throw new Exceptions\BadRequestException($message);
 
             case 'INCORRECT_VALUE_TYPE':
-                throw new Exceptions\IncorrectValueTypeException();
+                throw new Exceptions\IncorrectValueTypeException($message);
 
             case 'MISSING_REQUIRED_PARAMETER':
-                throw new Exceptions\MissingRequiredParameterException();
+                throw new Exceptions\MissingRequiredParameterException($message);
 
             case 'INVALID_VALUE':
-                throw new Exceptions\InvalidValueException();
+                throw new Exceptions\InvalidValueException($message);
 
             case 'INVALID_RANGE':
-                throw new Exceptions\InvalidRangeException();
+                throw new Exceptions\InvalidRangeException($message);
 
             case 'INVALID_CURSOR':
-                throw new Exceptions\InvalidCursorException();
+                throw new Exceptions\InvalidCursorException($message);
 
             case 'CONFLICTING_PARAMETERS':
-                throw new Exceptions\ConflictingParametersException();
+                throw new Exceptions\ConflictingParametersException($message);
 
             case 'UNAUTHORIZED':
-                throw new Exceptions\UnauthorizedException();
+                throw new Exceptions\UnauthorizedException($message);
 
             case 'PAYMENT_REQUIRED':
-                throw new Exceptions\PaymentRequiredException();
+                throw new Exceptions\PaymentRequiredException($message);
 
             case 'FORBIDDEN':
-                throw new Exceptions\ForbiddenException();
+                throw new Exceptions\ForbiddenException($message);
 
             case 'NOT_FOUND':
-                throw new Exceptions\NotFoundException();
+                throw new Exceptions\NotFoundException($message);
 
             case 'UNSUPPORTED_MEDIA_TYPE':
-                throw new Exceptions\UnsupportedMediaTypeException();
+                throw new Exceptions\UnsupportedMediaTypeException($message);
 
             case 'RATE_LIMITED':
-                throw new Exceptions\RateLimitedException();
+                throw new Exceptions\RateLimitedException($message);
 
             default:
-                throw new Exceptions\UnknownException();
+                throw new Exceptions\UnknownException($message);
         }
     }
 

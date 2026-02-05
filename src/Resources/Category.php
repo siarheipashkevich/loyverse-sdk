@@ -12,30 +12,30 @@ class Category extends Resource
     /**
      * The category id.
      *
-     * @var string
+     * @var string|null
      */
-    public string $id;
+    public ?string $id;
 
     /**
      * The category name.
      *
-     * @var string
+     * @var string|null
      */
-    public string $name;
+    public ?string $name;
 
     /**
      * The category color.
      *
-     * @var string
+     * @var string|null
      */
-    public string $color;
+    public ?string $color;
 
     /**
      * The time when this resource was created.
      *
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public ?string $createdAt;
 
     /**
      * The time when this resource was deleted.

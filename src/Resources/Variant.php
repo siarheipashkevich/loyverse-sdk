@@ -14,23 +14,23 @@ class Variant extends Resource
     /**
      * The read only internal id of the variant.
      *
-     * @var string
+     * @var string|null
      */
-    public string $variantId;
+    public ?string $variantId;
 
     /**
      * The item id this variant is attached to.
      *
-     * @var string
+     * @var string|null
      */
-    public string $itemId;
+    public ?string $itemId;
 
     /**
      * The variant sku.
      *
-     * @var string
+     * @var string|null
      */
-    public string $sku;
+    public ?string $sku;
 
     /**
      * External reference id for the variant.
@@ -70,9 +70,9 @@ class Variant extends Resource
     /**
      * The variant cost.
      *
-     * @var float
+     * @var float|null
      */
-    public float $cost;
+    public ?float $cost;
 
     /**
      * The variant purchase cost.
@@ -84,9 +84,9 @@ class Variant extends Resource
     /**
      * The default variant pricing type.
      *
-     * @var string
+     * @var string|null
      */
-    public string $defaultPricingType;
+    public ?string $defaultPricingType;
 
     /**
      * The default variant price (only for pricing_type: FIXED).
@@ -98,23 +98,23 @@ class Variant extends Resource
     /**
      * The list of values that are unique for each store.
      *
-     * @var array
+     * @var array|null
      */
-    public array $stores;
+    public ?array $stores;
 
     /**
      * The time when this resource was created.
      *
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public ?string $createdAt;
 
     /**
      * The time when this resource was updated.
      *
-     * @var string
+     * @var string|null
      */
-    public string $updatedAt;
+    public ?string $updatedAt;
 
     /**
      * The time when this resource was deleted.

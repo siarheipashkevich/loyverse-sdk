@@ -12,16 +12,16 @@ class Customer extends Resource
     /**
      * The customer id.
      *
-     * @var string
+     * @var string|null
      */
-    public string $id;
+    public ?string $id;
 
     /**
      * The customer's name.
      *
-     * @var string
+     * @var string|null
      */
-    public string $name;
+    public ?string $name;
 
     /**
      * The customer's email.
@@ -103,37 +103,37 @@ class Customer extends Resource
     /**
      * The total number of visits.
      *
-     * @var int
+     * @var int|null
      */
-    public int $totalVisits;
+    public ?int $totalVisits;
 
     /**
      * The total money amount that customer had spent.
      *
-     * @var float
+     * @var float|null
      */
-    public float $totalSpent;
+    public ?float $totalSpent;
 
     /**
      * Actual customer points balance.
      *
-     * @var float
+     * @var float|null
      */
-    public float $totalPoints;
+    public ?float $totalPoints;
 
     /**
      * The time when this resource was created.
      *
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public ?string $createdAt;
 
     /**
      * The time when this resource was updated.
      *
-     * @var string
+     * @var string|null
      */
-    public string $updatedAt;
+    public ?string $updatedAt;
 
     /**
      * The time when this resource was deleted.

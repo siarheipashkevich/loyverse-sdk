@@ -12,16 +12,16 @@ class Store extends Resource
     /**
      * The id of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $id;
+    public ?string $id;
 
     /**
      * The name of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $name;
+    public ?string $name;
 
     /**
      * The email of the store.
@@ -40,9 +40,9 @@ class Store extends Resource
     /**
      * The state of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $state;
+    public ?string $state;
 
     /**
      * The postal code of the store.
@@ -54,9 +54,9 @@ class Store extends Resource
     /**
      * The country of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $country;
+    public ?string $country;
 
     /**
      * The phone number of the store.
@@ -75,16 +75,16 @@ class Store extends Resource
     /**
      * The time when this resource was created.
      *
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public ?string $createdAt;
 
     /**
      * The time when this resource was updated.
      *
-     * @var string
+     * @var string|null
      */
-    public string $updatedAt;
+    public ?string $updatedAt;
 
     /**
      * The time when this resource was deleted.

@@ -14,30 +14,30 @@ class Item extends Resource
     /**
      * The read only internal id of the item.
      *
-     * @var string
+     * @var string|null
      */
-    public string $id;
+    public ?string $id;
 
     /**
      * The handle of the item.
      *
-     * @var string
+     * @var string|null
      */
-    public string $handle;
+    public ?string $handle;
 
     /**
      * The item name.
      *
-     * @var string
+     * @var string|null
      */
-    public string $itemName;
+    public ?string $itemName;
 
     /**
      * The item description.
      *
-     * @var string
+     * @var string|null
      */
-    public string $description;
+    public ?string $description;
 
     /**
      * External reference id for the item.
@@ -56,37 +56,37 @@ class Item extends Resource
     /**
      * If true, the system tracks inventory for this item at all stores.
      *
-     * @var bool
+     * @var bool|null
      */
-    public bool $trackStock;
+    public ?bool $trackStock;
 
     /**
      * If true, a fractional quantity for this item can be specified at the time of a sale (for example 1.5).
      *
-     * @var bool
+     * @var bool|null
      */
-    public bool $soldByWeight;
+    public ?bool $soldByWeight;
 
     /**
      * If true, the item contains a specified quantity of other items.
      *
-     * @var bool
+     * @var bool|null
      */
-    public bool $isComposite;
+    public ?bool $isComposite;
 
     /**
      * If true, the system tracks stock not only for its components but also for this item.
      *
-     * @var bool
+     * @var bool|null
      */
-    public bool $useProduction;
+    public ?bool $useProduction;
 
     /**
      * The list of components for the item.
      *
-     * @var array
+     * @var array|null
      */
-    public array $components;
+    public ?array $components;
 
     /**
      * The primary supplier id.
@@ -98,30 +98,30 @@ class Item extends Resource
     /**
      * The list of tax ids applied to this item.
      *
-     * @var array
+     * @var array|null
      */
-    public array $taxIds;
+    public ?array $taxIds;
 
     /**
      * The list of modifiers ids applied to this item.
      *
-     * @var array
+     * @var array|null
      */
-    public array $modifiersIds;
+    public ?array $modifiersIds;
 
     /**
      * The visual form of the item that is displayed on the POS.
      *
-     * @var string
+     * @var string|null
      */
-    public string $form;
+    public ?string $form;
 
     /**
      * One of the predefined colors for the item that is displayed on the POS.
      *
-     * @var string
+     * @var string|null
      */
-    public string $color;
+    public ?string $color;
 
     /**
      * The image url.
@@ -154,16 +154,16 @@ class Item extends Resource
     /**
      * The time when this resource was created.
      *
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public ?string $createdAt;
 
     /**
      * The time when this resource was updated.
      *
-     * @var string
+     * @var string|null
      */
-    public string $updatedAt;
+    public ?string $updatedAt;
 
     /**
      * The time when this resource was deleted.
