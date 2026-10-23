@@ -774,7 +774,7 @@ class LoyverseSDKTest extends TestCase
                 $attempts++;
 
                 if ($attempts === 1) {
-                    throw (new Exceptions\RateLimitedException)
+                    throw (new Exceptions\RateLimitedException())
                         ->setContext(429, [], 'RATE_LIMITED', '2');
                 }
 
@@ -800,12 +800,13 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse->retryOnRateLimit(
             function () {
-                throw (new Exceptions\RateLimitedException)
+                throw (new Exceptions\RateLimitedException())
                     ->setContext(429, [], 'RATE_LIMITED', '1');
             },
             2,
             1,
-            function () {}
+            function () {
+            }
         );
     }
 }
