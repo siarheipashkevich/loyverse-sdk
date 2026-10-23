@@ -2,6 +2,28 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.2.0 - 2026-10-23
+
+### Added
+
+- Configurable base URI, headers and connection timeout.
+- `User-Agent` header with the SDK and PHP versions.
+- `TokenStore` and `ArrayTokenStore` for OAuth tokens.
+- Automatic OAuth token refresh before requests and after `401` responses.
+- `Loyverse::fake()` for testing integrations without HTTP calls.
+- Enums for webhook events, receipt types, tax types, discount types, payment types,
+  item forms, item colors and cash movement types.
+- Transport exceptions: `ConnectionException`, `HttpTimeoutException`, `TlsException`.
+- `LoyverseException` as the common SDK exception base.
+- OpenAPI snapshot and contract test.
+- Scheduled workflow that detects changes in the Loyverse OpenAPI specification.
+- `SECURITY.md`, issue templates, pull request template and Dependabot configuration.
+
+### Changed
+
+- `composer.json` now exposes issue and source links in the `support` section.
+- CI runs `composer audit` in addition to tests, PHPStan and Pint.
+
 ## 4.1.1 - 2026-10-23
 
 ### Changed

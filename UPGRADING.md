@@ -1,5 +1,16 @@
 # Upgrading
 
+## From 4.1 to 4.2
+
+No breaking changes. New features:
+
+- `setBaseUri()`, `setHeader()`, `setHeaders()`, `setConnectTimeout()`.
+- `withOAuth()`, `setAccessToken()`, `getAccessToken()`, `refreshAccessToken()`.
+- `Pashkevich\Loyverse\Auth\TokenStore` and `ArrayTokenStore`.
+- `Loyverse::fake()` for tests.
+- Enums in `Pashkevich\Loyverse\Enums`.
+- Transport exceptions: `ConnectionException`, `HttpTimeoutException`, `TlsException`.
+
 ## From 3.x to 4.0
 
 ### Requirements

@@ -6,6 +6,10 @@ namespace Pashkevich\Loyverse;
 
 use Generator;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use Pashkevich\Loyverse\Auth\ArrayTokenStore;
+use Pashkevich\Loyverse\Auth\TokenStore;
 use Pashkevich\Loyverse\Resources\Resource;
 
 class Loyverse
@@ -29,6 +33,10 @@ class Loyverse
     use Actions\ManagesWebhooks;
     use MakesHttpRequests;
 
+    public const string VERSION = '4.2.0';
+
+    public const string DEFAULT_BASE_URI = 'https://api.loyverse.com/v1.0/';
+
     /**
      * The Loyverse API Key.
      */
@@ -45,6 +53,43 @@ class Loyverse
     public int $timeout = 30;
 
     /**
+     * The connection timeout in seconds.
+     */
+    public ?float $connectTimeout = null;
+
+    /**
+     * The optional custom base URI.
+     */
+    protected ?string $baseUri = null;
+
+    /**
+     * The default request headers.
+     *
+     * @var array<string, string>
+     */
+    protected array $headers = [];
+
+    /**
+     * The OAuth client.
+     */
+    protected ?OAuth $oauth = null;
+
+    /**
+     * The OAuth client id.
+     */
+    protected ?string $oauthClientId = null;
+
+    /**
+     * The OAuth client secret.
+     */
+    protected ?string $oauthClientSecret = null;
+
+    /**
+     * The OAuth token store.
+     */
+    protected ?TokenStore $tokenStore = null;
+
+    /**
      * Loyverse constructor.
      */
     public function __construct(?string $apiKey = null, ?Client $guzzle = null)
@@ -56,6 +101,214 @@ class Loyverse
         if (! is_null($guzzle)) {
             $this->guzzle = $guzzle;
         }
+    }
+
+    /**
+     * Create a client with mocked responses.
+     *
+     * @param array<int, mixed> $responses
+     */
+    public static function fake(array $responses = [], ?string $apiKey = null): self
+    {
+        $client = new Client([
+            'base_uri' => self::DEFAULT_BASE_URI,
+            'http_errors' => false,
+            'handler' => HandlerStack::create(new MockHandler($responses)),
+        ]);
+
+        return new self($apiKey, $client);
+    }
+
+    /**
+     * Set a custom base URI.
+     */
+    public function setBaseUri(string $baseUri): static
+    {
+        if (trim($baseUri) === '') {
+            throw new \InvalidArgumentException('The base URI cannot be empty.');
+        }
+
+        $this->baseUri = rtrim($baseUri, '/').'/';
+
+        return $this;
+    }
+
+    /**
+     * Get the custom base URI.
+     */
+    public function getBaseUri(): ?string
+    {
+        return $this->baseUri;
+    }
+
+    /**
+     * Set a default request header.
+     */
+    public function setHeader(string $name, string $value): static
+    {
+        $this->headers[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set multiple default request headers.
+     *
+     * @param array<string, string> $headers
+     */
+    public function setHeaders(array $headers): static
+    {
+        $this->headers = array_merge($this->headers, $headers);
+
+        return $this;
+    }
+
+    /**
+     * Get the default request headers.
+     *
+     * @return array<string, string>
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Set the connection timeout in seconds.
+     */
+    public function setConnectTimeout(float $seconds): static
+    {
+        $this->connectTimeout = $seconds;
+
+        return $this;
+    }
+
+    /**
+     * Configure OAuth authentication.
+     */
+    public function withOAuth(
+        OAuth $oauth,
+        string $clientId,
+        #[\SensitiveParameter] string $clientSecret,
+        ?TokenStore $tokenStore = null
+    ): static {
+        $this->oauth = $oauth;
+        $this->oauthClientId = $clientId;
+        $this->oauthClientSecret = $clientSecret;
+
+        if ($tokenStore !== null) {
+            $this->tokenStore = $tokenStore;
+        } elseif ($this->tokenStore === null) {
+            $this->tokenStore = new ArrayTokenStore();
+        }
+
+        if (! isset($this->guzzle)) {
+            $this->guzzle = $this->createClient();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the current access token.
+     */
+    public function setAccessToken(AccessToken $token): static
+    {
+        if ($this->tokenStore === null) {
+            $this->tokenStore = new ArrayTokenStore();
+        }
+
+        $this->tokenStore->set($token);
+
+        return $this;
+    }
+
+    /**
+     * Get the current access token.
+     */
+    public function getAccessToken(): ?AccessToken
+    {
+        return $this->tokenStore?->get();
+    }
+
+    /**
+     * Refresh the current access token.
+     */
+    public function refreshAccessToken(): bool
+    {
+        if (
+            $this->oauth === null
+            || $this->oauthClientId === null
+            || $this->oauthClientSecret === null
+            || $this->tokenStore === null
+        ) {
+            return false;
+        }
+
+        $token = $this->tokenStore->get();
+
+        if ($token === null || $token->refreshToken === null) {
+            return false;
+        }
+
+        $newToken = $this->oauth->refreshToken(
+            $this->oauthClientId,
+            $this->oauthClientSecret,
+            $token->refreshToken
+        );
+
+        $this->tokenStore->set($newToken);
+
+        return true;
+    }
+
+    /**
+     * Apply the current access token to the request options.
+     *
+     * @param array<string, mixed> $options
+     */
+    protected function applyOAuth(array &$options): void
+    {
+        $token = $this->getAccessToken();
+
+        if ($token === null) {
+            return;
+        }
+
+        if ($token->isExpired(60) && $this->refreshAccessToken()) {
+            $token = $this->getAccessToken();
+        }
+
+        if ($token === null) {
+            return;
+        }
+
+        $options['headers'] = array_merge(
+            $options['headers'] ?? [],
+            ['Authorization' => 'Bearer '.$token->accessToken]
+        );
+    }
+
+    /**
+     * Create a new Guzzle client.
+     */
+    protected function createClient(?string $apiKey = null): Client
+    {
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'loyverse-sdk/'.self::VERSION.' (PHP '.PHP_VERSION.')',
+        ];
+
+        if ($apiKey !== null) {
+            $headers['Authorization'] = 'Bearer '.$apiKey;
+        }
+
+        return new Client([
+            'base_uri' => self::DEFAULT_BASE_URI,
+            'http_errors' => false,
+            'headers' => $headers,
+        ]);
     }
 
     /**
@@ -223,15 +476,7 @@ class Loyverse
     {
         $this->apiKey = $apiKey;
 
-        $this->guzzle = $guzzle ?: new Client([
-            'base_uri' => 'https://api.loyverse.com/v1.0/',
-            'http_errors' => false,
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->apiKey,
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        $this->guzzle = $guzzle ?: $this->createClient($this->apiKey);
 
         return $this;
     }

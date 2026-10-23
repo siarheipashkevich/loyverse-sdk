@@ -10,6 +10,10 @@
     "homepage": "https://github.com/siarheipashkevich/loyverse-sdk",
     "license": "MIT",
     "type": "library",
+    "support": {
+        "issues": "https://github.com/siarheipashkevich/loyverse-sdk/issues",
+        "source": "https://github.com/siarheipashkevich/loyverse-sdk"
+    },
     "authors": [
         {
             "name": "Sergey Pashkevich",

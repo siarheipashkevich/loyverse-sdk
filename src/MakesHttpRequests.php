@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse;
 
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ResponseException;
 use Psr\Http\Message\ResponseInterface;
 
 trait MakesHttpRequests
@@ -84,15 +87,41 @@ trait MakesHttpRequests
      *
      * @param array<string, mixed> $options
      */
-    protected function request(string $verb, string $uri, array $options = []): mixed
+    protected function request(string $verb, string $uri, array $options = [], bool $retryOAuth = true): mixed
     {
+        if ($this->baseUri !== null && ! preg_match('#^https?://#i', $uri)) {
+            $uri = $this->baseUri.ltrim($uri, '/');
+        }
+
         if (! array_key_exists('timeout', $options)) {
             $options['timeout'] = $this->timeout;
         }
 
-        $response = $this->guzzle->request($verb, $uri, $options);
+        if ($this->connectTimeout !== null && ! array_key_exists('connect_timeout', $options)) {
+            $options['connect_timeout'] = $this->connectTimeout;
+        }
+
+        if ($this->headers !== []) {
+            $options['headers'] = array_merge($this->headers, $options['headers'] ?? []);
+        }
+
+        $this->applyOAuth($options);
+
+        try {
+            $response = $this->guzzle->request($verb, $uri, $options);
+        } catch (ResponseException $exception) {
+            $response = $exception->getResponse();
+        } catch (ConnectException $exception) {
+            throw $this->transportException($exception);
+        } catch (GuzzleException $exception) {
+            throw new Exceptions\ConnectionException($exception->getMessage(), $exception);
+        }
 
         $status = $response->getStatusCode();
+
+        if ($status === 401 && $retryOAuth && $this->refreshAccessToken()) {
+            return $this->request($verb, $uri, $options, false);
+        }
 
         if ($status < 200 || $status >= 300) {
             $this->handleRequestError($response);
@@ -103,6 +132,28 @@ trait MakesHttpRequests
         $decoded = json_decode($responseBody, true);
 
         return json_last_error() === JSON_ERROR_NONE ? $decoded : $responseBody;
+    }
+
+    /**
+     * Convert a Guzzle connection exception into an SDK transport exception.
+     */
+    protected function transportException(ConnectException $exception): Exceptions\TransportException
+    {
+        $message = $exception->getMessage();
+
+        if (
+            stripos($message, 'timed out') !== false
+            || stripos($message, 'timeout') !== false
+            || stripos($message, 'cURL error 28') !== false
+        ) {
+            return new Exceptions\HttpTimeoutException($message, $exception);
+        }
+
+        if (preg_match('/(SSL|certificate|TLS|cURL error (35|51|58|59|60|77|83|90|91))/i', $message) === 1) {
+            return new Exceptions\TlsException($message, $exception);
+        }
+
+        return new Exceptions\ConnectionException($message, $exception);
     }
 
     /**

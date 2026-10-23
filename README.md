@@ -11,8 +11,10 @@ create an API token through [Loyverse](https://loyverse.com) itself.
 - [Documentation](#documentation)
     - [Installation](#installation)
     - [Basic Usage](#basic-usage)
+    - [Configuration](#configuration)
     - [OAuth](#oauth)
     - [Pagination](#pagination)
+    - [Enums](#enums)
     - [Handling Errors](#handling-errors)
     - [Retries](#retries)
     - [Webhook Signatures](#webhook-signatures)
@@ -33,6 +35,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Taxes](#managing-taxes)
     - [Managing Variants](#managing-variants)
     - [Managing Webhooks](#managing-webhooks)
+    - [Fake Client](#fake-client)
 - [Upgrading from 2.x](UPGRADING.md)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -48,7 +51,7 @@ PHP **8.4** or newer and Guzzle **8** are required. To install the SDK in your p
 require the package via composer:
 
 ```bash
-composer require pashkevich/loyverse-sdk:^4.0
+composer require pashkevich/loyverse-sdk:^4.2
 ```
 
 ### Basic Usage
@@ -107,6 +110,21 @@ You can also set the desired timeout value. The timeout is applied to every HTTP
 $loyverse->setTimeout(120)->createCategory(array $data);
 ```
 
+### Configuration
+
+The client can be configured for tests, proxies or custom gateways:
+
+``` php
+$loyverse
+    ->setBaseUri('https://api.loyverse.com/v1.0')
+    ->setConnectTimeout(5)
+    ->setTimeout(30)
+    ->setHeader('X-Request-Id', 'request-id');
+```
+
+The SDK sends a `User-Agent` header with its version and the current PHP version. You can
+override it with `setHeader('User-Agent', '...')`.
+
 ### OAuth
 
 The SDK supports both personal access tokens and OAuth 2.0. Create an `OAuth` instance and
@@ -143,6 +161,20 @@ if ($token->isExpired(60) && $token->refreshToken !== null) {
 }
 ```
 
+For automatic refresh, configure a token store:
+
+``` php
+use Pashkevich\Loyverse\Auth\ArrayTokenStore;
+
+$store = new ArrayTokenStore();
+$store->set($token);
+
+$loyverse = (new Loyverse())->withOAuth($oauth, CLIENT_ID, CLIENT_SECRET, $store);
+```
+
+The client refreshes expired tokens before a request and retries once after a `401`
+response. You can implement `TokenStore` to persist tokens in your application.
+
 `AccessToken` exposes `accessToken`, `tokenType`, `expiresIn`, `refreshToken`, `scope`,
 `idToken`, `isExpired()`, `getScopes()` and `getIdTokenClaims()`. ID token claims are decoded
 without signature verification.
@@ -171,6 +203,23 @@ foreach ($loyverse->paginate(function (array $parameters) use ($loyverse) {
 `paginate()` automatically passes the cursor returned by the previous page and stops when
 the cursor is empty. It also stops if the API returns the same cursor twice.
 
+### Enums
+
+Common API values are available as enums:
+
+``` php
+use Pashkevich\Loyverse\Enums\{DiscountType, ItemColor, ReceiptType, TaxType, WebhookEvent};
+
+ReceiptType::SALE->value;
+TaxType::INCLUDED->value;
+DiscountType::FIXED_PERCENT->value;
+ItemColor::GREEN->value;
+WebhookEvent::ITEMS_UPDATE->value;
+```
+
+Each enum also provides `values()`. `Scope` lives in the root namespace for backwards
+compatibility.
+
 ### Handling Errors
 
 All API errors are represented by exceptions that extend
@@ -190,6 +239,24 @@ try {
     $exception->getErrors();     // the full list of errors
 }
 ```
+
+Transport errors are wrapped as well:
+
+``` php
+use Pashkevich\Loyverse\Exceptions\{ConnectionException, HttpTimeoutException, TlsException};
+
+try {
+    $loyverse->items();
+} catch (HttpTimeoutException $exception) {
+    // request timed out
+} catch (TlsException $exception) {
+    // TLS/certificate problem
+} catch (ConnectionException $exception) {
+    // DNS, connection refused, etc.
+}
+```
+
+All SDK exceptions extend `Pashkevich\Loyverse\Exceptions\LoyverseException`.
 
 For rate limited requests you can also read the delay before retrying:
 
@@ -494,19 +561,47 @@ $webhook->update(array $data);
 $webhook->delete();
 ```
 
+### Fake Client
+
+Use `Loyverse::fake()` to test code that depends on the SDK without real HTTP calls:
+
+``` php
+use GuzzleHttp\Psr7\Response;
+use Pashkevich\Loyverse\Loyverse;
+
+$loyverse = Loyverse::fake([
+    new Response(200, [], json_encode([
+        'categories' => [],
+        'cursor' => null,
+    ])),
+]);
+
+$page = $loyverse->categories();
+```
+
+Queued responses are consumed in order. You can also enqueue exceptions to test error
+handling.
+
 ### Testing
 
 ``` bash
 composer test
 composer analyse
 composer format-test
+composer audit
 ```
+
+The suite includes a contract test that checks all endpoints from the committed Loyverse
+OpenAPI snapshot. A scheduled GitHub Actions workflow compares that snapshot with the live
+specification and fails when the API changes.
 
 ### Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
+
+Please see [SECURITY.md](SECURITY.md) for supported versions and reporting instructions.
 
 If you discover any security related issues, please email siarheipashkevich@gmail.com instead of using the issue
 tracker.

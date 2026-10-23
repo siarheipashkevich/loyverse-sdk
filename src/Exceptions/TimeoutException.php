@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
-class TimeoutException extends Exception
+class TimeoutException extends LoyverseException
 {
     /**
      * The output returned from the operation.

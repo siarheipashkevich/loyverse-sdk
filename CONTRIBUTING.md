@@ -44,6 +44,8 @@ If the project maintainer has any additional requirements, you will find them li
 
 - **Static analysis** - Run `composer analyse` before submitting. The project uses PHPStan.
 
+- **Dependency audit** - Run `composer audit` before submitting.
+
 - **Add tests!** - Your patch won't be accepted if it doesn't have tests. Run `composer test` to execute the suite.
 
 - **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.

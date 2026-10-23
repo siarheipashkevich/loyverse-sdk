@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
 use Throwable;
 
-class ApiException extends Exception
+class ApiException extends LoyverseException
 {
     /**
      * The HTTP status code of the response.
