@@ -51,7 +51,7 @@ PHP **8.4** or newer and Guzzle **8** are required. To install the SDK in your p
 require the package via composer:
 
 ```bash
-composer require pashkevich/loyverse-sdk:^4.2
+composer require pashkevich/loyverse-sdk:^4.3
 ```
 
 ### Basic Usage
