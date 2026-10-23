@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse;
 
-/**
- * Class AccessToken
- */
 final class AccessToken
 {
     /**

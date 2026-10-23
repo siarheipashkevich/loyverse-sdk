@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-/**
- * Class UnknownException
- */
 class UnknownException extends ApiException
 {
     /**

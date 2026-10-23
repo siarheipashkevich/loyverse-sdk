@@ -6,9 +6,6 @@ namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Tax;
 
-/**
- * Trait ManagesTaxes
- */
 trait ManagesTaxes
 {
     /**

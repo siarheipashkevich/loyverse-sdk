@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-/**
- * Class NotFoundException
- */
 class NotFoundException extends ApiException
 {
     /**

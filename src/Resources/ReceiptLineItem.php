@@ -6,9 +6,6 @@ namespace Pashkevich\Loyverse\Resources;
 
 use Pashkevich\Loyverse\Loyverse;
 
-/**
- * Class ReceiptLineItem
- */
 class ReceiptLineItem extends Resource
 {
     /**
