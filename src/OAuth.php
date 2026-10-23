@@ -1,33 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ResponseException;
 use Pashkevich\Loyverse\Exceptions\ApiException;
 
 /**
  * Class OAuth
- *
- * @package Pashkevich\Loyverse
  */
 class OAuth
 {
     public const AUTHORIZE_URL = 'https://api.loyverse.com/oauth/authorize';
+
     public const TOKEN_URL = 'https://api.loyverse.com/oauth/token';
 
     /**
      * The Guzzle HTTP Client instance.
-     *
-     * @var Client
      */
-    protected Client $guzzle;
+    protected readonly Client $guzzle;
 
     /**
      * OAuth constructor.
-     *
-     * @param Client|null $guzzle
      */
     public function __construct(?Client $guzzle = null)
     {
@@ -38,8 +35,6 @@ class OAuth
 
     /**
      * Generate a random state value for the authorization request.
-     *
-     * @return string
      */
     public static function generateState(): string
     {
@@ -49,11 +44,7 @@ class OAuth
     /**
      * Build the URL the merchant should be redirected to.
      *
-     * @param string $clientId
-     * @param string $redirectUri
-     * @param string $state
-     * @param array $scopes
-     * @return string
+     * @param  array<Scope|string>  $scopes
      */
     public function authorizationUrl(
         string $clientId,
@@ -68,26 +59,25 @@ class OAuth
             'state' => $state,
         ];
 
-        if (!empty($scopes)) {
-            $query['scope'] = implode(' ', $scopes);
+        if (! empty($scopes)) {
+            $values = array_map(
+                static fn (Scope|string $scope): string => $scope instanceof Scope ? $scope->value : $scope,
+                $scopes
+            );
+
+            $query['scope'] = implode(' ', $values);
         }
 
-        return self::AUTHORIZE_URL . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+        return self::AUTHORIZE_URL.'?'.http_build_query($query, '', '&', PHP_QUERY_RFC3986);
     }
 
     /**
      * Exchange an authorization code for an access token.
-     *
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param string $code
-     * @param string $redirectUri
-     * @return AccessToken
      */
     public function exchangeCode(
         string $clientId,
-        string $clientSecret,
-        string $code,
+        #[\SensitiveParameter] string $clientSecret,
+        #[\SensitiveParameter] string $code,
         string $redirectUri
     ): AccessToken {
         return $this->requestToken([
@@ -101,16 +91,11 @@ class OAuth
 
     /**
      * Refresh an access token.
-     *
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param string $refreshToken
-     * @return AccessToken
      */
     public function refreshToken(
         string $clientId,
-        string $clientSecret,
-        string $refreshToken
+        #[\SensitiveParameter] string $clientSecret,
+        #[\SensitiveParameter] string $refreshToken
     ): AccessToken {
         return $this->requestToken([
             'client_id' => $clientId,
@@ -123,28 +108,23 @@ class OAuth
     /**
      * Request a new token from the OAuth server.
      *
-     * @param array $payload
-     * @return AccessToken
+     * @param  array<string, mixed>  $payload
      */
-    public function requestToken(array $payload): AccessToken
+    public function requestToken(#[\SensitiveParameter] array $payload): AccessToken
     {
         try {
             $response = $this->guzzle->request('POST', self::TOKEN_URL, [
                 'form_params' => $payload,
             ]);
-        } catch (RequestException $exception) {
+        } catch (ResponseException $exception) {
             $response = $exception->getResponse();
-
-            if ($response === null) {
-                throw new ApiException($exception->getMessage(), 0, $exception);
-            }
         } catch (GuzzleException $exception) {
             throw new ApiException($exception->getMessage(), 0, $exception);
         }
 
         $status = $response->getStatusCode();
 
-        $body = (string)$response->getBody();
+        $body = (string) $response->getBody();
 
         $data = json_decode($body, true);
 
@@ -153,15 +133,27 @@ class OAuth
 
             $message = $error['error_description'] ?? $error['error'] ?? 'OAuth token request failed.';
 
-            $code = isset($error['error']) ? (string)$error['error'] : null;
+            if (! is_string($message)) {
+                $message = 'OAuth token request failed.';
+            }
 
-            throw (new ApiException((string)$message))->setContext($status, [], $code);
+            $code = isset($error['error']) && is_scalar($error['error']) ? (string) $error['error'] : null;
+
+            throw (new ApiException($message))->setContext($status, [], $code);
         }
 
-        if (!is_array($data) || !isset($data['access_token'])) {
+        if (! is_array($data) || ! isset($data['access_token'])) {
             throw new ApiException('Invalid OAuth token response.');
         }
 
-        return new AccessToken($data);
+        $attributes = [];
+
+        foreach ($data as $key => $value) {
+            if (is_string($key)) {
+                $attributes[$key] = $value;
+            }
+        }
+
+        return AccessToken::fromArray($attributes);
     }
 }

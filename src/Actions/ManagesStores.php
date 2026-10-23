@@ -1,35 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Store;
 
 /**
  * Trait ManagesStores
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesStores
 {
     /**
      * Get a list of stores.
      *
-     * @param array $parameters
-     * @return array{stores: Store[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function stores(array $parameters = []): array
     {
-        return $this->transformPage($this->get('stores', $parameters), 'stores', Store::class);
+        return $this->getPage('stores', $parameters, 'stores', Store::class);
     }
 
     /**
      * Get a single store.
-     *
-     * @param string $storeId
-     * @return Store
      */
     public function store(string $storeId): Store
     {
-        return new Store($this->get("stores/$storeId"), $this);
+        return $this->getResource("stores/$storeId", Store::class);
     }
 }

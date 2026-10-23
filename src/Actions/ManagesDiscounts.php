@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Discount;
 
 /**
  * Trait ManagesDiscounts
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesDiscounts
 {
     /**
      * Get a list of discounts.
      *
-     * @param array $parameters
-     * @return array{discounts: Discount[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function discounts(array $parameters = []): array
     {
-        return $this->transformPage($this->get('discounts', $parameters), 'discounts', Discount::class);
+        return $this->getPage('discounts', $parameters, 'discounts', Discount::class);
     }
 
     /**
      * Get a single discount.
-     *
-     * @param string $discountId
-     * @return Discount
      */
     public function discount(string $discountId): Discount
     {
-        return new Discount($this->get("discounts/$discountId"), $this);
+        return $this->getResource("discounts/$discountId", Discount::class);
     }
 
     /**
      * Create or update a single discount.
      *
-     * @param array $data
-     * @return Discount
+     * @param  array<string, mixed>  $data
      */
     public function createDiscount(array $data): Discount
     {
-        $item = $this->post('discounts', $data);
-
-        return new Discount($item, $this);
+        return $this->resource($this->post('discounts', $data), Discount::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $discountId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteDiscount(string $discountId): array
     {
-        return $this->delete("discounts/$discountId");
+        return $this->deleteResource("discounts/$discountId");
     }
 }

@@ -1,88 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse;
 
 /**
  * Class AccessToken
- *
- * @package Pashkevich\Loyverse
  */
-class AccessToken
+final class AccessToken
 {
     /**
-     * The access token.
-     *
-     * @var string
-     */
-    public string $accessToken;
-
-    /**
-     * The token type.
-     *
-     * @var string
-     */
-    public string $tokenType;
-
-    /**
-     * The number of seconds until the access token expires.
-     *
-     * @var int
-     */
-    public int $expiresIn;
-
-    /**
-     * The refresh token.
-     *
-     * @var string|null
-     */
-    public ?string $refreshToken;
-
-    /**
-     * The space-separated list of granted scopes.
-     *
-     * @var string|null
-     */
-    public ?string $scope;
-
-    /**
-     * The OpenID Connect ID token.
-     *
-     * @var string|null
-     */
-    public ?string $idToken;
-
-    /**
-     * The Unix timestamp when the token was received.
-     *
-     * @var int
-     */
-    public int $createdAt;
-
-    /**
      * AccessToken constructor.
-     *
-     * @param array $attributes
      */
-    public function __construct(array $attributes)
-    {
-        $this->accessToken = (string)($attributes['access_token'] ?? '');
-        $this->tokenType = (string)($attributes['token_type'] ?? 'Bearer');
-        $this->expiresIn = (int)($attributes['expires_in'] ?? 0);
-        $this->refreshToken = isset($attributes['refresh_token']) ? (string)$attributes['refresh_token'] : null;
-        $this->scope = isset($attributes['scope']) ? (string)$attributes['scope'] : null;
-        $this->idToken = isset($attributes['id_token']) ? (string)$attributes['id_token'] : null;
-        $this->createdAt = (int)($attributes['created_at'] ?? time());
-    }
+    public function __construct(
+        public readonly string $accessToken,
+        public readonly string $tokenType,
+        public readonly int $expiresIn,
+        public readonly ?string $refreshToken,
+        public readonly ?string $scope,
+        public readonly ?string $idToken,
+        public readonly int $createdAt,
+    ) {}
 
     /**
      * Create a token from an API response.
      *
-     * @param array $attributes
-     * @return static
+     * @param  array<string, mixed>  $attributes
      */
     public static function fromArray(array $attributes): self
     {
-        return new static($attributes);
+        return new self(
+            (string) ($attributes['access_token'] ?? ''),
+            (string) ($attributes['token_type'] ?? 'Bearer'),
+            (int) ($attributes['expires_in'] ?? 0),
+            isset($attributes['refresh_token']) ? (string) $attributes['refresh_token'] : null,
+            isset($attributes['scope']) ? (string) $attributes['scope'] : null,
+            isset($attributes['id_token']) ? (string) $attributes['id_token'] : null,
+            (int) ($attributes['created_at'] ?? time()),
+        );
     }
 
     /**
@@ -101,9 +56,6 @@ class AccessToken
 
     /**
      * Determine if the access token has expired.
-     *
-     * @param int $leeway
-     * @return bool
      */
     public function isExpired(int $leeway = 0): bool
     {
@@ -120,7 +72,7 @@ class AccessToken
      * The signature is not verified. Use these claims only after validating the
      * token signature against the Loyverse OpenID Connect configuration.
      *
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function getIdTokenClaims(): ?array
     {
@@ -151,7 +103,7 @@ class AccessToken
     /**
      * Convert the token back to an array.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {

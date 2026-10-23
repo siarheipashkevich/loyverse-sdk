@@ -2,6 +2,27 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.0.0 - 2026-10-23
+
+### Added
+
+- PHPStan level 8 configuration and CI job.
+- Pint configuration and CI job.
+- `Scope` enum replacing the `Scopes` class.
+- `retry()` is deprecated in favour of `retryOnRateLimit()`.
+
+### Changed
+
+- Minimum PHP version is now **8.4**.
+- Guzzle **8** is required; Guzzle 7 support has been dropped.
+- `AccessToken` is now `final` and uses promoted readonly properties.
+- All source and test files use `declare(strict_types=1)`.
+- Modernized code with `mixed`, `never`, `static`, `match` and `#[\SensitiveParameter]`.
+- Tests and configuration upgraded to PHPUnit 13.
+- CI tests PHP 8.4 and 8.5, plus PHPStan and Pint jobs.
+- Removed redundant `ext-json` and `ext-hash` requirements.
+- Fixed the author email address.
+
 ## 3.0.0 - 2026-10-23
 
 ### Added

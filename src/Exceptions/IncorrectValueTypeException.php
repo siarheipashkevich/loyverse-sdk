@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class IncorrectValueTypeException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class IncorrectValueTypeException extends ApiException
 {

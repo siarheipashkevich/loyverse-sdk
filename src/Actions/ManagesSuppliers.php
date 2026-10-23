@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Supplier;
 
 /**
  * Trait ManagesSuppliers
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesSuppliers
 {
     /**
      * Get a list of suppliers.
      *
-     * @param array $parameters
-     * @return array{suppliers: Supplier[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function suppliers(array $parameters = []): array
     {
-        return $this->transformPage($this->get('suppliers', $parameters), 'suppliers', Supplier::class);
+        return $this->getPage('suppliers', $parameters, 'suppliers', Supplier::class);
     }
 
     /**
      * Get a single supplier.
-     *
-     * @param string $supplierId
-     * @return Supplier
      */
     public function supplier(string $supplierId): Supplier
     {
-        return new Supplier($this->get("suppliers/$supplierId"), $this);
+        return $this->getResource("suppliers/$supplierId", Supplier::class);
     }
 
     /**
      * Create or update a single supplier.
      *
-     * @param array $data
-     * @return Supplier
+     * @param  array<string, mixed>  $data
      */
     public function createSupplier(array $data): Supplier
     {
-        $item = $this->post('suppliers', $data);
-
-        return new Supplier($item, $this);
+        return $this->resource($this->post('suppliers', $data), Supplier::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $supplierId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteSupplier(string $supplierId): array
     {
-        return $this->delete("suppliers/$supplierId");
+        return $this->deleteResource("suppliers/$supplierId");
     }
 }

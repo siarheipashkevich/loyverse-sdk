@@ -1,25 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse;
 
-use Pashkevich\Loyverse\Exceptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Trait MakesHttpRequests
- *
- * @package Pashkevich\Loyverse
  */
 trait MakesHttpRequests
 {
     /**
      * Make a GET request to Loyverse servers and return the response.
      *
-     * @param string $uri
-     * @param array $payload
-     * @return mixed
+     * @param  array<string, mixed>  $payload
      */
-    public function get(string $uri, array $payload = [])
+    public function get(string $uri, array $payload = []): mixed
     {
         $options = empty($payload) ? [] : ['query' => $payload];
 
@@ -29,11 +26,9 @@ trait MakesHttpRequests
     /**
      * Make a POST request to Loyverse servers and return the response.
      *
-     * @param string $uri
-     * @param array $payload
-     * @return mixed
+     * @param  array<string, mixed>  $payload
      */
-    public function post(string $uri, array $payload = [])
+    public function post(string $uri, array $payload = []): mixed
     {
         $options = empty($payload) ? [] : ['json' => $payload];
 
@@ -43,11 +38,9 @@ trait MakesHttpRequests
     /**
      * Make a PUT request to Loyverse servers and return the response.
      *
-     * @param string $uri
-     * @param array $payload
-     * @return mixed
+     * @param  array<string, mixed>  $payload
      */
-    public function put(string $uri, array $payload = [])
+    public function put(string $uri, array $payload = []): mixed
     {
         $options = empty($payload) ? [] : ['json' => $payload];
 
@@ -57,11 +50,9 @@ trait MakesHttpRequests
     /**
      * Make a DELETE request to Loyverse servers and return the response.
      *
-     * @param string $uri
-     * @param array $payload
-     * @return mixed
+     * @param  array<string, mixed>  $payload
      */
-    public function delete(string $uri, array $payload = [])
+    public function delete(string $uri, array $payload = []): mixed
     {
         $options = empty($payload) ? [] : ['json' => $payload];
 
@@ -71,13 +62,9 @@ trait MakesHttpRequests
     /**
      * Make a request with a raw body to Loyverse servers and return the response.
      *
-     * @param string $verb
-     * @param string $uri
-     * @param string $body
-     * @param array $headers
-     * @return mixed
+     * @param  array<string, string>  $headers
      */
-    public function requestRaw(string $verb, string $uri, string $body, array $headers = [])
+    public function requestRaw(string $verb, string $uri, string $body, array $headers = []): mixed
     {
         return $this->request($verb, $uri, [
             'body' => $body,
@@ -88,12 +75,9 @@ trait MakesHttpRequests
     /**
      * Make a POST request with a raw body to Loyverse servers and return the response.
      *
-     * @param string $uri
-     * @param string $body
-     * @param array $headers
-     * @return mixed
+     * @param  array<string, string>  $headers
      */
-    public function postRaw(string $uri, string $body, array $headers = [])
+    public function postRaw(string $uri, string $body, array $headers = []): mixed
     {
         return $this->requestRaw('POST', $uri, $body, $headers);
     }
@@ -101,14 +85,11 @@ trait MakesHttpRequests
     /**
      * Make request to Loyverse servers and return the response.
      *
-     * @param string $verb
-     * @param string $uri
-     * @param array $options
-     * @return mixed
+     * @param  array<string, mixed>  $options
      */
-    protected function request(string $verb, string $uri, array $options = [])
+    protected function request(string $verb, string $uri, array $options = []): mixed
     {
-        if (!array_key_exists('timeout', $options) && isset($this->timeout)) {
+        if (! array_key_exists('timeout', $options)) {
             $options['timeout'] = $this->timeout;
         }
 
@@ -120,7 +101,7 @@ trait MakesHttpRequests
             $this->handleRequestError($response);
         }
 
-        $responseBody = (string)$response->getBody();
+        $responseBody = (string) $response->getBody();
 
         $decoded = json_decode($responseBody, true);
 
@@ -129,13 +110,10 @@ trait MakesHttpRequests
 
     /**
      * Handle the request error.
-     *
-     * @param ResponseInterface $response
-     * @return void
      */
-    protected function handleRequestError(ResponseInterface $response)
+    protected function handleRequestError(ResponseInterface $response): never
     {
-        $body = json_decode((string)$response->getBody(), true);
+        $body = json_decode((string) $response->getBody(), true);
 
         $errors = is_array($body) && isset($body['errors']) && is_array($body['errors'])
             ? $body['errors']
@@ -143,13 +121,13 @@ trait MakesHttpRequests
 
         $error = $errors[0] ?? [];
 
-        $code = isset($error['code']) ? (string)$error['code'] : null;
+        $code = isset($error['code']) ? (string) $error['code'] : null;
 
         $status = $response->getStatusCode();
 
         $retryAfter = $code === 'RATE_LIMITED' ? $response->getHeaderLine('Retry-After') : null;
 
-        $exceptions = [
+        $class = match ($code) {
             'INTERNAL_SERVER_ERROR' => Exceptions\InternalServerException::class,
             'BAD_REQUEST' => Exceptions\BadRequestException::class,
             'INCORRECT_VALUE_TYPE' => Exceptions\IncorrectValueTypeException::class,
@@ -164,14 +142,10 @@ trait MakesHttpRequests
             'NOT_FOUND' => Exceptions\NotFoundException::class,
             'UNSUPPORTED_MEDIA_TYPE' => Exceptions\UnsupportedMediaTypeException::class,
             'RATE_LIMITED' => Exceptions\RateLimitedException::class,
-        ];
+            default => Exceptions\UnknownException::class,
+        };
 
-        $class = $code !== null && isset($exceptions[$code])
-            ? $exceptions[$code]
-            : Exceptions\UnknownException::class;
-
-        /** @var Exceptions\ApiException $exception */
-        $exception = new $class();
+        $exception = new $class;
 
         throw $exception->setContext($status, $errors, $code, $retryAfter);
     }
@@ -179,45 +153,37 @@ trait MakesHttpRequests
     /**
      * Retry the callback or fail after x seconds.
      *
-     * @param int $timeout
-     * @param callable $callback
-     * @param int $sleep
-     * @return mixed
+     * @deprecated Use retryOnRateLimit() instead.
      */
-    public function retry(int $timeout, callable $callback, int $sleep = 5)
+    #[\Deprecated('Use retryOnRateLimit() instead.')]
+    public function retry(int $timeout, callable $callback, int $sleep = 5): mixed
     {
         $start = time();
 
-        beginning:
+        while (true) {
+            $output = $callback();
 
-        if ($output = $callback()) {
-            return $output;
-        }
+            if ($output) {
+                return $output;
+            }
 
-        if (time() - $start < $timeout) {
+            if (time() - $start >= $timeout) {
+                throw new Exceptions\TimeoutException(is_array($output) ? $output : null);
+            }
+
             sleep($sleep);
-
-            goto beginning;
         }
-
-        throw new Exceptions\TimeoutException($output);
     }
 
     /**
      * Retry the callback when the API rate limit is exceeded.
-     *
-     * @param callable $callback
-     * @param int $maxAttempts
-     * @param int $baseDelay
-     * @param callable|null $sleeper
-     * @return mixed
      */
     public function retryOnRateLimit(
         callable $callback,
         int $maxAttempts = 3,
         int $baseDelay = 1,
         ?callable $sleeper = null
-    ) {
+    ): mixed {
         $attempt = 0;
 
         while (true) {
@@ -236,7 +202,7 @@ trait MakesHttpRequests
                     $delay = $baseDelay * (2 ** ($attempt - 1));
                 }
 
-                $delay = max(0, (int)$delay);
+                $delay = max(0, (int) $delay);
 
                 if ($sleeper !== null) {
                     $sleeper($delay);

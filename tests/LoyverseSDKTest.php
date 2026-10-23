@@ -1,45 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Tests;
 
-use Mockery;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
+use Mockery;
+use Pashkevich\Loyverse\Exceptions;
+use Pashkevich\Loyverse\Loyverse;
+use Pashkevich\Loyverse\Resources\Category;
+use Pashkevich\Loyverse\Resources\Customer;
+use Pashkevich\Loyverse\Resources\Discount;
+use Pashkevich\Loyverse\Resources\Employee;
+use Pashkevich\Loyverse\Resources\Inventory;
+use Pashkevich\Loyverse\Resources\InventoryLevel;
+use Pashkevich\Loyverse\Resources\Item;
+use Pashkevich\Loyverse\Resources\ItemComponent;
+use Pashkevich\Loyverse\Resources\Modifier;
+use Pashkevich\Loyverse\Resources\ModifierOption;
+use Pashkevich\Loyverse\Resources\PaymentType;
+use Pashkevich\Loyverse\Resources\PosDevice;
+use Pashkevich\Loyverse\Resources\Receipt;
+use Pashkevich\Loyverse\Resources\ReceiptLineDiscount;
+use Pashkevich\Loyverse\Resources\ReceiptLineItem;
+use Pashkevich\Loyverse\Resources\ReceiptLineModifier;
+use Pashkevich\Loyverse\Resources\ReceiptLineTax;
+use Pashkevich\Loyverse\Resources\ReceiptPayment;
+use Pashkevich\Loyverse\Resources\ReceiptTotalDiscount;
+use Pashkevich\Loyverse\Resources\ReceiptTotalTax;
+use Pashkevich\Loyverse\Resources\Shift;
+use Pashkevich\Loyverse\Resources\Store;
+use Pashkevich\Loyverse\Resources\Supplier;
+use Pashkevich\Loyverse\Resources\Tax;
+use Pashkevich\Loyverse\Resources\Variant;
+use Pashkevich\Loyverse\Resources\Webhook;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Psr7\{Utils, Response};
-use Pashkevich\Loyverse\{Loyverse, Exceptions};
-use Pashkevich\Loyverse\Resources\{
-    Category,
-    Customer,
-    Discount,
-    Employee,
-    Inventory,
-    InventoryLevel,
-    Item,
-    ItemComponent,
-    Modifier,
-    ModifierOption,
-    PaymentType,
-    PosDevice,
-    Receipt,
-    ReceiptLineDiscount,
-    ReceiptLineItem,
-    ReceiptLineModifier,
-    ReceiptLineTax,
-    ReceiptPayment,
-    ReceiptTotalDiscount,
-    ReceiptTotalTax,
-    Shift,
-    Store,
-    Supplier,
-    Tax,
-    Variant,
-    Webhook,
-};
 
 /**
  * Class LoyverseSDKTest
- *
- * @package Pashkevich\Loyverse\Tests
  */
 class LoyverseSDKTest extends TestCase
 {
@@ -498,9 +499,7 @@ class LoyverseSDKTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider listMethodsProvider
-     */
+    #[DataProvider('listMethodsProvider')]
     public function test_list_methods_return_pages_with_cursor(
         string $method,
         string $path,
@@ -528,7 +527,7 @@ class LoyverseSDKTest extends TestCase
         $this->assertInstanceOf($class, $page[$key][0]);
     }
 
-    public function listMethodsProvider(): array
+    public static function listMethodsProvider(): array
     {
         return [
             'categories' => ['categories', 'categories', 'categories', Category::class],
@@ -663,6 +662,64 @@ class LoyverseSDKTest extends TestCase
         $this->assertSame(2.5, $item->components[0]->quantity);
     }
 
+    public function test_single_resource_is_returned_from_get_resource()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('GET', 'categories/category-id', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"id": "category-id", "name": "Fruits", "color": "GREEN"}'
+        ));
+
+        $category = $loyverse->category('category-id');
+
+        $this->assertInstanceOf(Category::class, $category);
+        $this->assertSame('Fruits', $category->name);
+    }
+
+    public function test_resource_is_created_from_post()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('POST', 'categories', [
+            'json' => ['name' => 'Fruits'],
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"id": "category-id", "name": "Fruits", "color": "GREEN"}'
+        ));
+
+        $category = $loyverse->createCategory(['name' => 'Fruits']);
+
+        $this->assertInstanceOf(Category::class, $category);
+        $this->assertSame('Fruits', $category->name);
+    }
+
+    public function test_delete_resource_returns_decoded_response()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('DELETE', 'categories/category-id', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"deleted_object_ids": ["category-id"]}'
+        ));
+
+        $this->assertSame(
+            ['deleted_object_ids' => ['category-id']],
+            $loyverse->deleteCategory('category-id')
+        );
+    }
+
     public function test_paginate_iterates_all_pages()
     {
         $loyverse = new Loyverse('123', Mockery::mock(Client::class));
@@ -720,7 +777,7 @@ class LoyverseSDKTest extends TestCase
                 $attempts++;
 
                 if ($attempts === 1) {
-                    throw (new Exceptions\RateLimitedException())
+                    throw (new Exceptions\RateLimitedException)
                         ->setContext(429, [], 'RATE_LIMITED', '2');
                 }
 
@@ -746,13 +803,12 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse->retryOnRateLimit(
             function () {
-                throw (new Exceptions\RateLimitedException())
+                throw (new Exceptions\RateLimitedException)
                     ->setContext(429, [], 'RATE_LIMITED', '1');
             },
             2,
             1,
-            function () {
-            }
+            function () {}
         );
     }
 }

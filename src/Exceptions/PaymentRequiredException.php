@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class PaymentRequiredException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class PaymentRequiredException extends ApiException
 {

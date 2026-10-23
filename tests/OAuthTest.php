@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Tests;
 
-use Mockery;
 use GuzzleHttp\Client;
-use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Psr7\{Utils, Response};
-use Pashkevich\Loyverse\{AccessToken, OAuth, Scopes};
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
+use Mockery;
+use Pashkevich\Loyverse\AccessToken;
 use Pashkevich\Loyverse\Exceptions\ApiException;
+use Pashkevich\Loyverse\OAuth;
+use Pashkevich\Loyverse\Scope;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class OAuthTest
- *
- * @package Pashkevich\Loyverse\Tests
  */
 class OAuthTest extends TestCase
 {
@@ -29,7 +32,7 @@ class OAuthTest extends TestCase
             'client-id',
             'https://example.com/callback',
             'state-value',
-            [Scopes::ITEMS_READ, Scopes::RECEIPTS_READ]
+            [Scope::ITEMS_READ, Scope::RECEIPTS_READ]
         );
 
         $this->assertStringStartsWith(OAuth::AUTHORIZE_URL, $url);
@@ -136,6 +139,12 @@ class OAuthTest extends TestCase
         }
     }
 
+    public function test_scope_enum_exposes_values()
+    {
+        $this->assertSame('ITEMS_READ', Scope::ITEMS_READ->value);
+        $this->assertContains('ITEMS_READ', Scope::values());
+    }
+
     public function test_access_token_exposes_scopes_expiration_and_id_token_claims()
     {
         $payload = rtrim(strtr(base64_encode(json_encode([
@@ -143,11 +152,11 @@ class OAuthTest extends TestCase
             'iss' => 'https://api.loyverse.com',
         ])), '+/', '-_'), '=');
 
-        $token = new AccessToken([
+        $token = AccessToken::fromArray([
             'access_token' => 'access-token',
             'expires_in' => 10,
             'scope' => 'OPENID ITEMS_READ',
-            'id_token' => 'header.' . $payload . '.signature',
+            'id_token' => 'header.'.$payload.'.signature',
             'created_at' => time() - 20,
         ]);
 

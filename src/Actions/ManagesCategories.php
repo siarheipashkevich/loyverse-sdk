@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Category;
 
 /**
  * Trait ManagesCategories
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesCategories
 {
     /**
      * Get a list of categories.
      *
-     * @param array $parameters
-     * @return array{categories: Category[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function categories(array $parameters = []): array
     {
-        return $this->transformPage($this->get('categories', $parameters), 'categories', Category::class);
+        return $this->getPage('categories', $parameters, 'categories', Category::class);
     }
 
     /**
      * Get a single category.
-     *
-     * @param string $categoryId
-     * @return Category
      */
     public function category(string $categoryId): Category
     {
-        return new Category($this->get("categories/$categoryId"), $this);
+        return $this->getResource("categories/$categoryId", Category::class);
     }
 
     /**
      * Create or update a single category.
      *
-     * @param array $data
-     * @return Category
+     * @param  array<string, mixed>  $data
      */
     public function createCategory(array $data): Category
     {
-        $item = $this->post('categories', $data);
-
-        return new Category($item, $this);
+        return $this->resource($this->post('categories', $data), Category::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $categoryId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteCategory(string $categoryId): array
     {
-        return $this->delete("categories/$categoryId");
+        return $this->deleteResource("categories/$categoryId");
     }
 }

@@ -15,10 +15,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.4, '8.0', 8.1, 8.2, 8.3, 8.4, 8.5]
-        guzzle: ['^7.2', '^8.0']
+        php: [8.4, 8.5]
 
-    name: PHP ${{ matrix.php }} / Guzzle ${{ matrix.guzzle }}
+    name: PHP ${{ matrix.php }}
 
     steps:
       - name: Checkout code
@@ -34,7 +33,55 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer update --no-interaction --no-progress --with "guzzlehttp/guzzle:${{ matrix.guzzle }}"
+        run: composer update --no-interaction --no-progress
 
       - name: Execute tests
         run: vendor/bin/phpunit
+
+  phpstan:
+    runs-on: ubuntu-latest
+
+    name: PHPStan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: dom, curl, libxml, mbstring, zip
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --no-progress
+
+  pint:
+    runs-on: ubuntu-latest
+
+    name: Pint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: dom, curl, libxml, mbstring, zip
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress
+
+      - name: Check code style
+        run: vendor/bin/pint --test

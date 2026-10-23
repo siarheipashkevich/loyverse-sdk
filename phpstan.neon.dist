@@ -1,0 +1,7 @@
+parameters:
+    # Level max is blocked by Guzzle's request-options array shape, which is
+    # built dynamically in MakesHttpRequests and OAuth.
+    level: 8
+    paths:
+        - src
+    tmpDir: build/phpstan

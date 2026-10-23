@@ -44,10 +44,11 @@ create an API token through [Loyverse](https://loyverse.com) itself.
 
 ### Installation
 
-To install the SDK in your project you need to require the package via composer:
+PHP **8.4** or newer and Guzzle **8** are required. To install the SDK in your project you need to
+require the package via composer:
 
 ```bash
-composer require pashkevich/loyverse-sdk
+composer require pashkevich/loyverse-sdk:^4.0
 ```
 
 ### Basic Usage
@@ -112,7 +113,7 @@ The SDK supports both personal access tokens and OAuth 2.0. Create an `OAuth` in
 redirect the merchant to the authorization URL:
 
 ``` php
-use Pashkevich\Loyverse\{Loyverse, OAuth, Scopes};
+use Pashkevich\Loyverse\{Loyverse, OAuth, Scope};
 
 $oauth = new OAuth();
 $state = OAuth::generateState();
@@ -121,7 +122,7 @@ $url = $oauth->authorizationUrl(
     CLIENT_ID,
     REDIRECT_URI,
     $state,
-    [Scopes::ITEMS_READ, Scopes::RECEIPTS_READ]
+    [Scope::ITEMS_READ, Scope::RECEIPTS_READ]
 );
 ```
 
@@ -497,6 +498,8 @@ $webhook->delete();
 
 ``` bash
 composer test
+composer analyse
+composer format-test
 ```
 
 ### Contributing
@@ -505,7 +508,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email siarheipashkveich@gmail.com instead of using the issue
+If you discover any security related issues, please email siarheipashkevich@gmail.com instead of using the issue
 tracker.
 
 ### Credits
