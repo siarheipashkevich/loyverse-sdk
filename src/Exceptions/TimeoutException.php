@@ -6,9 +6,6 @@ namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
-/**
- * Class TimeoutException
- */
 class TimeoutException extends Exception
 {
     /**

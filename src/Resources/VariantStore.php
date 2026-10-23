@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Resources;
 
-/**
- * Class VariantStore
- */
 class VariantStore extends Resource
 {
     /**

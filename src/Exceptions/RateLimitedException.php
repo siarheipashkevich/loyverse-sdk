@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-/**
- * Class RateLimitedException
- */
 class RateLimitedException extends ApiException
 {
     /**

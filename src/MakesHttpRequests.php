@@ -6,9 +6,6 @@ namespace Pashkevich\Loyverse;
 
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Trait MakesHttpRequests
- */
 trait MakesHttpRequests
 {
     /**

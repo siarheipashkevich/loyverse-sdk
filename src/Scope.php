@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse;
 
-/**
- * Enum Scope
- */
 enum Scope: string
 {
     case CUSTOMERS_READ = 'CUSTOMERS_READ';

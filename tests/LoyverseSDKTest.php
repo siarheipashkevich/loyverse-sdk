@@ -39,9 +39,6 @@ use Pashkevich\Loyverse\Resources\Webhook;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class LoyverseSDKTest
- */
 class LoyverseSDKTest extends TestCase
 {
     protected function tearDown(): void

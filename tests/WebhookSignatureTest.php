@@ -7,9 +7,6 @@ namespace Pashkevich\Loyverse\Tests;
 use Pashkevich\Loyverse\WebhookSignature;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class WebhookSignatureTest
- */
 class WebhookSignatureTest extends TestCase
 {
     public function test_computes_and_verifies_signature()

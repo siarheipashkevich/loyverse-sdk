@@ -9,9 +9,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ResponseException;
 use Pashkevich\Loyverse\Exceptions\ApiException;
 
-/**
- * Class OAuth
- */
 class OAuth
 {
     public const AUTHORIZE_URL = 'https://api.loyverse.com/oauth/authorize';

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Resources;
 
-/**
- * Class Category
- */
 class Category extends Resource
 {
     /**

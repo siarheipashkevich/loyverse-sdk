@@ -14,9 +14,6 @@ use Pashkevich\Loyverse\OAuth;
 use Pashkevich\Loyverse\Scope;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class OAuthTest
- */
 class OAuthTest extends TestCase
 {
     protected function tearDown(): void

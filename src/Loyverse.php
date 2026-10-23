@@ -8,9 +8,6 @@ use Generator;
 use GuzzleHttp\Client;
 use Pashkevich\Loyverse\Resources\Resource;
 
-/**
- * Class Loyverse
- */
 class Loyverse
 {
     use Actions\ManagesCategories;

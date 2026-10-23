@@ -7,9 +7,6 @@ namespace Pashkevich\Loyverse\Exceptions;
 use Exception;
 use Throwable;
 
-/**
- * Class ApiException
- */
 class ApiException extends Exception
 {
     /**

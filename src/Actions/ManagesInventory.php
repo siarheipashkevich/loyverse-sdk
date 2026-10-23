@@ -7,9 +7,6 @@ namespace Pashkevich\Loyverse\Actions;
 use Pashkevich\Loyverse\Resources\Inventory;
 use Pashkevich\Loyverse\Resources\InventoryLevel;
 
-/**
- * Trait ManagesInventory
- */
 trait ManagesInventory
 {
     /**
