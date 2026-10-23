@@ -1,5 +1,9 @@
 # Upgrading
 
+## From 4.3.1 to 4.3.2
+
+No breaking changes. This patch only cleans up packaging and stale config references.
+
 ## From 4.3.0 to 4.3.1
 
 No breaking changes. This patch only refactors the test suite and Pint configuration.

@@ -2,6 +2,15 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.3.2 - 2026-10-23
+
+### Changed
+
+- Composer dist archives now exclude `.github` and development tooling.
+- Removed stale Travis and Scrutinizer entries from `.gitattributes`.
+- Removed unused `docs` and legacy PHPUnit cache entries from `.gitignore`.
+- Updated the README installation constraint and issue template placeholder to 4.3.
+
 ## 4.3.1 - 2026-10-23
 
 ### Changed
