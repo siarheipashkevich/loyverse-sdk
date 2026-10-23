@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class NotFoundException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class NotFoundException extends ApiException
 {

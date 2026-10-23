@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Resources;
 
 use Pashkevich\Loyverse\Loyverse;
 
 /**
  * Class Resource
- *
- * @package Pashkevich\Loyverse\Resources
  */
 #[\AllowDynamicProperties]
 class Resource
@@ -15,22 +15,19 @@ class Resource
     /**
      * The resource attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $attributes;
 
     /**
      * The Loyverse SDK instance.
-     *
-     * @var Loyverse|null
      */
     protected ?Loyverse $loyverse;
 
     /**
      * Resource constructor.
      *
-     * @param array $attributes
-     * @param Loyverse|null $loyverse
+     * @param  array<string, mixed>  $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
@@ -42,8 +39,6 @@ class Resource
 
     /**
      * Fill the resource with the array of attributes.
-     *
-     * @return void
      */
     protected function fill(): void
     {
@@ -56,11 +51,8 @@ class Resource
 
     /**
      * Convert the key name to camel case.
-     *
-     * @param string $key
-     * @return string
      */
-    protected function camelCase($key)
+    protected function camelCase(string $key): string
     {
         $parts = explode('_', $key);
 
@@ -74,16 +66,63 @@ class Resource
     }
 
     /**
+     * Get the Loyverse client attached to this resource.
+     */
+    protected function client(): Loyverse
+    {
+        if ($this->loyverse === null) {
+            throw new \LogicException('The Loyverse client is not available on this resource.');
+        }
+
+        return $this->loyverse;
+    }
+
+    /**
+     * Transform a nested collection from the resource attributes.
+     *
+     * @template T of Resource
+     *
+     * @param  class-string<T>  $class
+     * @return array<int, T>
+     */
+    protected function transformNested(string $key, string $class): array
+    {
+        $collection = $this->attributes[$key] ?? [];
+
+        $items = [];
+
+        if (is_array($collection)) {
+            foreach ($collection as $item) {
+                if (is_array($item)) {
+                    $normalized = [];
+
+                    foreach ($item as $itemKey => $itemValue) {
+                        if (is_string($itemKey)) {
+                            $normalized[$itemKey] = $itemValue;
+                        }
+                    }
+
+                    $items[] = $normalized;
+                }
+            }
+        }
+
+        return $this->transformCollection($items, $class);
+    }
+
+    /**
      * Transform the items of the collection to the given class.
      *
-     * @param array $collection
-     * @param string $class
-     * @param array $extraData
-     * @return array
+     * @template T of Resource
+     *
+     * @param  array<int, array<string, mixed>>  $collection
+     * @param  class-string<T>  $class
+     * @param  array<string, mixed>  $extraData
+     * @return array<int, T>
      */
     protected function transformCollection(array $collection, string $class, array $extraData = []): array
     {
-        return array_map(function ($data) use ($class, $extraData) {
+        return array_map(function (array $data) use ($class, $extraData): Resource {
             return new $class($data + $extraData, $this->loyverse);
         }, $collection);
     }

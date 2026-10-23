@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Webhook;
 
 /**
  * Trait ManagesWebhooks
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesWebhooks
 {
     /**
      * Get a list of webhooks.
      *
-     * @param array $parameters
-     * @return array{webhooks: Webhook[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function webhooks(array $parameters = []): array
     {
-        return $this->transformPage($this->get('webhooks', $parameters), 'webhooks', Webhook::class);
+        return $this->getPage('webhooks', $parameters, 'webhooks', Webhook::class);
     }
 
     /**
      * Get a single webhook.
-     *
-     * @param string $webhookId
-     * @return Webhook
      */
     public function webhook(string $webhookId): Webhook
     {
-        return new Webhook($this->get("webhooks/$webhookId"), $this);
+        return $this->getResource("webhooks/$webhookId", Webhook::class);
     }
 
     /**
      * Create or update a single webhook.
      *
-     * @param array $data
-     * @return Webhook
+     * @param  array<string, mixed>  $data
      */
     public function createWebhook(array $data): Webhook
     {
-        $item = $this->post('webhooks', $data);
-
-        return new Webhook($item, $this);
+        return $this->resource($this->post('webhooks', $data), Webhook::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $webhookId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteWebhook(string $webhookId): array
     {
-        return $this->delete("webhooks/$webhookId");
+        return $this->deleteResource("webhooks/$webhookId");
     }
 }

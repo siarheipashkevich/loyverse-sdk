@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Customer;
 
 /**
  * Trait ManagesCustomers
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesCustomers
 {
     /**
      * Get a list of customers.
      *
-     * @param array $parameters
-     * @return array{customers: Customer[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function customers(array $parameters = []): array
     {
-        return $this->transformPage($this->get('customers', $parameters), 'customers', Customer::class);
+        return $this->getPage('customers', $parameters, 'customers', Customer::class);
     }
 
     /**
      * Get a single customer.
-     *
-     * @param string $customerId
-     * @return Customer
      */
     public function customer(string $customerId): Customer
     {
-        return new Customer($this->get("customers/$customerId"), $this);
+        return $this->getResource("customers/$customerId", Customer::class);
     }
 
     /**
      * Create or update a single customer.
      *
-     * @param array $data
-     * @return Customer
+     * @param  array<string, mixed>  $data
      */
     public function createCustomer(array $data): Customer
     {
-        $item = $this->post('customers', $data);
-
-        return new Customer($item, $this);
+        return $this->resource($this->post('customers', $data), Customer::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $customerId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteCustomer(string $customerId): array
     {
-        return $this->delete("customers/$customerId");
+        return $this->deleteResource("customers/$customerId");
     }
 }

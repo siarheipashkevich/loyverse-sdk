@@ -1,67 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Resources;
 
 /**
  * Class PosDevice
- *
- * @package Pashkevich\Loyverse\Resources
  */
 class PosDevice extends Resource
 {
     /**
      * The pos device id.
-     *
-     * @var string
      */
     public string $id;
 
     /**
      * The name of the pos device.
-     *
-     * @var string
      */
     public string $name;
 
     /**
      * The store id this device is connected to.
-     *
-     * @var string
      */
     public string $storeId;
 
     /**
      * Shows the status of the POS device. If true, this device is connected to the physical device.
-     *
-     * @var bool
      */
     public bool $activated;
 
     /**
      * The time when this resource was deleted.
-     *
-     * @var string|null
      */
     public ?string $deletedAt;
 
     /**
      * Update the given pos device.
      *
-     * @param array $data
-     * @return PosDevice
+     * @param  array<string, mixed>  $data
      */
     public function update(array $data): PosDevice
     {
-        return $this->loyverse->createPosDevice(array_merge($data, ['id' => $this->id]));
+        return $this->client()->createPosDevice(array_merge($data, ['id' => $this->id]));
     }
 
     /**
      * Delete the given pos device.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function delete(): array
     {
-        return $this->loyverse->deletePosDevice($this->id);
+        return $this->client()->deletePosDevice($this->id);
     }
 }

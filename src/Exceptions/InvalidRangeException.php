@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class InvalidRangeException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class InvalidRangeException extends ApiException
 {

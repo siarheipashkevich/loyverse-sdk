@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class ConflictingParametersException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class ConflictingParametersException extends ApiException
 {

@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class InternalServerException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class InternalServerException extends ApiException
 {

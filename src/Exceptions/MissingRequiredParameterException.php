@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 /**
  * Class MissingRequiredParameterException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class MissingRequiredParameterException extends ApiException
 {

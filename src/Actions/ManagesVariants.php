@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Variant;
 
 /**
  * Trait ManagesVariants
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesVariants
 {
     /**
      * Get a list of item variants.
      *
-     * @param array $parameters
-     * @return array{variants: Variant[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function variants(array $parameters = []): array
     {
-        return $this->transformPage($this->get('variants', $parameters), 'variants', Variant::class);
+        return $this->getPage('variants', $parameters, 'variants', Variant::class);
     }
 
     /**
      * Get a single item variant.
-     *
-     * @param string $variantId
-     * @return Variant
      */
     public function variant(string $variantId): Variant
     {
-        return new Variant($this->get("variants/$variantId"), $this);
+        return $this->getResource("variants/$variantId", Variant::class);
     }
 
     /**
      * Create or update a single variant.
      *
-     * @param array $data
-     * @return Variant
+     * @param  array<string, mixed>  $data
      */
     public function createVariant(array $data): Variant
     {
-        $variant = $this->post("variants", $data);
-
-        return new Variant($variant, $this);
+        return $this->resource($this->post('variants', $data), Variant::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $variantId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deleteVariant(string $variantId): array
     {
-        return $this->delete("variants/$variantId");
+        return $this->deleteResource("variants/$variantId");
     }
 }

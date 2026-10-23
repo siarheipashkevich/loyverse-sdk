@@ -1,27 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Exceptions;
 
 use Exception;
 
 /**
  * Class TimeoutException
- *
- * @package Pashkevich\Loyverse\Exceptions
  */
 class TimeoutException extends Exception
 {
     /**
      * The output returned from the operation.
      *
-     * @var array|null
+     * @var array<string, mixed>|null
      */
     public ?array $output;
 
     /**
      * TimeoutException constructor.
      *
-     * @param array|null $output
+     * @param  array<string, mixed>|null  $output
      */
     public function __construct(?array $output = null)
     {
@@ -33,7 +33,7 @@ class TimeoutException extends Exception
     /**
      * The output returned from the operation.
      *
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function output(): ?array
     {

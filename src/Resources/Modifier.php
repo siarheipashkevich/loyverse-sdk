@@ -1,34 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Resources;
 
 use Pashkevich\Loyverse\Loyverse;
 
 /**
  * Class Modifier
- *
- * @package Pashkevich\Loyverse\Resources
  */
 class Modifier extends Resource
 {
     /**
      * The modifier id.
-     *
-     * @var string
      */
     public string $id;
 
     /**
      * The modifier name.
-     *
-     * @var string
      */
     public string $name;
 
     /**
      * Determines the position of this modifier in the modifiers list.
-     *
-     * @var int
      */
     public int $position;
 
@@ -42,62 +36,54 @@ class Modifier extends Resource
     /**
      * The list of modifier options.
      *
-     * @var array
+     * @var array<int, ModifierOption>
      */
     public array $modifierOptions = [];
 
     /**
      * The time when this resource was created.
-     *
-     * @var string
      */
     public string $createdAt;
 
     /**
      * The time when this resource was updated.
-     *
-     * @var string
      */
     public string $updatedAt;
 
     /**
      * The time when this resource was deleted.
-     *
-     * @var string|null
      */
     public ?string $deletedAt;
 
     /**
      * Modifier constructor.
      *
-     * @param array $attributes
-     * @param Loyverse|null $loyverse
+     * @param  array<string, mixed>  $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
 
-        $this->modifierOptions = $this->transformCollection($this->modifierOptions ?: [], ModifierOption::class);
+        $this->modifierOptions = $this->transformNested('modifier_options', ModifierOption::class);
     }
 
     /**
      * Update the given modifier.
      *
-     * @param array $data
-     * @return Modifier
+     * @param  array<string, mixed>  $data
      */
     public function update(array $data): Modifier
     {
-        return $this->loyverse->createModifier(array_merge($data, ['id' => $this->id]));
+        return $this->client()->createModifier(array_merge($data, ['id' => $this->id]));
     }
 
     /**
      * Delete the given modifier.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function delete(): array
     {
-        return $this->loyverse->deleteModifier($this->id);
+        return $this->client()->deleteModifier($this->id);
     }
 }

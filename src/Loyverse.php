@@ -1,70 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse;
 
 use Generator;
 use GuzzleHttp\Client;
+use Pashkevich\Loyverse\Resources\Resource;
 
 /**
  * Class Loyverse
- *
- * @package Pashkevich\Loyverse
  */
 class Loyverse
 {
-    use MakesHttpRequests;
-    use Actions\ManagesEmployees;
-    use Actions\ManagesStores;
-    use Actions\ManagesReceipts;
-    use Actions\ManagesItems;
-    use Actions\ManagesVariants;
-    use Actions\ManagesMerchants;
     use Actions\ManagesCategories;
-    use Actions\ManagesDiscounts;
-    use Actions\ManagesPaymentTypes;
-    use Actions\ManagesTaxes;
-    use Actions\ManagesModifiers;
     use Actions\ManagesCustomers;
-    use Actions\ManagesSuppliers;
+    use Actions\ManagesDiscounts;
+    use Actions\ManagesEmployees;
     use Actions\ManagesInventory;
-    use Actions\ManagesShifts;
+    use Actions\ManagesItems;
+    use Actions\ManagesMerchants;
+    use Actions\ManagesModifiers;
+    use Actions\ManagesPaymentTypes;
     use Actions\ManagesPosDevices;
+    use Actions\ManagesReceipts;
+    use Actions\ManagesShifts;
+    use Actions\ManagesStores;
+    use Actions\ManagesSuppliers;
+    use Actions\ManagesTaxes;
+    use Actions\ManagesVariants;
     use Actions\ManagesWebhooks;
+    use MakesHttpRequests;
 
     /**
      * The Loyverse API Key.
-     *
-     * @var string
      */
     protected string $apiKey;
 
     /**
      * The Guzzle HTTP Client instance.
-     *
-     * @var Client
      */
     public Client $guzzle;
 
     /**
      * Number of seconds a request is retried.
-     *
-     * @var int
      */
     public int $timeout = 30;
 
     /**
      * Loyverse constructor.
-     *
-     * @param string|null $apiKey
-     * @param Client|null $guzzle
      */
     public function __construct(?string $apiKey = null, ?Client $guzzle = null)
     {
-        if (!is_null($apiKey)) {
+        if (! is_null($apiKey)) {
             $this->setApiKey($apiKey, $guzzle);
         }
 
-        if (!is_null($guzzle)) {
+        if (! is_null($guzzle)) {
             $this->guzzle = $guzzle;
         }
     }
@@ -72,14 +64,16 @@ class Loyverse
     /**
      * Transform the items of the collection to the given class.
      *
-     * @param array $collection
-     * @param string $class
-     * @param array $extraData
-     * @return array
+     * @template T of Resource
+     *
+     * @param  array<int, array<string, mixed>>  $collection
+     * @param  class-string<T>  $class
+     * @param  array<string, mixed>  $extraData
+     * @return array<int, T>
      */
     protected function transformCollection(array $collection, string $class, array $extraData = []): array
     {
-        return array_map(function ($data) use ($class, $extraData) {
+        return array_map(function (array $data) use ($class, $extraData): Resource {
             return new $class($data + $extraData, $this);
         }, $collection);
     }
@@ -87,17 +81,90 @@ class Loyverse
     /**
      * Transform a page response into a list of resources and a cursor.
      *
-     * @param array $response
-     * @param string $key
-     * @param string $class
-     * @return array
+     * @template TKey of string
+     * @template T of Resource
+     *
+     * @param  array<string, mixed>  $response
+     * @param  TKey  $key
+     * @param  class-string<T>  $class
+     * @return array<string, mixed>
      */
     protected function transformPage(array $response, string $key, string $class): array
     {
+        $resources = $response[$key] ?? [];
+
         return [
-            $key => $this->transformCollection($response[$key] ?? [], $class),
-            'cursor' => $response['cursor'] ?? null,
+            $key => $this->transformCollection(is_array($resources) ? $resources : [], $class),
+            'cursor' => isset($response['cursor']) ? (string) $response['cursor'] : null,
         ];
+    }
+
+    /**
+     * Create a resource from an API response.
+     *
+     * @template T of Resource
+     *
+     * @param  class-string<T>  $class
+     * @return T
+     */
+    protected function resource(mixed $response, string $class): Resource
+    {
+        if (! is_array($response)) {
+            throw new Exceptions\UnknownException('Unexpected response from the Loyverse API.');
+        }
+
+        return new $class($response, $this);
+    }
+
+    /**
+     * Get a single resource.
+     *
+     * @template T of Resource
+     *
+     * @param  class-string<T>  $class
+     * @return T
+     */
+    protected function getResource(string $uri, string $class): Resource
+    {
+        return $this->resource($this->get($uri), $class);
+    }
+
+    /**
+     * Get a page of resources.
+     *
+     * @template TKey of string
+     * @template T of Resource
+     *
+     * @param  array<string, mixed>  $parameters
+     * @param  TKey  $key
+     * @param  class-string<T>  $class
+     * @return array<string, mixed>
+     */
+    protected function getPage(string $uri, array $parameters, string $key, string $class): array
+    {
+        $response = $this->get($uri, $parameters);
+
+        if (! is_array($response)) {
+            throw new Exceptions\UnknownException('Unexpected response from the Loyverse API.');
+        }
+
+        return $this->transformPage($response, $key, $class);
+    }
+
+    /**
+     * Delete a resource and return the decoded response.
+     *
+     * @return array<string, mixed>
+     */
+    protected function deleteResource(string $uri): array
+    {
+        $response = $this->delete($uri);
+
+        if (! is_array($response)) {
+            throw new Exceptions\UnknownException('Unexpected response from the Loyverse API.');
+        }
+
+        return $response;
     }
 
     /**
@@ -106,9 +173,9 @@ class Loyverse
      * The callback receives the current query parameters and must return a page
      * array with a list of resources and a cursor.
      *
-     * @param callable $fetch
-     * @param array $parameters
-     * @return Generator
+     * @param  callable(array<string, mixed>): array<string, mixed>  $fetch
+     * @param  array<string, mixed>  $parameters
+     * @return Generator<int, Resources\Resource>
      */
     public function paginate(callable $fetch, array $parameters = []): Generator
     {
@@ -125,7 +192,7 @@ class Loyverse
             $page = $fetch($pageParameters);
 
             foreach ($page as $key => $value) {
-                if ($key === 'cursor' || !is_array($value)) {
+                if ($key === 'cursor' || ! is_array($value)) {
                     continue;
                 }
 
@@ -153,11 +220,9 @@ class Loyverse
     /**
      * Set the api key and setup the guzzle request object.
      *
-     * @param string $apiKey
-     * @param Client|null $guzzle
      * @return $this
      */
-    public function setApiKey(string $apiKey, ?Client $guzzle = null): self
+    public function setApiKey(#[\SensitiveParameter] string $apiKey, ?Client $guzzle = null): static
     {
         $this->apiKey = $apiKey;
 
@@ -165,7 +230,7 @@ class Loyverse
             'base_uri' => 'https://api.loyverse.com/v1.0/',
             'http_errors' => false,
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ],
@@ -177,10 +242,9 @@ class Loyverse
     /**
      * Set a new timeout.
      *
-     * @param int $timeout
      * @return $this
      */
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
 
@@ -189,8 +253,6 @@ class Loyverse
 
     /**
      * Get the timeout.
-     *
-     * @return int
      */
     public function getTimeout(): int
     {

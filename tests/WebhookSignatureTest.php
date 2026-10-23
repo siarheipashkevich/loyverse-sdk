@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Pashkevich\Loyverse\WebhookSignature;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class WebhookSignatureTest
- *
- * @package Pashkevich\Loyverse\Tests
  */
 class WebhookSignatureTest extends TestCase
 {

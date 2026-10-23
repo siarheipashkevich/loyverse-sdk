@@ -1,59 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\PosDevice;
 
 /**
  * Trait ManagesPosDevices
- *
- * @package Pashkevich\Loyverse\Actions
  */
 trait ManagesPosDevices
 {
     /**
      * Get a list of pos devices.
      *
-     * @param array $parameters
-     * @return array{pos_devices: PosDevice[], cursor: string|null}
+     * @param  array<string, mixed>  $parameters
+     * @return array<string, mixed>
      */
     public function posDevices(array $parameters = []): array
     {
-        return $this->transformPage($this->get('pos_devices', $parameters), 'pos_devices', PosDevice::class);
+        return $this->getPage('pos_devices', $parameters, 'pos_devices', PosDevice::class);
     }
 
     /**
      * Get a single pos device.
-     *
-     * @param string $posDeviceId
-     * @return PosDevice
      */
     public function posDevice(string $posDeviceId): PosDevice
     {
-        return new PosDevice($this->get("pos_devices/$posDeviceId"), $this);
+        return $this->getResource("pos_devices/$posDeviceId", PosDevice::class);
     }
 
     /**
      * Create or update a single pos device.
      *
-     * @param array $data
-     * @return PosDevice
+     * @param  array<string, mixed>  $data
      */
     public function createPosDevice(array $data): PosDevice
     {
-        $item = $this->post('pos_devices', $data);
-
-        return new PosDevice($item, $this);
+        return $this->resource($this->post('pos_devices', $data), PosDevice::class);
     }
 
     /**
      * Delete a single resource.
      *
-     * @param string $posDeviceId
-     * @return array
+     * @return array<string, mixed>
      */
     public function deletePosDevice(string $posDeviceId): array
     {
-        return $this->delete("pos_devices/$posDeviceId");
+        return $this->deleteResource("pos_devices/$posDeviceId");
     }
 }
