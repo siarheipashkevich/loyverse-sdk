@@ -39,6 +39,32 @@ trait ManagesItems
     }
 
     /**
+     * Upload a single item image.
+     *
+     * @param string $itemId
+     * @param string $contents
+     * @param string $contentType
+     * @return void
+     */
+    public function uploadItemImage(string $itemId, string $contents, string $contentType = 'image/png'): void
+    {
+        $this->postRaw("items/$itemId/image", $contents, [
+            'Content-Type' => $contentType,
+        ]);
+    }
+
+    /**
+     * Delete a single item image.
+     *
+     * @param string $itemId
+     * @return array
+     */
+    public function deleteItemImage(string $itemId): array
+    {
+        return $this->delete("items/$itemId/image");
+    }
+
+    /**
      * Create or update a single item.
      *
      * @param array $data

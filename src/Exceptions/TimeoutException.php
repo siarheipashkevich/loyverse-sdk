@@ -23,7 +23,7 @@ class TimeoutException extends Exception
      *
      * @param array|null $output
      */
-    public function __construct(array $output = null)
+    public function __construct(?array $output = null)
     {
         parent::__construct('Script timed out while waiting for the process to complete.');
 

@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\{Utils, Response};
 use Pashkevich\Loyverse\{Loyverse, Exceptions};
+use Pashkevich\Loyverse\Resources\{Inventory, Item, ModifierOption, Variant};
 
 /**
  * Class LoyverseSDKTest
@@ -24,7 +25,7 @@ class LoyverseSDKTest extends TestCase
     {
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -45,7 +46,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -63,7 +64,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -81,7 +82,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -99,7 +100,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -117,7 +118,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -135,7 +136,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -153,7 +154,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -171,7 +172,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -189,7 +190,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -207,7 +208,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -225,7 +226,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -243,7 +244,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -261,7 +262,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -279,7 +280,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -297,7 +298,7 @@ class LoyverseSDKTest extends TestCase
 
         $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [])->andReturn(
+        $http->shouldReceive('request')->once()->with('GET', 'employees', ['timeout' => 30])->andReturn(
             $response = Mockery::mock(Response::class)
         );
 
@@ -305,7 +306,168 @@ class LoyverseSDKTest extends TestCase
         $response->shouldReceive('getBody')
             ->once()
             ->andReturn(Utils::streamFor('{"errors": [{"code": "RATE_LIMITED"}]}'));
+        $response->shouldReceive('getHeaderLine')->once()->with('Retry-After')->andReturn('120');
 
         $loyverse->employees();
+    }
+
+    public function test_uploads_item_image_with_raw_body()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('POST', 'items/item-id/image', [
+            'body' => 'image-bytes',
+            'headers' => ['Content-Type' => 'image/png'],
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(201);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(''));
+
+        $loyverse->uploadItemImage('item-id', 'image-bytes');
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_deletes_item_image_and_decodes_empty_json_object()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('DELETE', 'items/item-id/image', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor('{}'));
+
+        $this->assertSame([], $loyverse->deleteItemImage('item-id'));
+    }
+
+    public function test_set_timeout_is_passed_to_request()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse->setTimeout(120);
+
+        $http->shouldReceive('request')->once()->with('GET', 'employees', [
+            'timeout' => 120,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn(Utils::streamFor('{"employees": [], "cursor": "value"}'));
+
+        $loyverse->employees();
+
+        $this->assertSame(120, $loyverse->getTimeout());
+    }
+
+    public function test_item_resource_delegates_image_methods()
+    {
+        $loyverse = Mockery::mock(Loyverse::class);
+
+        $item = new Item([
+            'id' => 'item-id',
+            'variants' => [],
+        ], $loyverse);
+
+        $loyverse->shouldReceive('uploadItemImage')->once()->with('item-id', 'image-bytes', 'image/png');
+        $loyverse->shouldReceive('deleteItemImage')->once()->with('item-id')->andReturn([]);
+
+        $item->uploadImage('image-bytes');
+
+        $this->assertSame([], $item->deleteImage());
+    }
+
+    public function test_variant_update_uses_variant_id()
+    {
+        $loyverse = Mockery::mock(Loyverse::class);
+
+        $variant = new Variant([
+            'variant_id' => 'variant-id',
+            'stores' => [],
+        ], $loyverse);
+
+        $loyverse->shouldReceive('createVariant')->once()->with([
+            'sku' => 'NEW-SKU',
+            'variant_id' => 'variant-id',
+        ])->andReturn($variant);
+
+        $this->assertSame($variant, $variant->update(['sku' => 'NEW-SKU']));
+    }
+
+    public function test_modifier_option_exposes_timestamps()
+    {
+        $option = new ModifierOption([
+            'id' => 'option-id',
+            'name' => 'Large',
+            'price' => 1.5,
+            'position' => 1,
+            'created_at' => '2020-01-01T00:00:00.000Z',
+            'updated_at' => '2020-01-02T00:00:00.000Z',
+            'deleted_at' => null,
+        ]);
+
+        $this->assertSame('2020-01-01T00:00:00.000Z', $option->createdAt);
+        $this->assertSame('2020-01-02T00:00:00.000Z', $option->updatedAt);
+        $this->assertNull($option->deletedAt);
+    }
+
+    public function test_inventory_exposes_cursor()
+    {
+        $inventory = new Inventory([
+            'inventory_levels' => [],
+            'cursor' => 'next-cursor',
+        ]);
+
+        $this->assertSame('next-cursor', $inventory->cursor);
+        $this->assertSame([], $inventory->inventoryLevels);
+    }
+
+    public function test_exception_exposes_error_context()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('GET', 'employees', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->andReturn(404);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"errors": [{"code": "NOT_FOUND", "details": "The resource was not found", "field": "category_id"}]}'
+        ));
+
+        try {
+            $loyverse->employees();
+            $this->fail('Expected NotFoundException to be thrown.');
+        } catch (Exceptions\NotFoundException $exception) {
+            $this->assertSame(404, $exception->getStatus());
+            $this->assertSame('NOT_FOUND', $exception->getErrorCode());
+            $this->assertSame('The resource was not found', $exception->getDetails());
+            $this->assertSame('category_id', $exception->getField());
+            $this->assertCount(1, $exception->getErrors());
+        }
+    }
+
+    public function test_rate_limited_exception_exposes_retry_after()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('GET', 'employees', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->andReturn(429);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"errors": [{"code": "RATE_LIMITED"}]}'
+        ));
+        $response->shouldReceive('getHeaderLine')->once()->with('Retry-After')->andReturn('120');
+
+        try {
+            $loyverse->employees();
+            $this->fail('Expected RateLimitedException to be thrown.');
+        } catch (Exceptions\RateLimitedException $exception) {
+            $this->assertSame(120, $exception->getRetryAfter());
+        }
     }
 }

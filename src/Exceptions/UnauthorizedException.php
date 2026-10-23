@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class UnauthorizedException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class UnauthorizedException extends Exception
+class UnauthorizedException extends ApiException
 {
     /**
      * UnauthorizedException constructor.

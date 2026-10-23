@@ -36,4 +36,25 @@ class ModifierOption extends Resource
      * @var int
      */
     public int $position;
+
+    /**
+     * The time when this resource was created.
+     *
+     * @var string
+     */
+    public string $createdAt;
+
+    /**
+     * The time when this resource was updated.
+     *
+     * @var string
+     */
+    public string $updatedAt;
+
+    /**
+     * The time when this resource was deleted.
+     *
+     * @var string|null
+     */
+    public ?string $deletedAt;
 }

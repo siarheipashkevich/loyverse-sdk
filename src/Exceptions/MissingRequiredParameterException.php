@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class MissingRequiredParameterException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class MissingRequiredParameterException extends Exception
+class MissingRequiredParameterException extends ApiException
 {
     /**
      * MissingRequiredParameterException constructor.

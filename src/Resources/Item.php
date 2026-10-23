@@ -185,11 +185,33 @@ class Item extends Resource
      * @param array $attributes
      * @param Loyverse|null $loyverse
      */
-    public function __construct(array $attributes, Loyverse $loyverse = null)
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
 
         $this->variants = $this->transformCollection($this->variants ?: [], Variant::class);
+    }
+
+    /**
+     * Upload the image for the given item.
+     *
+     * @param string $contents
+     * @param string $contentType
+     * @return void
+     */
+    public function uploadImage(string $contents, string $contentType = 'image/png'): void
+    {
+        $this->loyverse->uploadItemImage($this->id, $contents, $contentType);
+    }
+
+    /**
+     * Delete the image for the given item.
+     *
+     * @return array
+     */
+    public function deleteImage(): array
+    {
+        return $this->loyverse->deleteItemImage($this->id);
     }
 
     /**

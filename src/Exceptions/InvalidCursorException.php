@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class InvalidCursorException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class InvalidCursorException extends Exception
+class InvalidCursorException extends ApiException
 {
     /**
      * InvalidCursorException constructor.

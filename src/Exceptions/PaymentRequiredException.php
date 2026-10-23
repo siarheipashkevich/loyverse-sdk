@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class PaymentRequiredException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class PaymentRequiredException extends Exception
+class PaymentRequiredException extends ApiException
 {
     /**
      * PaymentRequiredException constructor.

@@ -19,12 +19,19 @@ class Inventory extends Resource
     public array $inventoryLevels;
 
     /**
+     * The cursor for the next page of inventory levels.
+     *
+     * @var string|null
+     */
+    public ?string $cursor = null;
+
+    /**
      * Inventory constructor.
      *
      * @param array $attributes
      * @param Loyverse|null $loyverse
      */
-    public function __construct(array $attributes, Loyverse $loyverse = null)
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
 

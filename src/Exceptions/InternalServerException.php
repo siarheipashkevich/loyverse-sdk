@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class InternalServerException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class InternalServerException extends Exception
+class InternalServerException extends ApiException
 {
     /**
      * InternalServerException constructor.
