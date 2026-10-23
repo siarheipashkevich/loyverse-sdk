@@ -129,3 +129,8 @@ $item->components[0]->variantId;
 - `Loyverse::retryOnRateLimit()` for retrying rate limited requests.
 - `OAuth`, `AccessToken` and `Scopes` for OAuth 2.0 / OpenID Connect.
 - `WebhookSignature` for validating `X-Loyverse-Signature`.
+
+## Requirements
+
+- Guzzle 7 and Guzzle 8 are both supported.
+- The `ext-hash` extension is now required for webhook signature verification.

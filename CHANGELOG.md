@@ -25,6 +25,12 @@ All notable changes to `loyverse-sdk` will be documented in this file
 - `Shift::$closedAt`, `$closedByEmployee`, `$actualCash` and `Store::$state`, `$country`
   are nullable.
 
+### Dependencies
+
+- Guzzle 8 is now supported in addition to Guzzle 7 (`^7.2|^8.0`).
+- Added the `ext-hash` requirement for webhook signature verification.
+- Updated dev dependencies to Mockery `^1.6` and PHPUnit `^9.6`.
+
 ## 2.1.0 - 2026-10-23
 
 ### Added
