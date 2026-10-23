@@ -86,7 +86,7 @@ class Item extends Resource
      *
      * @var array
      */
-    public array $components;
+    public array $components = [];
 
     /**
      * The primary supplier id.
@@ -177,7 +177,7 @@ class Item extends Resource
      *
      * @var array
      */
-    public array $variants;
+    public array $variants = [];
 
     /**
      * Item constructor.
@@ -188,6 +188,8 @@ class Item extends Resource
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
+
+        $this->components = $this->transformCollection($this->components ?: [], ItemComponent::class);
 
         $this->variants = $this->transformCollection($this->variants ?: [], Variant::class);
     }

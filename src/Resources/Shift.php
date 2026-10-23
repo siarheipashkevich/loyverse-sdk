@@ -42,9 +42,9 @@ class Shift extends Resource
     /**
      * The time when the shift was closed.
      *
-     * @var string
+     * @var string|null
      */
-    public string $closedAt;
+    public ?string $closedAt = null;
 
     /**
      * The employee id who opened the shift.
@@ -56,9 +56,9 @@ class Shift extends Resource
     /**
      * The employee id who closed the shift.
      *
-     * @var string
+     * @var string|null
      */
-    public string $closedByEmployee;
+    public ?string $closedByEmployee = null;
 
     /**
      * The initial money amount at the start of the shift.
@@ -105,9 +105,9 @@ class Shift extends Resource
     /**
      * The actual money amount at the end of the shift.
      *
-     * @var float
+     * @var float|null
      */
-    public float $actualCash;
+    public ?float $actualCash = null;
 
     /**
      * The gross money amount for the shift.
@@ -157,21 +157,21 @@ class Shift extends Resource
      *
      * @var array
      */
-    public array $taxes;
+    public array $taxes = [];
 
     /**
      * The list of total money amounts for every payment type in the shift.
      *
      * @var array
      */
-    public array $payments;
+    public array $payments = [];
 
     /**
      * The list of shift cash movements.
      *
      * @var array
      */
-    public array $cashMovements;
+    public array $cashMovements = [];
 
     /**
      * Shift constructor.

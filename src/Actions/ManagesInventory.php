@@ -3,6 +3,7 @@
 namespace Pashkevich\Loyverse\Actions;
 
 use Pashkevich\Loyverse\Resources\Inventory;
+use Pashkevich\Loyverse\Resources\InventoryLevel;
 
 /**
  * Trait ManagesInventory
@@ -15,11 +16,15 @@ trait ManagesInventory
      * Inventory levels for item variants.
      *
      * @param array $parameters
-     * @return Inventory
+     * @return array{inventory_levels: InventoryLevel[], cursor: string|null}
      */
-    public function inventory(array $parameters = []): Inventory
+    public function inventory(array $parameters = []): array
     {
-        return new Inventory($this->get('inventory', $parameters), $this);
+        return $this->transformPage(
+            $this->get('inventory', $parameters),
+            'inventory_levels',
+            InventoryLevel::class,
+        );
     }
 
     /**

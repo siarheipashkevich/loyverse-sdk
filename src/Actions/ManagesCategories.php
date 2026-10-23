@@ -15,11 +15,11 @@ trait ManagesCategories
      * Get a list of categories.
      *
      * @param array $parameters
-     * @return Category[]
+     * @return array{categories: Category[], cursor: string|null}
      */
     public function categories(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('categories', $parameters)['categories'], Category::class);
+        return $this->transformPage($this->get('categories', $parameters), 'categories', Category::class);
     }
 
     /**

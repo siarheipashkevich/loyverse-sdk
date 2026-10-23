@@ -202,4 +202,48 @@ trait MakesHttpRequests
 
         throw new Exceptions\TimeoutException($output);
     }
+
+    /**
+     * Retry the callback when the API rate limit is exceeded.
+     *
+     * @param callable $callback
+     * @param int $maxAttempts
+     * @param int $baseDelay
+     * @param callable|null $sleeper
+     * @return mixed
+     */
+    public function retryOnRateLimit(
+        callable $callback,
+        int $maxAttempts = 3,
+        int $baseDelay = 1,
+        ?callable $sleeper = null
+    ) {
+        $attempt = 0;
+
+        while (true) {
+            try {
+                return $callback();
+            } catch (Exceptions\RateLimitedException $exception) {
+                $attempt++;
+
+                if ($attempt >= $maxAttempts) {
+                    throw $exception;
+                }
+
+                $delay = $exception->getRetryAfter();
+
+                if ($delay === null) {
+                    $delay = $baseDelay * (2 ** ($attempt - 1));
+                }
+
+                $delay = max(0, (int)$delay);
+
+                if ($sleeper !== null) {
+                    $sleeper($delay);
+                } else {
+                    sleep($delay);
+                }
+            }
+        }
+    }
 }

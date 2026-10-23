@@ -15,11 +15,11 @@ trait ManagesStores
      * Get a list of stores.
      *
      * @param array $parameters
-     * @return Store[]
+     * @return array{stores: Store[], cursor: string|null}
      */
     public function stores(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('stores', $parameters)['stores'], Store::class);
+        return $this->transformPage($this->get('stores', $parameters), 'stores', Store::class);
     }
 
     /**

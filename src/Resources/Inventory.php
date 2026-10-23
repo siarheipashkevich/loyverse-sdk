@@ -16,7 +16,7 @@ class Inventory extends Resource
      *
      * @var array
      */
-    public array $inventoryLevels;
+    public array $inventoryLevels = [];
 
     /**
      * The cursor for the next page of inventory levels.

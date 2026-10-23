@@ -15,16 +15,11 @@ trait ManagesEmployees
      * Get a list of employees.
      *
      * @param array $parameters
-     * @return array{employees: Employee[], cursor: string}
+     * @return array{employees: Employee[], cursor: string|null}
      */
     public function employees(array $parameters = []): array
     {
-        $response = $this->get('employees', $parameters);
-
-        return [
-            'employees' => $this->transformCollection($response['employees'], Employee::class),
-            'cursor' => $response['cursor'],
-        ];
+        return $this->transformPage($this->get('employees', $parameters), 'employees', Employee::class);
     }
 
     /**

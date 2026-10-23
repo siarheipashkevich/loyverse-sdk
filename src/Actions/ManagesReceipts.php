@@ -15,16 +15,11 @@ trait ManagesReceipts
      * Get a list of receipts.
      *
      * @param array $parameters
-     * @return array{receipts: Receipt[], cursor: string}
+     * @return array{receipts: Receipt[], cursor: string|null}
      */
     public function receipts(array $parameters = []): array
     {
-        $response = $this->get('receipts', $parameters);
-
-        return [
-            'receipts' => $this->transformCollection($response['receipts'], Receipt::class),
-            'cursor' => $response['cursor'],
-        ];
+        return $this->transformPage($this->get('receipts', $parameters), 'receipts', Receipt::class);
     }
 
     /**

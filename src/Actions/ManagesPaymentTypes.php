@@ -15,14 +15,11 @@ trait ManagesPaymentTypes
      * Get a list of payment types.
      *
      * @param array $parameters
-     * @return PaymentType[]
+     * @return array{payment_types: PaymentType[], cursor: string|null}
      */
     public function paymentTypes(array $parameters = []): array
     {
-        return $this->transformCollection(
-            $this->get('payment_types', $parameters)['payment_types'],
-            PaymentType::class,
-        );
+        return $this->transformPage($this->get('payment_types', $parameters), 'payment_types', PaymentType::class);
     }
 
     /**

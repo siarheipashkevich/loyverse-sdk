@@ -15,11 +15,11 @@ trait ManagesPosDevices
      * Get a list of pos devices.
      *
      * @param array $parameters
-     * @return PosDevice[]
+     * @return array{pos_devices: PosDevice[], cursor: string|null}
      */
     public function posDevices(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('pos_devices', $parameters)['pos_devices'], PosDevice::class);
+        return $this->transformPage($this->get('pos_devices', $parameters), 'pos_devices', PosDevice::class);
     }
 
     /**

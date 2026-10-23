@@ -44,7 +44,7 @@ class Modifier extends Resource
      *
      * @var array
      */
-    public array $modifierOptions;
+    public array $modifierOptions = [];
 
     /**
      * The time when this resource was created.
