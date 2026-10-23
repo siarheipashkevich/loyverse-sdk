@@ -38,6 +38,28 @@ class Loyverse
     public const string DEFAULT_BASE_URI = 'https://api.loyverse.com/v1.0/';
 
     /**
+     * @var array<string, string>
+     */
+    private const array LIST_KEYS = [
+        'categories' => 'categories',
+        'customers' => 'customers',
+        'discounts' => 'discounts',
+        'employees' => 'employees',
+        'inventory' => 'inventory_levels',
+        'items' => 'items',
+        'modifiers' => 'modifiers',
+        'paymentTypes' => 'payment_types',
+        'posDevices' => 'pos_devices',
+        'receipts' => 'receipts',
+        'shifts' => 'shifts',
+        'stores' => 'stores',
+        'suppliers' => 'suppliers',
+        'taxes' => 'taxes',
+        'variants' => 'variants',
+        'webhooks' => 'webhooks',
+    ];
+
+    /**
      * The Loyverse API Key.
      */
     protected string $apiKey;
@@ -465,6 +487,33 @@ class Loyverse
                 $seen[$cursor] = true;
             }
         } while ($cursor !== null);
+    }
+
+    /**
+     * Get an opt-in paginator for a list method.
+     *
+     * @param array<string, mixed> $parameters
+     */
+    public function page(string $method, array $parameters = []): Paginator
+    {
+        if (! isset(self::LIST_KEYS[$method])) {
+            throw new \InvalidArgumentException(sprintf('Method %s is not a paginated list method.', $method));
+        }
+
+        $result = $this->{$method}($parameters);
+
+        $key = self::LIST_KEYS[$method];
+        $items = $result[$key] ?? [];
+        $cursor = isset($result['cursor']) ? (string) $result['cursor'] : null;
+
+        return new Paginator(
+            is_array($items) ? $items : [],
+            $cursor === '' ? null : $cursor,
+            fn (?string $nextCursor): Paginator => $this->page(
+                $method,
+                $nextCursor === null ? $parameters : array_merge($parameters, ['cursor' => $nextCursor])
+            ),
+        );
     }
 
     /**

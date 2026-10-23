@@ -18,6 +18,7 @@ Run an example:
 php examples/merchant.php
 php examples/items.php
 php examples/inventory.php
+php examples/paginator.php
 ```
 
 ## Receipts
@@ -30,6 +31,12 @@ export VARIANT_ID="..."
 export PAYMENT_TYPE_ID="..."
 export AMOUNT="10.00"
 php examples/create-receipt.php
+```
+
+The same request using a DTO:
+
+```bash
+php examples/create-receipt-dto.php
 ```
 
 Create a refund:

@@ -42,6 +42,28 @@ class Resource
         foreach ($this->attributes as $key => $value) {
             $key = $this->camelCase($key);
 
+            if (property_exists($this, $key)) {
+                $property = new \ReflectionProperty($this, $key);
+
+                if ($value === null && $property->hasType() && ! $property->getType()->allowsNull()) {
+                    continue;
+                }
+
+                if ($value !== null && $property->hasType() && is_scalar($value)) {
+                    $type = $property->getType();
+
+                    if ($type instanceof \ReflectionNamedType) {
+                        $value = match ($type->getName()) {
+                            'int' => (int) $value,
+                            'float' => (float) $value,
+                            'string' => (string) $value,
+                            'bool' => (bool) $value,
+                            default => $value,
+                        };
+                    }
+                }
+            }
+
             $this->{$key} = $value;
         }
     }

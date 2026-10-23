@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Data\RefundReceiptData;
 use Pashkevich\Loyverse\Loyverse;
 
 class Receipt extends Resource
@@ -174,7 +175,7 @@ class Receipt extends Resource
      *
      * @param array<string, mixed> $data
      */
-    public function refund(array $data): Receipt
+    public function refund(array|RefundReceiptData $data): Receipt
     {
         return $this->client()->createReceiptRefund($this->receiptNumber, $data);
     }
