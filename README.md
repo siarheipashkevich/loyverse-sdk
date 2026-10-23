@@ -11,7 +11,11 @@ create an API token through [Loyverse](https://loyverse.com) itself.
 - [Documentation](#documentation)
     - [Installation](#installation)
     - [Basic Usage](#basic-usage)
+    - [OAuth](#oauth)
     - [Pagination](#pagination)
+    - [Handling Errors](#handling-errors)
+    - [Retries](#retries)
+    - [Webhook Signatures](#webhook-signatures)
     - [Managing Categories](#managing-categories)
     - [Managing Customers](#managing-customers)
     - [Managing Discounts](#managing-discounts)
@@ -29,10 +33,6 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Taxes](#managing-taxes)
     - [Managing Variants](#managing-variants)
     - [Managing Webhooks](#managing-webhooks)
-    - [Handling Errors](#handling-errors)
-    - [OAuth](#oauth)
-    - [Webhook Signatures](#webhook-signatures)
-    - [Retries](#retries)
 - [Upgrading from 2.x](UPGRADING.md)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -106,6 +106,46 @@ You can also set the desired timeout value. The timeout is applied to every HTTP
 $loyverse->setTimeout(120)->createCategory(array $data);
 ```
 
+### OAuth
+
+The SDK supports both personal access tokens and OAuth 2.0. Create an `OAuth` instance and
+redirect the merchant to the authorization URL:
+
+``` php
+use Pashkevich\Loyverse\{Loyverse, OAuth, Scopes};
+
+$oauth = new OAuth();
+$state = OAuth::generateState();
+
+$url = $oauth->authorizationUrl(
+    CLIENT_ID,
+    REDIRECT_URI,
+    $state,
+    [Scopes::ITEMS_READ, Scopes::RECEIPTS_READ]
+);
+```
+
+Store `$state` in the session and compare it with the `state` query parameter in the
+callback. After that, exchange the authorization code for an access token:
+
+``` php
+$token = $oauth->exchangeCode(CLIENT_ID, CLIENT_SECRET, $_GET['code'], REDIRECT_URI);
+
+$loyverse = new Loyverse($token->accessToken);
+```
+
+Refresh the token when it expires:
+
+``` php
+if ($token->isExpired(60) && $token->refreshToken !== null) {
+    $token = $oauth->refreshToken(CLIENT_ID, CLIENT_SECRET, $token->refreshToken);
+}
+```
+
+`AccessToken` exposes `accessToken`, `tokenType`, `expiresIn`, `refreshToken`, `scope`,
+`idToken`, `isExpired()`, `getScopes()` and `getIdTokenClaims()`. ID token claims are decoded
+without signature verification.
+
 ### Pagination
 
 You can iterate over all pages of a list endpoint with `paginate()`. The callback receives
@@ -129,6 +169,73 @@ foreach ($loyverse->paginate(function (array $parameters) use ($loyverse) {
 
 `paginate()` automatically passes the cursor returned by the previous page and stops when
 the cursor is empty. It also stops if the API returns the same cursor twice.
+
+### Handling Errors
+
+All API errors are represented by exceptions that extend
+`Pashkevich\Loyverse\Exceptions\ApiException`. The exception exposes the HTTP status,
+the error code and the details returned by the API:
+
+``` php
+use Pashkevich\Loyverse\Exceptions\ApiException;
+
+try {
+    $loyverse->item('missing-item-id');
+} catch (ApiException $exception) {
+    $exception->getStatus();     // 404
+    $exception->getErrorCode();  // "NOT_FOUND"
+    $exception->getDetails();    // "The resource was not found"
+    $exception->getField();      // null or the field related to the error
+    $exception->getErrors();     // the full list of errors
+}
+```
+
+For rate limited requests you can also read the delay before retrying:
+
+``` php
+try {
+    $loyverse->items();
+} catch (Pashkevich\Loyverse\Exceptions\RateLimitedException $exception) {
+    $exception->getRetryAfter(); // seconds, or null when the header is missing
+}
+```
+
+### Retries
+
+`retryOnRateLimit()` retries the callback when the API responds with `429`. It uses the
+`Retry-After` header when present, otherwise it falls back to exponential backoff:
+
+``` php
+$page = $loyverse->retryOnRateLimit(function () use ($loyverse) {
+    return $loyverse->items();
+});
+```
+
+The default is 3 attempts. You can pass the maximum number of attempts and the base delay in
+seconds:
+
+``` php
+$loyverse->retryOnRateLimit($callback, 5, 2);
+```
+
+### Webhook Signatures
+
+Webhooks created by OAuth2 applications include an `X-Loyverse-Signature` header. Verify it
+with the application's Client Secret:
+
+``` php
+use Pashkevich\Loyverse\WebhookSignature;
+
+$payload = file_get_contents('php://input');
+$signature = $_SERVER['HTTP_X_LOYVERSE_SIGNATURE'] ?? '';
+
+if (!WebhookSignature::verify($payload, $signature, CLIENT_SECRET)) {
+    http_response_code(401);
+    exit;
+}
+```
+
+The payload must be the raw request body, before JSON decoding.
 
 ### Managing Categories
 
@@ -384,113 +491,6 @@ On a `Webhook` instance you may also call:
 ``` php
 $webhook->update(array $data);
 $webhook->delete();
-```
-
-### Handling Errors
-
-All API errors are represented by exceptions that extend
-`Pashkevich\Loyverse\Exceptions\ApiException`. The exception exposes the HTTP status,
-the error code and the details returned by the API:
-
-``` php
-use Pashkevich\Loyverse\Exceptions\ApiException;
-
-try {
-    $loyverse->item('missing-item-id');
-} catch (ApiException $exception) {
-    $exception->getStatus();     // 404
-    $exception->getErrorCode();  // "NOT_FOUND"
-    $exception->getDetails();    // "The resource was not found"
-    $exception->getField();      // null or the field related to the error
-    $exception->getErrors();     // the full list of errors
-}
-```
-
-For rate limited requests you can also read the delay before retrying:
-
-``` php
-try {
-    $loyverse->items();
-} catch (Pashkevich\Loyverse\Exceptions\RateLimitedException $exception) {
-    $exception->getRetryAfter(); // seconds, or null when the header is missing
-}
-```
-
-### OAuth
-
-The SDK supports both personal access tokens and OAuth 2.0. Create an `OAuth` instance and
-redirect the merchant to the authorization URL:
-
-``` php
-use Pashkevich\Loyverse\{Loyverse, OAuth, Scopes};
-
-$oauth = new OAuth();
-$state = OAuth::generateState();
-
-$url = $oauth->authorizationUrl(
-    CLIENT_ID,
-    REDIRECT_URI,
-    $state,
-    [Scopes::ITEMS_READ, Scopes::RECEIPTS_READ]
-);
-```
-
-Store `$state` in the session and compare it with the `state` query parameter in the
-callback. After that, exchange the authorization code for an access token:
-
-``` php
-$token = $oauth->exchangeCode(CLIENT_ID, CLIENT_SECRET, $_GET['code'], REDIRECT_URI);
-
-$loyverse = new Loyverse($token->accessToken);
-```
-
-Refresh the token when it expires:
-
-``` php
-if ($token->isExpired(60) && $token->refreshToken !== null) {
-    $token = $oauth->refreshToken(CLIENT_ID, CLIENT_SECRET, $token->refreshToken);
-}
-```
-
-`AccessToken` exposes `accessToken`, `tokenType`, `expiresIn`, `refreshToken`, `scope`,
-`idToken`, `isExpired()`, `getScopes()` and `getIdTokenClaims()`. ID token claims are decoded
-without signature verification.
-
-### Webhook Signatures
-
-Webhooks created by OAuth2 applications include an `X-Loyverse-Signature` header. Verify it
-with the application's Client Secret:
-
-``` php
-use Pashkevich\Loyverse\WebhookSignature;
-
-$payload = file_get_contents('php://input');
-$signature = $_SERVER['HTTP_X_LOYVERSE_SIGNATURE'] ?? '';
-
-if (!WebhookSignature::verify($payload, $signature, CLIENT_SECRET)) {
-    http_response_code(401);
-    exit;
-}
-```
-
-The payload must be the raw request body, before JSON decoding.
-
-### Retries
-
-`retryOnRateLimit()` retries the callback when the API responds with `429`. It uses the
-`Retry-After` header when present, otherwise it falls back to exponential backoff:
-
-``` php
-$page = $loyverse->retryOnRateLimit(function () use ($loyverse) {
-    return $loyverse->items();
-});
-```
-
-The default is 3 attempts. You can pass the maximum number of attempts and the base delay in
-seconds:
-
-``` php
-$loyverse->retryOnRateLimit($callback, 5, 2);
 ```
 
 ### Testing
