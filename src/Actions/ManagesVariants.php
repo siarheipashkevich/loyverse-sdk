@@ -11,7 +11,7 @@ trait ManagesVariants
     /**
      * Get a list of item variants.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function variants(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesVariants
     /**
      * Create or update a single variant.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createVariant(array $data): Variant
     {

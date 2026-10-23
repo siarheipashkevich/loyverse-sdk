@@ -24,7 +24,7 @@ class Resource
     /**
      * Resource constructor.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
@@ -79,7 +79,7 @@ class Resource
      *
      * @template T of Resource
      *
-     * @param  class-string<T>  $class
+     * @param class-string<T> $class
      * @return array<int, T>
      */
     protected function transformNested(string $key, string $class): array
@@ -112,9 +112,9 @@ class Resource
      *
      * @template T of Resource
      *
-     * @param  array<int, array<string, mixed>>  $collection
-     * @param  class-string<T>  $class
-     * @param  array<string, mixed>  $extraData
+     * @param array<int, array<string, mixed>> $collection
+     * @param class-string<T> $class
+     * @param array<string, mixed> $extraData
      * @return array<int, T>
      */
     protected function transformCollection(array $collection, string $class, array $extraData = []): array

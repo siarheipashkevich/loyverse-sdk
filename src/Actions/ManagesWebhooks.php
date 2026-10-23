@@ -11,7 +11,7 @@ trait ManagesWebhooks
     /**
      * Get a list of webhooks.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function webhooks(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesWebhooks
     /**
      * Create or update a single webhook.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createWebhook(array $data): Webhook
     {

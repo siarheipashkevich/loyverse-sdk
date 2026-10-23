@@ -109,7 +109,7 @@ class Customer extends Resource
     /**
      * Update the given customer.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Customer
     {

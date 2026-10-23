@@ -22,7 +22,7 @@ final readonly class AccessToken
     /**
      * Create a token from an API response.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public static function fromArray(array $attributes): self
     {

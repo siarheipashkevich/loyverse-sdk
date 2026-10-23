@@ -23,7 +23,7 @@ class Inventory extends Resource
     /**
      * Inventory constructor.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {

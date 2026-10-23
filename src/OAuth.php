@@ -41,7 +41,7 @@ class OAuth
     /**
      * Build the URL the merchant should be redirected to.
      *
-     * @param  array<Scope|string>  $scopes
+     * @param array<Scope|string> $scopes
      */
     public function authorizationUrl(
         string $clientId,
@@ -105,7 +105,7 @@ class OAuth
     /**
      * Request a new token from the OAuth server.
      *
-     * @param  array<string, mixed>  $payload
+     * @param array<string, mixed> $payload
      */
     public function requestToken(#[\SensitiveParameter] array $payload): AccessToken
     {

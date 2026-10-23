@@ -61,7 +61,7 @@ class Discount extends Resource
     /**
      * Update the given discount.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Discount
     {

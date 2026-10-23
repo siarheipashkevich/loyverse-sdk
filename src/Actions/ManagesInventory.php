@@ -12,7 +12,7 @@ trait ManagesInventory
     /**
      * Inventory levels for item variants.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function inventory(array $parameters = []): array
@@ -23,7 +23,7 @@ trait ManagesInventory
     /**
      * Batch update inventory levels for item variants.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function updateInventory(array $data): Inventory
     {

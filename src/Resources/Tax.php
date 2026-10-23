@@ -51,7 +51,7 @@ class Tax extends Resource
     /**
      * Update the given tax.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Tax
     {

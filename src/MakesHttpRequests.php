@@ -11,7 +11,7 @@ trait MakesHttpRequests
     /**
      * Make a GET request to Loyverse servers and return the response.
      *
-     * @param  array<string, mixed>  $payload
+     * @param array<string, mixed> $payload
      */
     public function get(string $uri, array $payload = []): mixed
     {
@@ -23,7 +23,7 @@ trait MakesHttpRequests
     /**
      * Make a POST request to Loyverse servers and return the response.
      *
-     * @param  array<string, mixed>  $payload
+     * @param array<string, mixed> $payload
      */
     public function post(string $uri, array $payload = []): mixed
     {
@@ -35,7 +35,7 @@ trait MakesHttpRequests
     /**
      * Make a PUT request to Loyverse servers and return the response.
      *
-     * @param  array<string, mixed>  $payload
+     * @param array<string, mixed> $payload
      */
     public function put(string $uri, array $payload = []): mixed
     {
@@ -47,7 +47,7 @@ trait MakesHttpRequests
     /**
      * Make a DELETE request to Loyverse servers and return the response.
      *
-     * @param  array<string, mixed>  $payload
+     * @param array<string, mixed> $payload
      */
     public function delete(string $uri, array $payload = []): mixed
     {
@@ -59,7 +59,7 @@ trait MakesHttpRequests
     /**
      * Make a request with a raw body to Loyverse servers and return the response.
      *
-     * @param  array<string, string>  $headers
+     * @param array<string, string> $headers
      */
     public function requestRaw(string $verb, string $uri, string $body, array $headers = []): mixed
     {
@@ -72,7 +72,7 @@ trait MakesHttpRequests
     /**
      * Make a POST request with a raw body to Loyverse servers and return the response.
      *
-     * @param  array<string, string>  $headers
+     * @param array<string, string> $headers
      */
     public function postRaw(string $uri, string $body, array $headers = []): mixed
     {
@@ -82,7 +82,7 @@ trait MakesHttpRequests
     /**
      * Make request to Loyverse servers and return the response.
      *
-     * @param  array<string, mixed>  $options
+     * @param array<string, mixed> $options
      */
     protected function request(string $verb, string $uri, array $options = []): mixed
     {

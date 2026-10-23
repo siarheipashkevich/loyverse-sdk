@@ -63,9 +63,9 @@ class Loyverse
      *
      * @template T of Resource
      *
-     * @param  array<int, array<string, mixed>>  $collection
-     * @param  class-string<T>  $class
-     * @param  array<string, mixed>  $extraData
+     * @param array<int, array<string, mixed>> $collection
+     * @param class-string<T> $class
+     * @param array<string, mixed> $extraData
      * @return array<int, T>
      */
     protected function transformCollection(array $collection, string $class, array $extraData = []): array
@@ -81,9 +81,9 @@ class Loyverse
      * @template TKey of string
      * @template T of Resource
      *
-     * @param  array<string, mixed>  $response
-     * @param  TKey  $key
-     * @param  class-string<T>  $class
+     * @param array<string, mixed> $response
+     * @param TKey $key
+     * @param class-string<T> $class
      * @return array<string, mixed>
      */
     protected function transformPage(array $response, string $key, string $class): array
@@ -101,7 +101,7 @@ class Loyverse
      *
      * @template T of Resource
      *
-     * @param  class-string<T>  $class
+     * @param class-string<T> $class
      * @return T
      */
     protected function resource(mixed $response, string $class): Resource
@@ -118,7 +118,7 @@ class Loyverse
      *
      * @template T of Resource
      *
-     * @param  class-string<T>  $class
+     * @param class-string<T> $class
      * @return T
      */
     protected function getResource(string $uri, string $class): Resource
@@ -132,9 +132,9 @@ class Loyverse
      * @template TKey of string
      * @template T of Resource
      *
-     * @param  array<string, mixed>  $parameters
-     * @param  TKey  $key
-     * @param  class-string<T>  $class
+     * @param array<string, mixed> $parameters
+     * @param TKey $key
+     * @param class-string<T> $class
      * @return array<string, mixed>
      */
     protected function getPage(string $uri, array $parameters, string $key, string $class): array
@@ -170,8 +170,8 @@ class Loyverse
      * The callback receives the current query parameters and must return a page
      * array with a list of resources and a cursor.
      *
-     * @param  callable(array<string, mixed>): array<string, mixed>  $fetch
-     * @param  array<string, mixed>  $parameters
+     * @param callable(array<string, mixed>): array<string, mixed> $fetch
+     * @param array<string, mixed> $parameters
      * @return Generator<int, Resources\Resource>
      */
     public function paginate(callable $fetch, array $parameters = []): Generator

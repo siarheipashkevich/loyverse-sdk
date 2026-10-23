@@ -2,6 +2,10 @@
     "preset": "psr12",
     "rules": {
         "declare_strict_types": true,
-        "single_line_empty_body": true
+        "single_line_empty_body": true,
+        "phpdoc_align": {
+            "align": "left",
+            "spacing": 1
+        }
     }
 }

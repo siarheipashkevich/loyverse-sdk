@@ -52,7 +52,7 @@ class ApiException extends Exception
     /**
      * Attach the error context from the API response.
      *
-     * @param  array<int, array<string, mixed>>  $errors
+     * @param array<int, array<string, mixed>> $errors
      * @return $this
      */
     public function setContext(

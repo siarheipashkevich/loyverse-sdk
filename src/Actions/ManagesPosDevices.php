@@ -11,7 +11,7 @@ trait ManagesPosDevices
     /**
      * Get a list of pos devices.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function posDevices(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesPosDevices
     /**
      * Create or update a single pos device.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createPosDevice(array $data): PosDevice
     {

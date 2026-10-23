@@ -11,7 +11,7 @@ trait ManagesItems
     /**
      * Get a list of items.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function items(array $parameters = []): array
@@ -50,7 +50,7 @@ trait ManagesItems
     /**
      * Create or update a single item.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createItem(array $data): Item
     {

@@ -154,7 +154,7 @@ class Receipt extends Resource
     /**
      * Receipt constructor.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
@@ -172,7 +172,7 @@ class Receipt extends Resource
     /**
      * Create a refund for the given receipt.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function refund(array $data): Receipt
     {

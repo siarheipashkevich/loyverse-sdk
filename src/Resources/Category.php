@@ -34,7 +34,7 @@ class Category extends Resource
     /**
      * Update the given category.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Category
     {

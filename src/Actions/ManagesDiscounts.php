@@ -11,7 +11,7 @@ trait ManagesDiscounts
     /**
      * Get a list of discounts.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function discounts(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesDiscounts
     /**
      * Create or update a single discount.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createDiscount(array $data): Discount
     {

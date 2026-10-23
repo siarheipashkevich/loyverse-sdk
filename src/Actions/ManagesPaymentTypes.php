@@ -11,7 +11,7 @@ trait ManagesPaymentTypes
     /**
      * Get a list of payment types.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function paymentTypes(array $parameters = []): array

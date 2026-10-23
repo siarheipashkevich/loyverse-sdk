@@ -34,7 +34,7 @@ class PosDevice extends Resource
     /**
      * Update the given pos device.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): PosDevice
     {

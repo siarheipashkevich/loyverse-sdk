@@ -11,7 +11,7 @@ trait ManagesEmployees
     /**
      * Get a list of employees.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function employees(array $parameters = []): array

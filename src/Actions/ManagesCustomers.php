@@ -11,7 +11,7 @@ trait ManagesCustomers
     /**
      * Get a list of customers.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function customers(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesCustomers
     /**
      * Create or update a single customer.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createCustomer(array $data): Customer
     {

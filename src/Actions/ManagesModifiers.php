@@ -11,7 +11,7 @@ trait ManagesModifiers
     /**
      * Get a list of modifiers.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function modifiers(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesModifiers
     /**
      * Create or update a single modifier.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createModifier(array $data): Modifier
     {

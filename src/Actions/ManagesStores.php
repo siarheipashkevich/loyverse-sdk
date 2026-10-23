@@ -11,7 +11,7 @@ trait ManagesStores
     /**
      * Get a list of stores.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function stores(array $parameters = []): array

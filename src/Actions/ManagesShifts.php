@@ -11,7 +11,7 @@ trait ManagesShifts
     /**
      * Get a list of shifts.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function shifts(array $parameters = []): array

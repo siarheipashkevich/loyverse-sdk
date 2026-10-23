@@ -11,7 +11,7 @@ trait ManagesTaxes
     /**
      * Get a list of taxes.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function taxes(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesTaxes
     /**
      * Create or update a single tax.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createTax(array $data): Tax
     {

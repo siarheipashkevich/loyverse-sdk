@@ -89,7 +89,7 @@ class Supplier extends Resource
     /**
      * Update the given supplier.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Supplier
     {

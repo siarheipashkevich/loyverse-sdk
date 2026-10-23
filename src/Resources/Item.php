@@ -139,7 +139,7 @@ class Item extends Resource
     /**
      * Item constructor.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
@@ -171,7 +171,7 @@ class Item extends Resource
     /**
      * Update the given item.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Item
     {

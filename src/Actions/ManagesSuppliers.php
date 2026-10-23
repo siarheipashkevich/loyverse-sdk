@@ -11,7 +11,7 @@ trait ManagesSuppliers
     /**
      * Get a list of suppliers.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function suppliers(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesSuppliers
     /**
      * Create or update a single supplier.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createSupplier(array $data): Supplier
     {

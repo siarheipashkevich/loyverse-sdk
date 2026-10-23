@@ -18,7 +18,7 @@ class TimeoutException extends Exception
     /**
      * TimeoutException constructor.
      *
-     * @param  array<string, mixed>|null  $output
+     * @param array<string, mixed>|null $output
      */
     public function __construct(?array $output = null)
     {

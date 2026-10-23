@@ -11,7 +11,7 @@ trait ManagesCategories
     /**
      * Get a list of categories.
      *
-     * @param  array<string, mixed>  $parameters
+     * @param array<string, mixed> $parameters
      * @return array<string, mixed>
      */
     public function categories(array $parameters = []): array
@@ -30,7 +30,7 @@ trait ManagesCategories
     /**
      * Create or update a single category.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function createCategory(array $data): Category
     {

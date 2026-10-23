@@ -49,7 +49,7 @@ class Webhook extends Resource
     /**
      * Update the given webhook.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function update(array $data): Webhook
     {
