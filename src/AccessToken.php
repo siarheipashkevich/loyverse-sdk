@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse;
 
-final class AccessToken
+final readonly class AccessToken
 {
     /**
      * AccessToken constructor.
      */
     public function __construct(
-        public readonly string $accessToken,
-        public readonly string $tokenType,
-        public readonly int $expiresIn,
-        public readonly ?string $refreshToken,
-        public readonly ?string $scope,
-        public readonly ?string $idToken,
-        public readonly int $createdAt,
+        public string $accessToken,
+        public string $tokenType,
+        public int $expiresIn,
+        public ?string $refreshToken,
+        public ?string $scope,
+        public ?string $idToken,
+        public int $createdAt,
     ) {}
 
     /**
