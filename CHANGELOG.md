@@ -2,6 +2,23 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.3.0 - 2026-10-23
+
+### Added
+
+- `getRateLimitResetsAt()` on `RateLimitedException`, populated from the
+  `x-ratelimit-reset` header.
+- `FakesHttpRequests` test trait with real PSR-7 request assertions.
+- `EndpointTest` covering every SDK action method.
+- `MethodCoverageTest` ensuring every action method has an endpoint test.
+- Opt-in integration test suite (`tests/Integration`, `phpunit-integration.xml`).
+- `branch-alias` for `dev-master` in `composer.json`.
+
+### Changed
+
+- The default PHPUnit suite excludes integration tests.
+- `composer test-integration` runs the opt-in integration suite.
+
 ## 4.2.0 - 2026-10-23
 
 ### Added

@@ -1,5 +1,15 @@
 # Upgrading
 
+## From 4.2 to 4.3
+
+No breaking changes. New additions:
+
+- `RateLimitedException::getRateLimitResetsAt()` reads `x-ratelimit-reset`.
+- `FakesHttpRequests` test trait.
+- `EndpointTest` and `MethodCoverageTest`.
+- Opt-in integration tests (`composer test-integration`).
+- `dev-master` branch alias.
+
 ## From 4.1 to 4.2
 
 No breaking changes. New features:

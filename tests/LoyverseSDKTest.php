@@ -332,6 +332,7 @@ class LoyverseSDKTest extends TestCase
             ->once()
             ->andReturn(Utils::streamFor('{"errors": [{"code": "RATE_LIMITED"}]}'));
         $response->shouldReceive('getHeaderLine')->once()->with('Retry-After')->andReturn('120');
+        $response->shouldReceive('getHeaderLine')->once()->with('x-ratelimit-reset')->andReturn('');
 
         $loyverse->employees();
     }
@@ -487,12 +488,14 @@ class LoyverseSDKTest extends TestCase
             '{"errors": [{"code": "RATE_LIMITED"}]}'
         ));
         $response->shouldReceive('getHeaderLine')->once()->with('Retry-After')->andReturn('120');
+        $response->shouldReceive('getHeaderLine')->once()->with('x-ratelimit-reset')->andReturn('1760000000');
 
         try {
             $loyverse->employees();
             $this->fail('Expected RateLimitedException to be thrown.');
         } catch (Exceptions\RateLimitedException $exception) {
             $this->assertSame(120, $exception->getRetryAfter());
+            $this->assertSame(1760000000, $exception->getRateLimitResetsAt());
         }
     }
 

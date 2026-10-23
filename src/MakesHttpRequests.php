@@ -175,6 +175,8 @@ trait MakesHttpRequests
 
         $retryAfter = $code === 'RATE_LIMITED' ? $response->getHeaderLine('Retry-After') : null;
 
+        $rateLimitReset = $code === 'RATE_LIMITED' ? $response->getHeaderLine('x-ratelimit-reset') : null;
+
         $class = match ($code) {
             'INTERNAL_SERVER_ERROR' => Exceptions\InternalServerException::class,
             'BAD_REQUEST' => Exceptions\BadRequestException::class,
@@ -195,7 +197,7 @@ trait MakesHttpRequests
 
         $exception = new $class();
 
-        throw $exception->setContext($status, $errors, $code, $retryAfter);
+        throw $exception->setContext($status, $errors, $code, $retryAfter, $rateLimitReset);
     }
 
     /**
