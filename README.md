@@ -36,7 +36,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Variants](#managing-variants)
     - [Managing Webhooks](#managing-webhooks)
     - [Fake Client](#fake-client)
-- [Upgrading from 2.x](UPGRADING.md)
+- [Upgrading](UPGRADING.md)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Security Vulnerabilities](#security)
@@ -264,7 +264,8 @@ For rate limited requests you can also read the delay before retrying:
 try {
     $loyverse->items();
 } catch (Pashkevich\Loyverse\Exceptions\RateLimitedException $exception) {
-    $exception->getRetryAfter(); // seconds, or null when the header is missing
+    $exception->getRetryAfter();      // seconds, or null when the header is missing
+    $exception->getRateLimitResetsAt(); // Unix timestamp from x-ratelimit-reset
 }
 ```
 
@@ -591,9 +592,17 @@ composer format-test
 composer audit
 ```
 
+Integration tests are opt-in and skipped unless `tests/Integration/.env.testing` is configured:
+
+``` bash
+cp tests/Integration/.env.testing.example tests/Integration/.env.testing
+composer test-integration
+```
+
 The suite includes a contract test that checks all endpoints from the committed Loyverse
-OpenAPI snapshot. A scheduled GitHub Actions workflow compares that snapshot with the live
-specification and fails when the API changes.
+OpenAPI snapshot, an endpoint test for every SDK action method and a method coverage test.
+A scheduled GitHub Actions workflow compares that snapshot with the live specification and
+fails when the API changes.
 
 ### Contributing
 

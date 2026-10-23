@@ -48,6 +48,8 @@ If the project maintainer has any additional requirements, you will find them li
 
 - **Add tests!** - Your patch won't be accepted if it doesn't have tests. Run `composer test` to execute the suite.
 
+- **Integration tests** - Copy `tests/Integration/.env.testing.example` to `tests/Integration/.env.testing` and run `composer test-integration` when changing API behavior.
+
 - **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 
 - **Consider our release cycle** - We try to follow [SemVer v2.0.0](https://semver.org/). Randomly breaking public APIs is not an option.

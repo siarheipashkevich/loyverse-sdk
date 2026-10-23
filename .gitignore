@@ -6,4 +6,5 @@ coverage
 phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
+tests/Integration/.env.testing
 .idea

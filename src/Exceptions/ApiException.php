@@ -41,6 +41,11 @@ class ApiException extends LoyverseException
     protected ?int $retryAfter = null;
 
     /**
+     * The timestamp when the rate limit resets.
+     */
+    protected ?int $rateLimitResetsAt = null;
+
+    /**
      * ApiException constructor.
      */
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
@@ -58,7 +63,8 @@ class ApiException extends LoyverseException
         int $status,
         array $errors = [],
         ?string $errorCode = null,
-        ?string $retryAfter = null
+        ?string $retryAfter = null,
+        ?string $rateLimitReset = null
     ): static {
         $this->status = $status;
         $this->errors = $errors;
@@ -75,6 +81,10 @@ class ApiException extends LoyverseException
             } elseif (($timestamp = strtotime($retryAfter)) !== false) {
                 $this->retryAfter = max(0, $timestamp - time());
             }
+        }
+
+        if ($rateLimitReset !== null && is_numeric($rateLimitReset)) {
+            $this->rateLimitResetsAt = (int) $rateLimitReset;
         }
 
         return $this;
@@ -128,5 +138,13 @@ class ApiException extends LoyverseException
     public function getRetryAfter(): ?int
     {
         return $this->retryAfter;
+    }
+
+    /**
+     * Get the timestamp when the rate limit resets.
+     */
+    public function getRateLimitResetsAt(): ?int
+    {
+        return $this->rateLimitResetsAt;
     }
 }
