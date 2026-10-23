@@ -1,0 +1,56 @@
+name: openapi
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    name: Check Loyverse OpenAPI changes
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download current OpenAPI specification
+        run: curl -sSL https://developer.loyverse.com/docs/API-Reference__v1.0.yaml -o /tmp/openapi.yaml
+
+      - name: Compare with the committed snapshot
+        run: |
+          ruby -ryaml -rjson -e '
+            def canonical(value)
+              case value
+              when Hash
+                value.keys.sort.each_with_object({}) { |key, result| result[key] = canonical(value[key]) }
+              when Array
+                value.map { |item| canonical(item) }
+              else
+                value
+              end
+            end
+
+            puts JSON.generate(canonical(YAML.load_file(ARGV[0])))
+          ' /tmp/openapi.yaml > /tmp/latest.json
+
+          ruby -rjson -e '
+            def canonical(value)
+              case value
+              when Hash
+                value.keys.sort.each_with_object({}) { |key, result| result[key] = canonical(value[key]) }
+              when Array
+                value.map { |item| canonical(item) }
+              else
+                value
+              end
+            end
+
+            puts JSON.generate(canonical(JSON.parse(File.read(ARGV[0]))))
+          ' tests/Fixtures/openapi.json > /tmp/snapshot.json
+
+          diff -u /tmp/snapshot.json /tmp/latest.json

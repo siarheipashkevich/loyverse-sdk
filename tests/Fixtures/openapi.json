@@ -1,0 +1,4993 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://api.loyverse.com/v1.0"
+    }
+  ],
+  "info": {
+    "version": "1.0",
+    "title": "Loyverse API",
+    "x-logo": {
+      "altText": "Loyverse logo"
+    },
+    "description": "\n# Using the REST API\nThe Loyverse API follows the general patterns of REST. You can use the resources of a Loyverse account (items, receipts, etc.) by making HTTPS requests to URLs that represent those resources. You can find description of all the endpoints here.\n\nTo test and explore Loyverse API you can use Postman. Postman is a powerful HTTP client for testing RESTful APIs by displaying requests and responses in manageable formats.\n\nThese are steps you need to take to start testing Loyverse API via Postman:\n1. Download and install Postman. You can get it here: [https://www.getpostman.com](https://www.getpostman.com)\n\n2. Get [Loyverse API Postman Collection](https://developer.loyverse.com/docs/Loyverse_API.postman_collection.json) and import it into Postman.\n\n3. Define variables used in postman collection. For example, in Loyverse production environment for Loyverse API v1.0 you should define `baseUrl` variable as `https://api.loyverse.com/v1.0`. It is useful to configure variables in postman environments so you will not have to redefine the values for each request manually. [Learn more about Postman environments](https://learning.postman.com/docs/sending-requests/managing-environments/)\n\n4. Configure the Postman Authorization header. Each request to Loyverse API should contain a token in request header. You can read more about ways to get the token in the Authorization section of the documentation.\n\nOnce you complete these steps you are ready to make calls to Loyverse API via Postman.\n\n\n\n# Versioning\n\nThe Loyverse API uses versioning. This documentation is for version 1.0 of the API. Version must be specified in the base URL, for example: `https://api.loyverse.com/v1.0`\n\n# Authorization\n\nAn application credential is any piece of information that identifies, authenticates, or authorizes an application in some way.\n\nLoyverse API provide two authorization methods:\n* Personal access tokens\n* OAuth 2.0\n## Personal access tokens\nPersonal access tokens are a simple way to make calls to the API. This authorization method suites best e.g. for periodically running scripts on data of your own account.\n\nYou can get your personal access token on the [corresponding page](https://r.loyverse.com/dashboard/#/integrations/tokens) in the back office of your account. For every call to the API you must include your access token in the Authorization header:\n\n```\n{\n  Authorization: Bearer fMYgxHEYtcyT8cvtvgi1Za5DRs4vArSyvydlnd9f\n}\n```\n\nBe aware that personal access token gives unlimited access to the targeted account.\n## OAuth 2.0\nThe main steps of OAuth flow are:\n1. Creating your app\n2. Requesting a temporary authorization code\n3. Requesting an access token\n4. Making API requests\n5. Refreshing the access token as needed\n\n### Creating an application\nTo create an app go to the [developer dashboard](http://developer.loyverse.com/apps) and specify all required data for your app. After  successfully creating your app you will be given a set of 2 unique keys `client_id` and `client_secret` which are used to identify your app and are required to complete the authorization process.\n### OAuth Authentication Flow\nThe merchant (resource owner) needs to authorize your app to access their data. Guide them to the authorization URL so that they can authorize your app. Authorization URL must be in format:\n\n```\nhttps://api.loyverse.com/oauth/authorize?client_id={client_id}&scope={scope}&response_type=code&redirect_uri={redirect_uri}&state={state}\n```\n\nThis URL must contain query parameters:\n* client_id: the app id provided when creating your app.\n* response_type: specify ‘code’ that means your app is requesting an authorization code grant.\n* redirect_uri: should be equal to one of the redirect URL list provided when creating your app.\n* scope: the list of permissions to the retailer's account that you app needs (the complete list of permissions see below). The scope values must be separated with the space character, %20.\n* state: a random value provided by your app that is unique for each authorization request. It is used to link requests and callbacks to  prevent cross-site request forgery attacks. During the OAuth callback, your app must check that this value matches the one you provided during authorization.\n\n**Permissions list:**\n\nPermission | Description\n----------|-------------\nCUSTOMERS_READ | Read customer information\nCUSTOMERS_WRITE | Edit customer information\nEMPLOYEES_READ | Read employee information\nITEMS_READ | Read items, categories, discounts and modifiers\nINVENTORY_READ | Read inventory\nINVENTORY_WRITE | Edit inventory \nITEMS_WRITE | Edit items, discounts, categories and modifiers\nMERCHANT_READ | Read merchant information\nPAYMENT_TYPES_READ | Read payment types\nPOS_DEVICES_READ | Read POS devices information\nPOS_DEVICES_WRITE | Update POS devices information\nRECEIPTS_READ | Read receipts\nRECEIPTS_WRITE | Create receipts\nSHIFTS_READ | Read shifts\nSTORES_READ | Read store information\nSUPPLIERS_READ | Read supplier information\nSUPPLIERS_WRITE | Edit supplier information\nTAXES_READ | Read taxes\nTAXES_WRITE | Edit taxes\n\n\nOnce directed to this link, the merchant will be asked to log in to their Loyverse account (if he is not already logged in). He will then be asked to allow or deny the authentication request. After allowing access, an authorization code will be sent back to your app to the specified redirect URI.\n\nOnce you have the authorization code, your app can now request an access token by sending a request to the following Access Token URL:\n\n```\nhttps://api.loyverse.com/oauth/token\n```\n\nThe payload of your request must be with Content-Type: application/x-www-form-urlencoded and include:\n* client_id\n* client_secret\n* redirect_uri\n* code\n* grant_type (specify ‘authorization_code’)\n\nIn case of successful request you will get a response with an access token.  Response example:\n\n```\n{\n  \"access_token\": \"39557133-8881-4ce7-99b5-2ab4d15c2092\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 43200,\n  \"refresh_token\": \"J3F62YPIQdfJjJia1xJuaHp7NoQYtm9y0WadNBTh\",\n  \"scope\": \"ITEMS_READ\"\n}\n```\n\nOnce you receive an access token you can use it to interact with the Loyverse API on behalf of the merchant by providing the access token in an Authorization header.\n\n### Refreshing access token\n\nWhen the access token expires you can obtain a new one by making POST request to `https://api.loyverse.com/oauth/token` with the following parameters:\n\n* client_id\n* client_secret\n* refresh_token\n* grant_type (specify \"refresh_token\")\n\n\n## OpenID Connect \n[OpenID Connect](https://openid.net/connect/) is a simple identity layer on top of the OAuth 2.0 protocol. It allows your app to authorize the user and obtain basic user profile information.\n\nID token is a [JSON Web Token (JWT)](https://tools.ietf.org/html/rfc7519) that contains identity information about the user that is digitally signed by Loyverse. To get ID token you need to specify `OPENID` scope in the authorization request along with other scopes that are necessary for your app.\n\nResponse example: \n```\n{\n  \"access_token\": \"39557133-8881-4ce7-99b5-2ab4d15c2092\",\n  \"id_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5ZTY4MjE0Ny1kZDdlLTExZWEtODNiMi05MDJiMzRhNWEwMzkiLCJhdWQiOiI2Nzc5ZWYyMGU3NTgxN2I3OTYwMiIsImNvdW50cnkiOiJqcCIsImlzcyI6Imh0dHBzOi8vYXBpLmxveXZlcnNlLmNvbSIsIm5hbWUiOiJQT1MzIiwiY3JlYXRlZF9hdCI6IjIwMTgtMDYtMDRUMTU6NDQ6MjAuMDIwKzAzOjAwIiwiZXhwIjoxNjAxNDI0MDAwLCJpYXQiOjE1OTg4Njk3MDgsImVtYWlsIjoicG9zQG1haWxpbmF0b3IuY29tIn0.n2wQZtRRU0k2bGxSaz9BY6blf8dAXDAG47UBbAiW9vH8YVnZ1CBcvxkzARAUDjTGuZbGLLUFvzHLT8X5DPulXUt8LhZS2YOpnJccVWrH8RiatwAErwmGGkxJisPwJrFVgQ0qX0O2Wo3NiA_UfY9g3SSveexfOE6g2VWTct8eMdzB0qTyBrtIPtBSVXApdSxF1d5Abl8e2xu2R5LDTdQhb4YxzLejU-sU9ppdYedJBqorhzJBfs6Mi7YyzsCGQ5SrY1ZA7pQNHuO9bUijyj3pHMshlcpvZJzxOfYbEczyUKMsQPdlqdgHGlyaoYJhQuVKPVxVz06dpBBpsdwMfI6Ofw\"\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 43200,\n  \"refresh_token\": \"J3F62YPIQdfJjJia1xJuaHp7NoQYtm9y0WadNBTh\",\n  \"scope\": \"OPENID ITEMS_READ ITEMS_WRITE RECEIPTS_READ\"\n}\n```\n\nAn ID token consists of three encoded parts separated by dots:\n* Header\n* Payload\n* Signature\n\nHeader is Base64Url encoded JSON with the following structure:\n```\n{\n  typ: \"JWT\",\n  alg: \"RS256\"\n}\n```\n* typ: the type of the token\n* alg: the hashing algorithm being used, such as HMAC SHA256 or RSA\n\nThe second part of ID token is a payload that has metadata about the user. Loyverse provides following fields (claims):\n\nClaim|Description\n----------|-------------\naud | The audience that this ID token is intended for. It must be the OAuth 2.0 client ID of a developer app.\nexp | The time when ID token expires, represented in Unix time (integer seconds).\niat | The time the ID token was issued. Represented in Unix time (integer seconds).\niss | The issuer identifier for the issuer of the response. This is always set to https://api.loyverse.com\nsub | An identifier for the user, unique among all Loyverse accounts and never reused. You can use sub within your application as the unique-identifier key for the user.\ncountry | The country code associated with the merchant account (ISO 3166-1-alpha-2 format)\nname | The name of business\nemail | The account email address\ncreated_at | The date and time when the merchant account was created\n\nThe payload example:\n```\n{\n  \"sub\": \"b4d08058-dc81-11ea-90b4-1269e7c5a22d\",\n  \"aud\": \"rmCfGKJJ22UdUGndankJ\",\n  \"iss\": \"https://api.loyverse.com\",\n  \"iat\": 1353601026,\n  \"exp\": 1353604926,\n  \"country\": \"jp\",\n  \"name\": \"Best Store\",\n  \"created_at\": \"2020-06-04T15:44:20.020+03:00\",\n  \"email\": \"jsmith@example.com\",\n}\n```\nThe same info you can get by calling `https://api.loyverse.com/userinfo` endpoint.\nThe third part of JWT is signature which is used to verify that the sender of the JWT is  Loyverse and used to ensure that the message wasn’t changed along the way.\nTo verify signature you should use keys that you can get by calling `api.loyverse.com/.well-known/jwks.json` endpoint.\nResponse example:\n```\n{\n  \"keys\":\n  [\n    {\n      \"kty\":\"RSA\",\n      \"n\": \"0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx\n  4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs\n  tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2\n  QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI\n  SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb\n  w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw\",\n      \"e\":\"AQAB\",\n      \"alg\":\"RS256\",\n      \"kid\":\"2011-04-29\"\n    }\n  ]\n}\n```\n\n### Discovery document\n\nThe OpenID Connect protocol requires the use of multiple endpoints for authenticating users, and for requesting resources including tokens, user information, and public keys.\nTo simplify implementations and increase flexibility, OpenID Connect allows the use of a \"Discovery document,\" a JSON document found at a well-known location containing key-value pairs which provide details about the OpenID Connect provider's configuration, including the URIs of the authorization, token, revocation, userinfo, and public-keys endpoints. The Discovery document for Loyverse OpenID Connect service may be found here:\n```\nhttps://api.loyverse.com/.well-known/openid-configuration\n```\nResponse example:\n```\n{\n  \"issuer\": \"https://api.loyverse.com\",\n  \"authorization_endpoint\": \"https://api.loyverse.com/oauth/authorize\",\n  \"token_endpoint\": \"https://api.loyverse.com/oauth/token\",\n  \"userinfo_endpoint\": \"https://api.loyverse.com/userinfo\",\n  \"jwks_uri\": \"https://api.loyverse.com/.well-known/jwks.json\",\n  \"scopes_supported\": [\n    \"items_read\",\n    \"items_write\",\n    \"customers_read\",\n    \"customers_write\",\n    \"employees_read\",\n    \"inventory_read\",\n    \"inventory_write\",\n    \"pos_devices_read\",\n    \"pos_devices_write\",\n    \"receipts_read\",\n    \"receipts_write\",\n    \"shifts_read\",\n    \"stores_read\",\n    \"payment_types_read\",\n    \"taxes_read\",\n    \"taxes_write\",\n    \"merchant_read\",\n    \"profile_read\",\n    \"suppliers_read\",\n    \"suppliers_write\",\n    \"openid\"\n  ],\n  \"response_types_supported\": [\n    \"code\"\n  ]\n}\n```\n\n\n\n\n\n\n\n# Pagination \n\nSome API endpoints paginate their responses to make the result set easier to handle. For example, if you request a list of items that is potentially too large to handle efficiently, the endpoint will return the first batch of results along with a marker of some kind to access the next batch of results. You may be able to avoid dealing with pagination by narrowing your initial request. \n\nPaginated results include a cursor field as part of the response body. To fetch the next set of results, send a followup request to the same endpoint and provide the cursor value returned in the previous response as a query parameter. When the endpoint sends the final set of results, the response body will not include a cursor field.\n\nIt is possible to change the number of objects returned in the response. It can be done by passing the `limit` parameter. Default value is 50 and maximum is 250.\n\n\n\n# API rate limits\n\nThe Loyverse API platform applies rate limits to the API requests that it receives. Every request is subject to throttling under our general limits. There are additional resource-based rate limits. Your app should be prepared to implement retry behavior if it is throttled.\nThe current limit is 300 requests per 300 sec per account. All requests that are made after rate limits have been exceeded are throttled and an HTTP `429 Too Many Requests` error is returned. \n\n# Date and time format\nAll dates and times in the API are in UTC. In requests you should specify dates and times in UTC. When processing responses you should convert dates and times to your local time.\n\n# Soft deletion\n\nLoyverse uses soft-deletion for most of its records. In the API, a soft-deleted object will have a special status. These records will not be returned by default, but can be accessed using `\"show_deleted\" = \"true\"` filter  and have `deleted_at` parameter. Notice that some resources (like customers) don't use soft deletion due to personal data restrictions.\n\n# Handling errors\n\nThe API will return an Error List for a failed request, which will contain one or more Error objects.\n\n```\n{\n  errors: [\n    {\n      code: \"NOT_FOUND\",\n      details: \"The resource was not found\",\n      field: \"category_id\"\n    }\n  ]\n}\n```\nThe Loyverse API uses the following error codes:\n\nError code|Description\n----------|-------------\n500 INTERNAL_SERVER_ERROR | Generic internal server error. Try again later.\n400 BAD_REQUEST | General client error. The request was not understood by the server, generally due to bad syntax.\n400 INCORRECT_VALUE_TYPE | The JSON value type for the field is incorrect. For example, a string instead of an integer.\n400 MISSING_REQUIRED_PARAMETER | A required path, query, or body parameter is missing.\n400 INVALID_VALUE | A parameter's value is incorrect.\n400 INVALID_RANGE | Specified time range is incorrect. For example, the end time is before the start time.\n400 INVALID_CURSOR | The pagination cursor is incorrect.\n400 CONFLICTING_PARAMETERS | 1 or more of the request parameters conflict with each other.\n401 UNAUTHORIZED | An authentication error. Request had a missing, malformed, or invalid authorization data\n402 PAYMENT_REQUIRED | The subscription of account has lapsed\n403 FORBIDDEN | The resource requested is not available with your permissions\n404 NOT_FOUND | The resource was not found\n415 UNSUPPORTED_MEDIA_TYPE | The server doesn't accept the submitted content-type.\n429 RATE_LIMITED | The request was not accepted because the application has exceeded the rate limit.\n\n# Webhooks overview\n\nWebhooks are the best way to get real-time notifications about different events in Loyverse system. One way to be in sync with Loyverse updates is to periodically pull the particular endpoint, but webhooks give you more effective way to accomplish this task. \n\nSupported webhook events:\n\nEvent|Description\n----------|-------------\ninventory_levels.update |  Webhook is fired when a item’s inventory is updated.\nitems.update |  Webhook is fired when an item is created, updated or deleted.\ncustomers.update |  Webhook is fired when a customer is created, updated or deleted.\nreceipts.update |  Webhook is fired when a receipt is created or updated.\nshifts.create |   Webhook is fired when a closed shift is created.\n\nWhen an event occurs, Loyverse collects data on the event, creates a notification, and sends it as a POST request to the notification URL registered while configuring  webhook.\n\n## Adding webhook\nThere are two ways to configure webhooks:\n* **Personal Access Token** — use the [/webhooks endpoint](https://developer.loyverse.com/docs/#tag/Webhooks) or the web interface at https://r.loyverse.com/dashboard/#/webhooks. Webhooks created this way belong to the merchant and are **not signed** — the `X-Loyverse-Signature` header is not included in their notifications.\n* **OAuth2 application** — use the [/webhooks endpoint](https://developer.loyverse.com/docs/#tag/Webhooks) with an OAuth2 access token. Webhooks created this way are owned by the application and **are signed** — every notification includes an `X-Loyverse-Signature` header generated using the application's Client Secret.\n\nYou can subscribe to a single event in one webhook. The combination of event type and url must be unique. The specified URL must be formatted correctly, use the HTTPS, and be reachable.\n\n\n## Webhook payload\n\nOnce you create a webhook, Loyverse will send a HTTP POST request to the URL defined by the webhook every time when event occurs. The POST request contain JSON data with details of the object that caused the hooked event and HTTP headers that provide context.\n\nPayload example for `inventory_levels.update` event type:\n```\n{\n  \"merchant_id\": \"5fk4f446-01d2-8787-4fd5-7b7b1995df85\",\n  \"type\": \"inventory_levels.update\",\n  \"created_at\": \"2020-06-07T17:23:48.562Z\",\n  \"inventory_levels\": [\n    {\n      \"variant_id\": \"5fk4f446-01d2-8787-4fd5-7b7b1995df85\",\n      \"store_id\": \"5fk4f446-01d2-8787-4fd5-7b7b1995df85\",\n      \"in_stock\": 0,\n      \"updated_at\": \"2019-08-24T14:15:22Z\"\n    }\n  ]\n}\n\n```\n\n\nYou will find additional HTTP headers for a request:\n\nHTTP header|Description\n----------|-------------\nX-Loyverse-Signature | A signature used to validate the notification authenticity. **Only present for webhooks created by OAuth2 applications.** (See Validate notifications section for more information)\nX-Loyverse-API-version | Used to confirm what version of the Loyverse API used to serialize the webhook payload (for example \"v1.0\")\n\n\nIf there is batch update of objects in the system (for example, caused by items import), Loyverse will send several request with maximum 100 objects in the array.\n\n## Testing webhook\n\nIf you create a webhook via web interface, you can quickly test your configuration by sending test notification. Loyverse will send test POST request with the dummy data the specified URL.\nWhen testing webhooks, you can run your server or use different services such as Beeceptor.\n\n\n## Validate notifications\n\nThis section applies to **webhooks created by OAuth2 applications**. Webhooks created with a Personal Access Token do not include the `X-Loyverse-Signature` header and do not require signature validation.\n\nBecause your webhook endpoint is publicly accessible, anyone on the internet can send requests to it. To confirm that a notification genuinely came from Loyverse and was not tampered with in transit, you must verify the signature attached to every webhook request from an OAuth2-owned webhook.\n\n**How the signature works**\n\nEvery webhook request from Loyverse includes an `X-Loyverse-Signature` header. Its value is a lowercase hex-encoded HMAC-SHA1 digest computed from the raw request body, using your application's **Client Secret** as the key.\n\n**How to verify the signature**\n\nFollow these steps each time your endpoint receives a webhook request:\n\n1. **Read the raw request body.** Use the exact bytes received — do not parse, decode, or reformat the body before computing the digest.\n2. **Retrieve your Client Secret.** This is the secret associated with your OAuth application in the Loyverse Developer Portal.\n3. **Compute an HMAC-SHA1 digest.** Use your Client Secret (encoded as UTF-8) as the key and the raw request body (encoded as UTF-8) as the message.\n4. **Hex-encode the result.** Convert each byte of the HMAC output to a two-character lowercase hexadecimal string and concatenate them.\n5. **Compare the values.** Check that the hex-encoded digest you just computed matches the value in the `X-Loyverse-Signature` header of the incoming request. Use a constant-time comparison to prevent timing attacks.\n\nIf the values match, the request is authentic. If they do not match, reject the request — do not process its payload.\n\n## Request timeout and retries\nWhen receiving webhook request on your end you must send a 2xx response. Any response outside of the 2xx range, will be considered by Loyverse as a delivery failure. Loyverse does not follow redirects for webhook notifications and considers them to be an error response.\nIn the case of delivery failure Loyverse will retry sending the request 200 times during 48 hours. If there is no 2XX response within this time range, then the webhook status will be changed to \"Disabled\". Loyverse will send a warning message to the developer email address.\n"
+  },
+  "tags": [
+    {
+      "name": "Categories"
+    },
+    {
+      "name": "Customers"
+    },
+    {
+      "name": "Discounts"
+    },
+    {
+      "name": "Employees"
+    },
+    {
+      "name": "Inventory"
+    },
+    {
+      "name": "Items"
+    },
+    {
+      "name": "Merchant"
+    },
+    {
+      "name": "Modifiers"
+    },
+    {
+      "name": "Payment types"
+    },
+    {
+      "name": "POS devices"
+    },
+    {
+      "name": "Receipts"
+    },
+    {
+      "name": "Shifts"
+    },
+    {
+      "name": "Stores"
+    },
+    {
+      "name": "Suppliers"
+    },
+    {
+      "name": "Taxes"
+    },
+    {
+      "name": "Webhooks"
+    }
+  ],
+  "paths": {
+    "/webhooks/{webhook_id}": {
+      "parameters": [
+        {
+          "name": "webhook_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get a single webhook",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get a list of webhooks",
+        "description": "This endpoint will only return webhooks created by the application which is making the request.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Create or update a single webhook",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
+                ],
+                "required": [
+                  "url",
+                  "type"
+                ]
+              }
+            }
+          },
+          "description": "The webhook object"
+        }
+      }
+    },
+    "/merchant/": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "summary": "Get merchant information",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/suppliers/{supplier_id}": {
+      "parameters": [
+        {
+          "name": "supplier_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Suppliers"
+        ],
+        "summary": "Get a single supplier",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Supplier"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Suppliers"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/suppliers/": {
+      "get": {
+        "tags": [
+          "Suppliers"
+        ],
+        "summary": "Get a list of suppliers",
+        "description": "The list of suppliers is sorted by created_at property in descending order.  The most recent suppliers appear first",
+        "parameters": [
+          {
+            "name": "suppliers_ids",
+            "in": "query",
+            "description": "Return only suppliers specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "suppliers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Supplier"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Suppliers"
+        ],
+        "summary": "Create or update a single supplier",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Supplier"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Supplier"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          },
+          "description": "The category object"
+        }
+      }
+    },
+    "/categories/{category_id}": {
+      "parameters": [
+        {
+          "name": "category_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get a single category",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get a list of categories",
+        "description": "The list of categories is sorted by created_at property in descending order.  The most recent categories appear first",
+        "parameters": [
+          {
+            "name": "categories_ids",
+            "in": "query",
+            "description": "Return only categories specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Category"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "categories": [
+                    {
+                      "id": "7ac0c2ab-219c-492c-a091-a39dd0ac18a2",
+                      "name": "Clothes",
+                      "color": "ORANGE",
+                      "created_at": "2020-06-01 10:55:48 UTC",
+                      "deleted_at": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Create or update a single category",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          },
+          "description": "The category object"
+        }
+      }
+    },
+    "/customers/{customer_id}": {
+      "parameters": [
+        {
+          "name": "customer_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Get a single customer",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Get a list of customers",
+        "description": "The list of customers is sorted by created_at property in descending order.  The most recent customers appear first",
+        "parameters": [
+          {
+            "name": "customer_ids",
+            "in": "query",
+            "description": "Return only customers specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Filter customers by email",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Customer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Create or update a single customer",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "The customer object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discounts/{discount_id}": {
+      "parameters": [
+        {
+          "name": "discount_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Discounts"
+        ],
+        "summary": "Get a single discount",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discount"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Discounts"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discounts": {
+      "get": {
+        "tags": [
+          "Discounts"
+        ],
+        "summary": "Get a list of discounts",
+        "description": "The list of discounts is sorted by created_at property in descending order.  The most recent discounts appear first",
+        "parameters": [
+          {
+            "name": "discount_ids",
+            "in": "query",
+            "description": "Return only discounts specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "discounts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Discount"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Discounts"
+        ],
+        "summary": "Create or update a single discount",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discount"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Discount"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "type"
+                ]
+              }
+            }
+          },
+          "description": "The category object",
+          "required": true
+        }
+      }
+    },
+    "/employees/{employee_id}": {
+      "parameters": [
+        {
+          "name": "employee_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Employees"
+        ],
+        "summary": "Get a single employee",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employee"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees": {
+      "get": {
+        "tags": [
+          "Employees"
+        ],
+        "summary": "Get a list of employees",
+        "description": "The list of employees is sorted by created_at property in descending order.  The most recent employees appear first",
+        "parameters": [
+          {
+            "name": "employee_ids",
+            "in": "query",
+            "description": "Return only employees specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "employees": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Employee"
+                      }
+                    },
+                    "cursor": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inventory": {
+      "get": {
+        "tags": [
+          "Inventory"
+        ],
+        "summary": "Inventory levels for item variants",
+        "parameters": [
+          {
+            "name": "store_ids",
+            "in": "query",
+            "description": "Show inventory levels only for specified stores",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant_ids",
+            "in": "query",
+            "description": "Show inventory levels only for specified variants",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated_at_min",
+            "in": "query",
+            "description": "Show inventory levels updated at or after specified date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "updated_at_max",
+            "in": "query",
+            "description": "Show inventory levels updated at or before specified date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GETInventory_levels"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Inventory"
+        ],
+        "summary": "Batch update inventory levels for item variants",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/POSTInventoryChanges"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inventory_levels": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GETInventory_level"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/{item_id}": {
+      "parameters": [
+        {
+          "name": "item_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Get a single item",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GETItem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/{item_id}/image": {
+      "parameters": [
+        {
+          "name": "item_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Upload a single image",
+        "description": "You can download image directly using image/png requests with image data. The following is an example of such an HTTP request:\n```\nPOST /v1.0/{item_id}/image\nContent-Type: image/png\nContent-Length: 1000\n\n[file content goes there]\n```",
+        "requestBody": {
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Delete a single image",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items": {
+      "get": {
+        "summary": "Get a list of items",
+        "description": "The list of items is sorted by created_at property in descending order.  The most recent items appear first",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "name": "items_ids",
+            "in": "query",
+            "description": "Return only items specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GETItem"
+                      }
+                    },
+                    "cursor": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Create or update a single item",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GETItem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/POSTItem"
+              }
+            }
+          },
+          "description": "The item object",
+          "required": true
+        }
+      }
+    },
+    "/modifiers/{modifier_id}": {
+      "parameters": [
+        {
+          "name": "modifier_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Modifiers"
+        ],
+        "summary": "Get a single modifier",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Modifier"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Modifiers"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modifiers": {
+      "get": {
+        "tags": [
+          "Modifiers"
+        ],
+        "summary": "Get a list of modifiers",
+        "description": "The list of modifiers is sorted by created_at property in descending order.  The most recent modifiers appear first",
+        "parameters": [
+          {
+            "name": "modifier_ids",
+            "in": "query",
+            "description": "Return only modifiers specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "modifiers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Modifier"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Modifiers"
+        ],
+        "summary": "Create or update a single modifier",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Modifier"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "The modifier object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Modifier"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "modifier_options"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment_types/{payment_type_id}": {
+      "parameters": [
+        {
+          "name": "payment_type_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Payment types"
+        ],
+        "summary": "Get a single payment type",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment_types": {
+      "get": {
+        "tags": [
+          "Payment types"
+        ],
+        "summary": "Get a list of payment types",
+        "description": "The list of payment types is sorted by created_at property in descending order.  The most recent payment types appear first",
+        "parameters": [
+          {
+            "name": "payment_type_ids",
+            "in": "query",
+            "description": "Return only payment types specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "payment_types": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PaymentType"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pos_devices/{pos_device_id}": {
+      "parameters": [
+        {
+          "name": "pos_device_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "POS devices"
+        ],
+        "summary": "Get a single pos device",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pos_device"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "POS devices"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pos_devices": {
+      "get": {
+        "tags": [
+          "POS devices"
+        ],
+        "summary": "Get a list of pos devices",
+        "description": "The list of pos devices is sorted by created_at property in descending order.  The most recent pos devices appear first",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "query",
+            "description": "Show pos devices only for specified store",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pos_devices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pos_device"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "POS devices"
+        ],
+        "summary": "Create or update a single pos device",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pos_device"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "The pos device object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Pos_device"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "store_id"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/receipts/{receipt_number}": {
+      "get": {
+        "tags": [
+          "Receipts"
+        ],
+        "summary": "Get a single receipt",
+        "parameters": [
+          {
+            "name": "receipt_number",
+            "in": "path",
+            "description": "The unique number of the receipt",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                },
+                "examples": {
+                  "Example_1": {
+                    "value": {
+                      "receipt_number": "2-1008",
+                      "note": null,
+                      "receipt_type": "SALE",
+                      "refund_for": null,
+                      "order": "O-1598498",
+                      "created_at": "2020-06-23T08:35:47.047Z",
+                      "updated_at": "2020-06-23T08:35:47.047Z",
+                      "source": "My app",
+                      "receipt_date": "2020-06-23T08:34:45.025Z",
+                      "cancelled_at": null,
+                      "total_money": 17.52,
+                      "total_tax": 0.92,
+                      "points_earned": 1.75,
+                      "points_deducted": 0.0,
+                      "points_balance": 332.32,
+                      "customer_id": "c71758a2-79bf-11ea-bde9-1269e7c5a22d",
+                      "total_discount": 7.4,
+                      "employee_id": "58f53835-7a17-11ea-bde9-1269e7c5a22d",
+                      "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                      "pos_device_id": "1cce2f2e-8033-4b67-ad2a-b9d1c749ec26",
+                      "dining_option": "Dine in",
+                      "total_discounts": [
+                        {
+                          "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                          "type": "FIXED_PERCENT",
+                          "name": "Percent discount",
+                          "percentage": 10,
+                          "money_amount": 2.4
+                        },
+                        {
+                          "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                          "type": "DISCOUNT_BY_POINTS",
+                          "name": "Discount by points",
+                          "money_amount": 5
+                        }
+                      ],
+                      "total_taxes": [
+                        {
+                          "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                          "type": "ADDED",
+                          "name": "Added",
+                          "rate": 5.545,
+                          "money_amount": 0.92
+                        }
+                      ],
+                      "tip": 0.0,
+                      "surcharge": 0.0,
+                      "line_items": [
+                        {
+                          "id": "365972a1-7268-11ea-bde9-1269e7c5a22d",
+                          "item_id": "d5fe0da6-44b3-4633-9915-e9dc5118cbfc",
+                          "variant_id": "706e2626-3329-45f8-98d7-0e1dbcbcb9d9",
+                          "item_name": "Ice cream",
+                          "variant_name": null,
+                          "sku": "10010",
+                          "quantity": 2,
+                          "price": 10.0,
+                          "gross_total_money": 24.0,
+                          "total_money": 17.52,
+                          "cost": 5.0,
+                          "cost_total": 10.0,
+                          "line_note": "Note for the item",
+                          "line_taxes": [
+                            {
+                              "money_amount": 0.92,
+                              "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                              "type": "ADDED",
+                              "name": "Added",
+                              "rate": 5.545
+                            }
+                          ],
+                          "total_discount": 7.4,
+                          "line_discounts": [
+                            {
+                              "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                              "type": "FIXED_PERCENT",
+                              "name": "Percent discount",
+                              "money_amount": 2.4
+                            },
+                            {
+                              "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                              "type": "DISCOUNT_BY_POINTS",
+                              "name": "Discount by points",
+                              "money_amount": 5.0
+                            }
+                          ],
+                          "line_modifiers": [
+                            {
+                              "id": "832a8516-71bf-4515-b742-e868898a1aba",
+                              "modifier_option_id": "89e741df-4767-41b1-ad40-d9245c01a51d",
+                              "name": "Toppings",
+                              "option": "Cherry",
+                              "price": 2.0,
+                              "money_amount": 4.0
+                            }
+                          ]
+                        }
+                      ],
+                      "payments": [
+                        {
+                          "payment_type_id": "42dd2a55-6f40-11ea-bde9-1269e7c5a22d",
+                          "name": "Cash",
+                          "type": "CASH",
+                          "money_amount": 5.84,
+                          "paid_at": "2020-06-23T08:35:47.047Z",
+                          "payment_details": null
+                        },
+                        {
+                          "payment_type_id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                          "name": "Cash rounding",
+                          "type": "CASHROUNDING",
+                          "money_amount": 0.04,
+                          "paid_at": "2020-03-10T08:23:20.020Z",
+                          "payment_details": null
+                        },
+                        {
+                          "payment_type_id": "42dd2d07-6f40-11ea-bde9-1269e7c5a22d",
+                          "name": "Card",
+                          "type": "NONINTEGRATEDCARD",
+                          "money_amount": 5.84,
+                          "paid_at": "2020-06-23T08:35:47.047Z",
+                          "payment_details": null
+                        },
+                        {
+                          "payment_type_id": "49d306bc-4454-48c1-9a92-c878290af83e",
+                          "name": "Worldpay",
+                          "type": "WORLDPAY",
+                          "money_amount": 5.84,
+                          "paid_at": "2020-06-23T08:35:47.047Z",
+                          "payment_details": {
+                            "authorization_code": "5215651D",
+                            "reference_id": 15657563452342,
+                            "entry_method": "EMV",
+                            "card_company": "VISA",
+                            "card_number": "•••• •••• •••• 4242"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/receipts": {
+      "get": {
+        "tags": [
+          "Receipts"
+        ],
+        "summary": "Get a list of receipts",
+        "description": "The list of receipts is sorted by created_at property in descending order.  The most recent receipts appear first",
+        "parameters": [
+          {
+            "name": "receipt_numbers",
+            "in": "query",
+            "description": "Return only receipts specified by a comma-separated list of receipt numbers",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "since_receipt_number",
+            "in": "query",
+            "description": "Show receipts since date which is equal to created_at date of the receipt with specified number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before_receipt_number",
+            "in": "query",
+            "description": "Show receipts up to date which is equal to created_at date of the receipt with specified number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "store_id",
+            "in": "query",
+            "description": "Show receipts only for specified store",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Filter receipts by order",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "The name of the the source this receipt comes from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated_at_min",
+            "in": "query",
+            "description": "Show receipts updated after date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "updated_at_max",
+            "in": "query",
+            "description": "Show receipts updated after date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "receipts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Receipt"
+                      }
+                    },
+                    "cursor": {
+                      "type": "string",
+                      "format": "UUID"
+                    }
+                  }
+                },
+                "examples": {
+                  "Example_1": {
+                    "value": {
+                      "receipts": [
+                        {
+                          "receipt_number": "2-1008",
+                          "note": null,
+                          "receipt_type": "SALE",
+                          "refund_for": null,
+                          "order": null,
+                          "created_at": "2020-06-23T08:35:47.047Z",
+                          "receipt_date": "2020-06-23T08:35:47.047Z",
+                          "updated_at": "2020-06-23T08:35:47.047Z",
+                          "cancelled_at": null,
+                          "source": "My app",
+                          "total_money": 17.52,
+                          "total_tax": 0.92,
+                          "points_earned": 1.75,
+                          "points_deducted": 0.0,
+                          "points_balance": 332.32,
+                          "customer_id": "c71758a2-79bf-11ea-bde9-1269e7c5a22d",
+                          "total_discount": 7.4,
+                          "employee_id": "58f53835-7a17-11ea-bde9-1269e7c5a22d",
+                          "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                          "pos_device_id": "1cce2f2e-8033-4b67-ad2a-b9d1c749ec26",
+                          "dining_option": "Dine in",
+                          "total_discounts": [
+                            {
+                              "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                              "type": "FIXED_PERCENT",
+                              "name": "Percent discount",
+                              "percentage": 10,
+                              "money_amount": 2.4
+                            },
+                            {
+                              "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                              "type": "DISCOUNT_BY_POINTS",
+                              "name": "Discount by points",
+                              "money_amount": 5.0
+                            }
+                          ],
+                          "total_taxes": [
+                            {
+                              "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                              "type": "ADDED",
+                              "name": "Added",
+                              "rate": 5.545,
+                              "money_amount": 0.92
+                            }
+                          ],
+                          "tip": 0.0,
+                          "surcharge": 0.0,
+                          "line_items": [
+                            {
+                              "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                              "item_id": "d5fe0da6-44b3-4633-9915-e9dc5118cbfc",
+                              "variant_id": "706e2626-3329-45f8-98d7-0e1dbcbcb9d9",
+                              "item_name": "Ice cream",
+                              "variant_name": null,
+                              "sku": "10010",
+                              "quantity": 2,
+                              "price": 10.0,
+                              "gross_total_money": 24.0,
+                              "total_money": 17.52,
+                              "cost": 5.0,
+                              "cost_total": 10.0,
+                              "line_note": "Note for the item",
+                              "line_taxes": [
+                                {
+                                  "money_amount": 0.92,
+                                  "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                                  "type": "ADDED",
+                                  "name": "Added",
+                                  "rate": 5.545
+                                }
+                              ],
+                              "total_discount": 7.4,
+                              "line_discounts": [
+                                {
+                                  "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                                  "type": "FIXED_PERCENT",
+                                  "name": "Percent discount",
+                                  "percentage": 10,
+                                  "money_amount": 2.4
+                                },
+                                {
+                                  "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                                  "type": "DISCOUNT_BY_POINTS",
+                                  "name": "Discount by points",
+                                  "money_amount": 5.0
+                                }
+                              ],
+                              "line_modifiers": [
+                                {
+                                  "id": "832a8516-71bf-4515-b742-e868898a1aba",
+                                  "modifier_option_id": "89e741df-4767-41b1-ad40-d9245c01a51d",
+                                  "name": "Toppings",
+                                  "option": "Cherry",
+                                  "price": 2.0,
+                                  "money_amount": 4.0
+                                }
+                              ]
+                            }
+                          ],
+                          "payments": [
+                            {
+                              "payment_type_id": "42dd2a55-6f40-11ea-bde9-1269e7c5a22d",
+                              "name": "Cash",
+                              "type": "CASH",
+                              "money_amount": 5.84,
+                              "paid_at": "2020-06-23T08:35:47.047Z",
+                              "payment_details": null
+                            },
+                            {
+                              "payment_type_id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                              "name": "Cash rounding",
+                              "type": "CASHROUNDING",
+                              "money_amount": 0.04,
+                              "paid_at": "2020-03-10T08:23:20.020Z",
+                              "payment_details": null
+                            },
+                            {
+                              "payment_type_id": "42dd2d07-6f40-11ea-bde9-1269e7c5a22d",
+                              "name": "Card",
+                              "type": "NONINTEGRATEDCARD",
+                              "money_amount": 5.84,
+                              "paid_at": "2020-06-23T08:35:47.047Z",
+                              "payment_details": null
+                            },
+                            {
+                              "payment_type_id": "49d306bc-4454-48c1-9a92-c878290af83e",
+                              "name": "Worldpay",
+                              "type": "WORLDPAY",
+                              "money_amount": 5.84,
+                              "paid_at": "2020-06-23T08:35:47.047Z",
+                              "payment_details": {
+                                "authorization_code": "5215651D",
+                                "reference_id": 15657563452342,
+                                "entry_method": "EMV",
+                                "card_company": "VISA",
+                                "card_number": "•••• •••• •••• 4242"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Receipts"
+        ],
+        "summary": "Create a sales receipt",
+        "requestBody": {
+          "required": true,
+          "description": "The receipt object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PostReceipt"
+                  }
+                ],
+                "required": [
+                  "store_id"
+                ]
+              },
+              "examples": {
+                "Example_1": {
+                  "value": {
+                    "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                    "order": "ORDER-103885",
+                    "customer_id": "c71758a2-79bf-11ea-bde9-1269e7c5a22d",
+                    "source": "My app",
+                    "receipt_date": "2020-06-23T08:35:47.047Z",
+                    "total_discounts": [
+                      {
+                        "id": "50f4e245-d221-448d-943a-7346c21cd82b",
+                        "percentage": 15,
+                        "scope": "LINE_ITEM"
+                      },
+                      {
+                        "id": "23a64c4f-c6e5-43cc-a017-b11a6ee32448",
+                        "scope": "RECEIPT"
+                      },
+                      {
+                        "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                        "money_amount": 5.0,
+                        "scope": "RECEIPT"
+                      }
+                    ],
+                    "line_items": [
+                      {
+                        "variant_id": "06929667-cc44-4bbb-b226-6758285d7033",
+                        "quantity": 2
+                      },
+                      {
+                        "variant_id": "706e2626-3329-45f8-98d7-0e1dbcbcb9d9",
+                        "quantity": 1,
+                        "price": 100.0,
+                        "cost": 50.0,
+                        "line_note": "Some line note",
+                        "line_discounts": [
+                          {
+                            "id": "50f4e245-d221-448d-943a-7346c21cd82b"
+                          }
+                        ],
+                        "line_taxes": [
+                          {
+                            "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d"
+                          },
+                          {
+                            "id": "365972a1-d5f9-449d-bc61-4328cf0e62cb"
+                          }
+                        ],
+                        "line_modifiers": [
+                          {
+                            "modifier_option_id": "0a7cdf41-c75b-11ea-f4ff-abc85f017314",
+                            "price": 2
+                          }
+                        ]
+                      }
+                    ],
+                    "note": "Some note for the receipt",
+                    "payments": [
+                      {
+                        "payment_type_id": "42dd2a55-6f40-11ea-bde9-1269e7c5a22d",
+                        "paid_at": "2020-06-10T19:16:46Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                },
+                "examples": {
+                  "Example_1": {
+                    "value": {
+                      "receipt_number": "2-1009",
+                      "note": null,
+                      "receipt_type": "SALE",
+                      "refund_for": null,
+                      "order": "ORDER-103885",
+                      "created_at": "2020-06-26T12:19:44.044Z",
+                      "updated_at": "2020-06-26T12:19:44.044Z",
+                      "source": "My app",
+                      "receipt_date": "2020-06-26T12:19:43.025Z",
+                      "cancelled_at": null,
+                      "total_money": 168.76,
+                      "total_tax": 12.06,
+                      "points_earned": 16.88,
+                      "points_deducted": 0.0,
+                      "points_balance": 344.2,
+                      "total_discount": 45.3,
+                      "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                      "employee_id": null,
+                      "pos_device_id": null,
+                      "customer_id": "c71758a2-79bf-11ea-bde9-1269e7c5a22d",
+                      "dining_option": null,
+                      "total_discounts": [
+                        {
+                          "id": "50f4e245-d221-448d-943a-7346c21cd82b",
+                          "type": "VARIABLE_PERCENT",
+                          "name": "Variable discount",
+                          "percentage": 15,
+                          "money_amount": 30.3
+                        },
+                        {
+                          "id": "23a64c4f-c6e5-43cc-a017-b11a6ee32448",
+                          "type": "FIXED_AMOUNT",
+                          "name": "Fixed amount discount",
+                          "money_amount": 10.0
+                        },
+                        {
+                          "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                          "type": "DISCOUNT_BY_POINTS",
+                          "name": "Discount by points",
+                          "money_amount": 5.0
+                        }
+                      ],
+                      "total_taxes": [
+                        {
+                          "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                          "type": "ADDED",
+                          "name": "Tax 1",
+                          "rate": 10.123,
+                          "money_amount": 8.01
+                        },
+                        {
+                          "id": "365972a1-d5f9-449d-bc61-4328cf0e62cb",
+                          "type": "ADDED",
+                          "name": "Tax 2",
+                          "rate": 5.12,
+                          "money_amount": 4.05
+                        }
+                      ],
+                      "tip": 0.0,
+                      "surcharge": 0.0,
+                      "line_items": [
+                        {
+                          "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                          "item_id": "2ca3341b-0a7b-4375-990a-30d402e55a7e",
+                          "variant_id": "06929667-cc44-4bbb-b226-6758285d7033",
+                          "item_name": "Coffee",
+                          "variant_name": null,
+                          "sku": "21213",
+                          "quantity": 2,
+                          "price": 50.0,
+                          "gross_total_money": 100.0,
+                          "total_money": 77.57,
+                          "cost": 25.0,
+                          "cost_total": 50.0,
+                          "line_note": null,
+                          "line_taxes": [
+
+                          ],
+                          "total_discount": 22.43,
+                          "line_discounts": [
+                            {
+                              "id": "50f4e245-d221-448d-943a-7346c21cd82b",
+                              "type": "VARIABLE_PERCENT",
+                              "name": "Variable discount",
+                              "money_amount": 15
+                            },
+                            {
+                              "id": "23a64c4f-c6e5-43cc-a017-b11a6ee32448",
+                              "type": "FIXED_AMOUNT",
+                              "name": "Fixed amount discount",
+                              "money_amount": 4.95
+                            },
+                            {
+                              "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                              "type": "DISCOUNT_BY_POINTS",
+                              "name": "Discount by points",
+                              "money_amount": 2.48
+                            }
+                          ],
+                          "line_modifiers": [
+
+                          ]
+                        },
+                        {
+                          "id": "365972a1-7268-11ea-bde9-1269e7c5a22d",
+                          "item_id": "d5fe0da6-44b3-4633-9915-e9dc5118cbfc",
+                          "variant_id": "706e2626-3329-45f8-98d7-0e1dbcbcb9d9",
+                          "item_name": "Ice cream",
+                          "variant_name": "Big",
+                          "sku": "10010",
+                          "quantity": 1,
+                          "price": 100.0,
+                          "gross_total_money": 102.0,
+                          "total_money": 91.19,
+                          "cost": 5.0,
+                          "cost_total": 5.0,
+                          "line_note": "Some line note",
+                          "line_taxes": [
+                            {
+                              "money_amount": 8.01,
+                              "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                              "type": "ADDED",
+                              "name": "Tax 1",
+                              "rate": 10.123
+                            },
+                            {
+                              "money_amount": 4.05,
+                              "id": "365972a1-d5f9-449d-bc61-4328cf0e62cb",
+                              "type": "ADDED",
+                              "name": "Tax 2",
+                              "rate": 5.12
+                            }
+                          ],
+                          "total_discount": 22.87,
+                          "line_discounts": [
+                            {
+                              "id": "50f4e245-d221-448d-943a-7346c21cd82b",
+                              "type": "VARIABLE_PERCENT",
+                              "name": "Variable discount",
+                              "value": 15,
+                              "money_amount": 15.3
+                            },
+                            {
+                              "id": "23a64c4f-c6e5-43cc-a017-b11a6ee32448",
+                              "type": "FIXED_AMOUNT",
+                              "name": "Fixed amount discount",
+                              "value": 10.0,
+                              "money_amount": 5.05
+                            },
+                            {
+                              "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                              "type": "DISCOUNT_BY_POINTS",
+                              "name": "Discount by points",
+                              "value": null,
+                              "money_amount": 2.52
+                            }
+                          ],
+                          "line_modifiers": [
+                            {
+                              "id": "832a8516-71bf-4515-b742-e868898a1aba",
+                              "modifier_option_id": "89e741df-4767-41b1-ad40-d9245c01a51d",
+                              "name": "Toppings",
+                              "option": "Cherry",
+                              "price": 2.0,
+                              "money_amount": 2.0
+                            }
+                          ]
+                        }
+                      ],
+                      "payments": [
+                        {
+                          "payment_type_id": "42dd2a55-6f40-11ea-bde9-1269e7c5a22d",
+                          "name": "Cash",
+                          "type": "CASH",
+                          "money_amount": 168.76,
+                          "paid_at": "2020-06-26T12:19:44.044Z",
+                          "payment_details": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/receipts/{receipt_number}/refund": {
+      "post": {
+        "description": "When using the refund API you should take into account these notes:\n* At the moment refund API allows creating a refund only for sales receipts which are paid by a single payment. For any attempt to make a refund for a sales receipt that has more than one payment Loyverse API will respond with an error.\n* Refund API doesn't support a refund of receipts paid by integrated payments using Loyverse POS app (e.g. iZettle, Sumup, etc.). For this purpose please use Loyverse POS app.\n* If a refund is created successfully, it will cause a restock of items specified in a refund receipt.\n",
+        "tags": [
+          "Receipts"
+        ],
+        "summary": "Create a refund receipt",
+        "parameters": [
+          {
+            "name": "receipt_number",
+            "in": "query",
+            "description": "The sales receipt number for a refund",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The refund object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RefundReceipt"
+                  }
+                ]
+              },
+              "examples": {
+                "Example_1": {
+                  "value": {
+                    "source": "My app",
+                    "receipt_date": "2020-06-23T08:35:47.047Z",
+                    "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                    "line_items": [
+                      {
+                        "id": "06929667-cc44-4bbb-b226-6758285d7033",
+                        "quantity": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                },
+                "example": {
+                  "receipt_number": "2-1009",
+                  "note": null,
+                  "receipt_type": "REFUND",
+                  "refund_for": "2-1005",
+                  "order": "O-15984978",
+                  "created_at": "2020-06-23T08:35:47.047Z",
+                  "updated_at": "2020-06-23T08:35:47.047Z",
+                  "source": "My app",
+                  "receipt_date": "2020-06-23T08:34:35.025Z",
+                  "cancelled_at": null,
+                  "total_money": 17.52,
+                  "total_tax": 0.92,
+                  "points_earned": 0.0,
+                  "points_deducted": 1.75,
+                  "points_balance": 332.32,
+                  "customer_id": "c71758a2-79bf-11ea-bde9-1269e7c5a22d",
+                  "total_discount": 7.4,
+                  "employee_id": null,
+                  "store_id": "42dc2cec-6f40-11ea-bde9-1269e7c5a22d",
+                  "pos_device_id": null,
+                  "dining_option": "Dine in",
+                  "total_discounts": [
+                    {
+                      "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                      "type": "FIXED_PERCENT",
+                      "name": "Percent discount",
+                      "percentage": 10,
+                      "money_amount": 2.4
+                    },
+                    {
+                      "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                      "type": "DISCOUNT_BY_POINTS",
+                      "name": "Discount by points",
+                      "money_amount": 5.0
+                    }
+                  ],
+                  "total_taxes": [
+                    {
+                      "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                      "type": "ADDED",
+                      "name": "Added",
+                      "rate": 5.545,
+                      "money_amount": 0.92
+                    }
+                  ],
+                  "tip": 0.0,
+                  "surcharge": 0.0,
+                  "line_items": [
+                    {
+                      "id": "365972a1-7268-11ea-bde9-1269e7c5a22d",
+                      "item_id": "d5fe0da6-44b3-4633-9915-e9dc5118cbfc",
+                      "variant_id": "06929667-cc44-4bbb-b226-6758285d7033",
+                      "item_name": "Ice cream",
+                      "variant_name": null,
+                      "sku": "10010",
+                      "quantity": 2,
+                      "price": 10.0,
+                      "gross_total_money": 24.0,
+                      "total_money": 17.52,
+                      "cost": 5.0,
+                      "cost_total": 10.0,
+                      "line_note": "Note for the item",
+                      "line_taxes": [
+                        {
+                          "money_amount": 0.92,
+                          "id": "a94d8606-7268-11ea-bde9-1269e7c5a22d",
+                          "type": "ADDED",
+                          "name": "Added",
+                          "rate": 5.545
+                        }
+                      ],
+                      "total_discount": 7.4,
+                      "line_discounts": [
+                        {
+                          "id": "82185d34-97a9-4137-8e1b-e0d1f07a7cd7",
+                          "type": "FIXED_PERCENT",
+                          "name": "Percent discount",
+                          "value": 10,
+                          "money_amount": 2.4
+                        },
+                        {
+                          "id": "77d2bf40-7b12-11ea-bc55-0242ac130003",
+                          "type": "DISCOUNT_BY_POINTS",
+                          "name": "Discount by points",
+                          "value": null,
+                          "money_amount": 5.0
+                        }
+                      ],
+                      "line_modifiers": [
+                        {
+                          "id": "832a8516-71bf-4515-b742-e868898a1aba",
+                          "modifier_option_id": "89e741df-4767-41b1-ad40-d9245c01a51d",
+                          "name": "Toppings",
+                          "option": "Cherry",
+                          "price": 2.0,
+                          "money_amount": 4.0
+                        }
+                      ]
+                    }
+                  ],
+                  "payments": [
+                    {
+                      "payment_type_id": "42dd2a55-6f40-11ea-bde9-1269e7c5a22d",
+                      "name": "Cash",
+                      "type": "CASH",
+                      "money_amount": 17.52,
+                      "paid_at": "2020-06-23T08:35:47.047Z",
+                      "payment_details": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shifts/{shift_id}": {
+      "get": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Get a single shift",
+        "parameters": [
+          {
+            "name": "shift_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shift"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shifts": {
+      "get": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Get a list of shifts",
+        "description": "The list of shifts is sorted by created_at property in descending order.  The most recent shifts appear first",
+        "parameters": [
+          {
+            "name": "store_ids",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A comma-separated list of store ids to filter shifts"
+          },
+          {
+            "name": "created_at_min",
+            "in": "query",
+            "description": "Show shifts opened after date (ISO 8601 format, e.g. 2020-03-30T08:05:10.020Z)\n",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_at_max",
+            "in": "query",
+            "description": "Show shifts opened before date (ISO 8601 format, e.g. 2020-03-30T08:05:10.020Z)\n",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "shifts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Shift"
+                      }
+                    },
+                    "cursor": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stores/{store_id}": {
+      "parameters": [
+        {
+          "name": "store_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Get a single store",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Store"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stores": {
+      "get": {
+        "tags": [
+          "Stores"
+        ],
+        "summary": "Get a list of stores",
+        "description": "The list of stores is sorted by created_at property in descending order.  The most recent stores appear first",
+        "parameters": [
+          {
+            "name": "store_ids",
+            "in": "query",
+            "description": "Return only store specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "stores": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Store"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxes/{tax_id}": {
+      "parameters": [
+        {
+          "name": "tax_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Taxes"
+        ],
+        "summary": "Get a single tax",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tax"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Taxes"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxes": {
+      "get": {
+        "tags": [
+          "Taxes"
+        ],
+        "summary": "Get a list of taxes",
+        "description": "The list of taxes is sorted by created_at property in descending order.  The most recent taxes appear first",
+        "parameters": [
+          {
+            "name": "tax_ids",
+            "in": "query",
+            "description": "Return only taxes specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "taxes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tax"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Taxes"
+        ],
+        "summary": "Create or update a single tax",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tax"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "The tax object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Tax"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "type",
+                  "rate"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/variants/{variant_id}": {
+      "parameters": [
+        {
+          "name": "variant_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Variants"
+        ],
+        "summary": "Get a single item variant",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GETVariant"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Variants"
+        ],
+        "summary": "Delete a single resource",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/variants": {
+      "get": {
+        "summary": "Get a list of item variants",
+        "description": "The list of variants is sorted by created_at property in descending order.  The most recent variants appear first",
+        "tags": [
+          "Variants"
+        ],
+        "parameters": [
+          {
+            "name": "variants_ids",
+            "in": "query",
+            "description": "Return only variants specified by a comma-separated list of IDs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "items_ids",
+            "in": "query",
+            "description": "Return only variants attached to specified item ids",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sku",
+            "in": "query",
+            "description": "Filter variants by sku",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/created_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/created_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_min"
+          },
+          {
+            "$ref": "#/components/parameters/updated_at_max"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/show_deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "variants": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GETVariant"
+                      }
+                    },
+                    "cursor": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create or update a single variant",
+        "tags": [
+          "Variants"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The variant object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/POSTVariant"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GETVariant"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "parameters": {
+      "created_at_min": {
+        "name": "created_at_min",
+        "in": "query",
+        "description": "Show resources created after date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)\n",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "created_at_max": {
+        "name": "created_at_max",
+        "in": "query",
+        "description": "Show resources created before date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)\n",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "updated_at_min": {
+        "name": "updated_at_min",
+        "in": "query",
+        "description": "Show resources updated after date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)\n",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "updated_at_max": {
+        "name": "updated_at_max",
+        "in": "query",
+        "description": "Show resources updated before date (ISO 8601 format, e.g: 2020-03-30T18:30:00.000Z)\n",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "limit": {
+        "name": "limit",
+        "in": "query",
+        "description": "Used for pagination",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 50
+        }
+      },
+      "cursor": {
+        "name": "cursor",
+        "in": "query",
+        "description": "Used for pagination",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "show_deleted": {
+        "name": "show_deleted",
+        "in": "query",
+        "description": "Show deleted modifiers and modifier options",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "schemas": {
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The webhook id. Including this id in POST request will cause an update of existing webhook"
+          },
+          "merchant_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the merchant which the webhook request originates from",
+            "readOnly": true
+          },
+          "url": {
+            "type": "string",
+            "description": "URI where the webhook should send the POST request when the event occurs"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "inventory_levels.update",
+              "items.update",
+              "customers.update",
+              "receipts.update",
+              "shifts.create"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ENABLED",
+              "DISABLED"
+            ],
+            "description": "The current status of webhook"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when of the webhook was created",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when of the webhook was updated",
+            "readOnly": true
+          }
+        }
+      },
+      "DeleteResource": {
+        "type": "object",
+        "properties": {
+          "deleted_object_ids": {
+            "type": "array",
+            "description": "The list of deleted object ids",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreatedAt": {
+        "type": "object",
+        "properties": {
+          "created_at": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-03-25 19:55:23 UTC",
+            "description": "The time when this resource was created (ISO 8601 format, e.g. 2020-03-25T19:55:23.077Z)"
+          }
+        }
+      },
+      "UpdatedAt": {
+        "type": "object",
+        "properties": {
+          "updated_at": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time",
+            "example": "2020-03-30 08:05:10 UTC",
+            "description": "The time when this resource was updated (ISO 8601 format, e.g. 2020-03-30T08:05:10.020Z)"
+          }
+        }
+      },
+      "DeletedAt": {
+        "type": "object",
+        "properties": {
+          "deleted_at": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time",
+            "example": "2020-04-02 23:45:20 UTC",
+            "description": "The time when this resource was deleted (ISO 8601 format, e.g. 2020-04-02T23:45:20.050Z)"
+          }
+        }
+      },
+      "CustomerPermanentDeletionAt": {
+        "type": "object",
+        "properties": {
+          "permanent_deletion_at": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time",
+            "example": "2020-04-03 23:45:20 UTC",
+            "description": "The time when the customer data will be permanently deleted (usually 24 hours after soft deletion)"
+          }
+        }
+      },
+      "MerchantProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The merchant id"
+          },
+          "business_name": {
+            "type": "string",
+            "description": "The merchant business name"
+          },
+          "email": {
+            "type": "string",
+            "description": "The merchant email"
+          },
+          "country": {
+            "type": "string",
+            "description": "The country code associated with the merchant account (ISO 3166-1-alpha-2 format)",
+            "example": "US"
+          },
+          "currency": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The currency code associated with the merchant account (ISO 4217 format)",
+                "example": "USD"
+              },
+              "decimal_places": {
+                "type": "integer",
+                "description": "The number of decimal places for the currency",
+                "example": 2
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the merchant account was created"
+          }
+        }
+      },
+      "RefundReceipt": {
+        "type": "object",
+        "properties": {
+          "receipt_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "By default, it matches the created_at value (time when receipt was created on the Loyverse server). You can set receipt_date to the value that is equal to the date and time in the past when the refund was created in another system."
+          },
+          "source": {
+            "type": "string",
+            "description": "The name of the the source this receipt comes from. By default it is the name of the application that created the receipt."
+          },
+          "employee_id": {
+            "type": "string",
+            "description": "The employee id associated with the receipt"
+          },
+          "store_id": {
+            "type": "string",
+            "description": "The store id associated with the refund receipt. By default, it matches the store id of the sales receipt."
+          },
+          "line_items": {
+            "type": "array",
+            "description": "The line items included in the refund",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The line item id from the sales receipt that you want to refund"
+                },
+                "quantity": {
+                  "type": "number",
+                  "description": "The number of items to be refunded"
+                }
+              },
+              "required": [
+                "quantity",
+                "id"
+              ]
+            }
+          }
+        },
+        "required": [
+          "line_items"
+        ]
+      },
+      "POSTInventoryChanges": {
+        "type": "object",
+        "properties": {
+          "inventory_levels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/POSTInventoryChange"
+            }
+          }
+        }
+      },
+      "POSTInventoryChange": {
+        "type": "object",
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "description": "The variant id for inventory level update"
+          },
+          "store_id": {
+            "type": "string",
+            "description": "The store id for inventory level update"
+          },
+          "stock_after": {
+            "description": "New stock value of the item variant",
+            "type": "number"
+          }
+        },
+        "required": [
+          "variant_id",
+          "store_id",
+          "stock_after"
+        ]
+      },
+      "Pos_device": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "UUID",
+                "description": "The pos device id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "type": "string"
+              },
+              "store_id": {
+                "type": "string",
+                "description": "The store id this device is connected to"
+              },
+              "activated": {
+                "type": "boolean",
+                "readOnly": true,
+                "description": "Shows the status of the POS device. If true, this device is connected to the physical device."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Shift": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "UUID"
+          },
+          "store_id": {
+            "type": "string",
+            "description": "The store id associated with the shift"
+          },
+          "pos_device_id": {
+            "type": "string",
+            "description": "The pos device id associated with the shift"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when the shift was opened"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when the shift was closed"
+          },
+          "opened_by_employee": {
+            "type": "string",
+            "format": "UUID",
+            "description": "The employee id who opened the shift"
+          },
+          "closed_by_employee": {
+            "type": "string",
+            "format": "UUID",
+            "description": "The employee id who closed the shift"
+          },
+          "starting_cash": {
+            "type": "number",
+            "description": "The initial money amount at the start of the shift"
+          },
+          "cash_payments": {
+            "type": "number",
+            "description": "The total money amount of cash payments for the shift"
+          },
+          "cash_refunds": {
+            "type": "number",
+            "description": "The total money amount of cash refunds for the shift"
+          },
+          "paid_in": {
+            "type": "number",
+            "description": "The money amount added to the cash drawer."
+          },
+          "paid_out": {
+            "type": "number",
+            "description": "The money amount removed from the cash drawer. The value is always positive."
+          },
+          "expected_cash": {
+            "type": "number",
+            "description": "The expected money amount at the end of the shift"
+          },
+          "actual_cash": {
+            "type": "number",
+            "description": "The actual money amount at the end of the shift"
+          },
+          "gross_sales": {
+            "type": "number",
+            "description": "The gross money amount for the shift. It calculates as sum of all payments before discounts but after taxes with type INCLUDED."
+          },
+          "refunds": {
+            "type": "number",
+            "description": "The total money amount of refunds for the shift"
+          },
+          "discounts": {
+            "type": "number",
+            "description": "The total money amount of discounts for the shift. The value is always positive."
+          },
+          "net_sales": {
+            "type": "number",
+            "description": "The net money amount for the shift. It calculates as gross sales minus discounts and refunds"
+          },
+          "tip": {
+            "type": "number",
+            "description": "The total money amount of tips for the shift. Tips are available only for some payment types."
+          },
+          "surcharge": {
+            "type": "number",
+            "description": "The total money amount of surcharge for the shift. Surcharge is available only for some payment types."
+          },
+          "taxes": {
+            "type": "array",
+            "description": "The list of taxes and it's totals for the shift",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tax_id": {
+                  "type": "string"
+                },
+                "money_amount": {
+                  "type": "number",
+                  "description": "The total money amount for the tax in the shift"
+                }
+              }
+            }
+          },
+          "payments": {
+            "description": "The list of total money amounts for every payment type in the shift",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "payment_type_id": {
+                  "type": "string"
+                },
+                "money_amount": {
+                  "type": "number",
+                  "description": "The total money amount for the payment type"
+                }
+              }
+            }
+          },
+          "cash_movements": {
+            "description": "The list of shift cash movements",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "PAY_IN",
+                    "PAY_OUT"
+                  ],
+                  "description": "The type of cash movement"
+                },
+                "money_amount": {
+                  "type": "number",
+                  "description": "The money amount. The value is always positive."
+                },
+                "comment": {
+                  "description": "The description of the cash movement",
+                  "type": "string"
+                },
+                "employee_id": {
+                  "description": "The employee id who made the cash movement",
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The time when this cash movement was created (ISO 8601 format, e.g. 2020-03-25T19:55:23.077Z)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Store": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "readOnly": true
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "address": {
+                "type": "string",
+                "maxLength": 255
+              },
+              "city": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "state": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "postal_code": {
+                "type": "string",
+                "maxLength": 20
+              },
+              "country": {
+                "type": "string",
+                "description": "Country format (ISO alpha-2)"
+              },
+              "phone_number": {
+                "type": "string",
+                "maxLength": 15
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 128
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Employee": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "UUID"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "email": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "phone_number": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 15
+              },
+              "stores": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of store ids where this employee has access"
+              },
+              "is_owner": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Supplier": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "UUID",
+                "description": "The supplier id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "The supplier company name"
+              },
+              "contact": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "The supplier contact person name"
+              },
+              "email": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "description": "The supplier email"
+              },
+              "phone_number": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 15
+              },
+              "website": {
+                "type": "string",
+                "description": "The supplier website page"
+              },
+              "address_1": {
+                "type": "string",
+                "maxLength": 192,
+                "description": "The supplier address"
+              },
+              "address_2": {
+                "type": "string",
+                "maxLength": 192,
+                "description": "The supplier address"
+              },
+              "city": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The supplier city, town, or village."
+              },
+              "region": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The supplier’s region name. Typically a province, a state, or a prefecture."
+              },
+              "postal_code": {
+                "type": "string",
+                "maxLength": 20,
+                "description": "The supplier’s postal code, also known as zip, postcode, Eircode, etc."
+              },
+              "country_code": {
+                "type": "string",
+                "description": "The two-letter country code corresponding to the supplier country in ISO 3166-1-alpha-2 format."
+              },
+              "note": {
+                "type": "string",
+                "maxLength": 500
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Customer": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The customer id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The customer's name"
+              },
+              "email": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "The customer's email"
+              },
+              "phone_number": {
+                "type": "string",
+                "maxLength": 15,
+                "description": "The customer's phone number"
+              },
+              "address": {
+                "type": "string",
+                "maxLength": 192,
+                "description": "The customer's address"
+              },
+              "city": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The customer's city, town, or village."
+              },
+              "region": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "The customer’s region name. Typically a province, a state, or a prefecture."
+              },
+              "postal_code": {
+                "type": "string",
+                "maxLength": 20,
+                "description": "The customer’s postal code, also known as zip, postcode, Eircode, etc."
+              },
+              "country_code": {
+                "type": "string",
+                "description": "The two-letter country code corresponding to the customer's country in ISO 3166-1-alpha-2 format."
+              },
+              "customer_code": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "note": {
+                "type": "string",
+                "maxLength": 255,
+                "description": "The note about the customer"
+              },
+              "first_visit": {
+                "type": "string",
+                "format": "date-time",
+                "default": null,
+                "readOnly": true,
+                "description": "The date of the first customer visit"
+              },
+              "last_visit": {
+                "type": "string",
+                "format": "date-time",
+                "default": null,
+                "readOnly": true,
+                "description": "The date of the most recent customer visit"
+              },
+              "total_visits": {
+                "type": "integer",
+                "default": 0,
+                "readOnly": true,
+                "description": "The total number of visits"
+              },
+              "total_spent": {
+                "readOnly": true,
+                "type": "number",
+                "default": 0,
+                "example": 120.55,
+                "description": "The total money amount that customer had spent"
+              },
+              "total_points": {
+                "default": 0,
+                "type": "number",
+                "description": "Actual customer points balance"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          },
+          {
+            "$ref": "#/components/schemas/CustomerPermanentDeletionAt"
+          }
+        ]
+      },
+      "Tax": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The tax id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "type": {
+                "type": "string",
+                "description": "If the type is `INCLUDED` then the tax is included in an item price. If the type is `ADDED` then the tax is added to an item price",
+                "enum": [
+                  "INCLUDED",
+                  "ADDED"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "The tax name"
+              },
+              "rate": {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0,
+                "description": "The tax rate. For example, a value of \"5.255\" corresponds to a percentage of 5.255%",
+                "example": 5.255
+              },
+              "stores": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of store ids where this tax is available"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "PaymentType": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The payment type id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "description": "The payment type name",
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CASH",
+                  "NONINTEGRATEDCARD",
+                  "CHECK",
+                  "WORLDPAY",
+                  "COINEY",
+                  "IZETTLE",
+                  "SUMUP",
+                  "TYRO",
+                  "CHECURITY",
+                  "SMARTPAY",
+                  "YOCO",
+                  "NICEPAY",
+                  "PAYGATE",
+                  "EZETAP",
+                  "FIRSTDATA",
+                  "SOFTBANK",
+                  "ONEPAY",
+                  "KICC",
+                  "MERCADOPAGO",
+                  "OTHER"
+                ]
+              },
+              "stores": {
+                "description": "The list of store ids where this payment type is available",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Discount": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The discount id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "FIXED_PERCENT",
+                  "FIXED_AMOUNT",
+                  "VARIABLE_PERCENT",
+                  "VARIABLE_AMOUNT",
+                  "DISCOUNT_BY_POINTS"
+                ],
+                "description": "The type of the discount"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "The discount name"
+              },
+              "discount_amount": {
+                "type": "number",
+                "maximum": 999999.99,
+                "minimum": 0.01,
+                "description": "The discount value in money representation (only for discounts with type FIXED_AMOUNT)"
+              },
+              "discount_percent": {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.01,
+                "description": "This is discount value in percentage (only for discounts with type FIXED_PERCENT)",
+                "example": 10.5
+              },
+              "stores": {
+                "description": "The list of store ids where this discount is available. By default discount is available at all stores",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "restricted_access": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, the password verification is necessary in order to apply this discount on POS."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Category": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "UUID",
+                "description": "The category id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "color": {
+                "type": "string",
+                "enum": [
+                  "GREY",
+                  "RED",
+                  "PINK",
+                  "ORANGE",
+                  "GREEN",
+                  "BLUE",
+                  "PURPLE"
+                ],
+                "default": "GREY"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Modifier": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The modifier id. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 40,
+                "description": "The modifier name"
+              },
+              "position": {
+                "type": "integer",
+                "description": "Determines the position of this modifier in the modifiers list"
+              },
+              "stores": {
+                "description": "The list of store ids where this modifier is available",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "modifier_options": {
+                "type": "array",
+                "description": "The list of modifier options",
+                "items": {
+                  "$ref": "#/components/schemas/Modifier_option"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "Modifier_option": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The option modifier id"
+          },
+          "name": {
+            "type": "string",
+            "description": "The option modifier name"
+          },
+          "price": {
+            "type": "number",
+            "default": 0,
+            "description": "The option modifier price"
+          },
+          "position": {
+            "type": "integer",
+            "description": "Determines the position ot this modifier option in the modifier options list"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this resource was created (ISO 8601 format, e.g. 2020-03-25T19:55:23.077Z)"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this resource was updated (ISO 8601 format, e.g. 2020-03-25T19:55:23.077Z)"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this resource was deleted (ISO 8601 format, e.g. 2020-03-25T19:55:23.077Z)"
+          }
+        }
+      },
+      "GETInventory_levels": {
+        "type": "object",
+        "properties": {
+          "inventory_levels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GETInventory_level"
+            }
+          },
+          "cursor": {
+            "type": "string",
+            "format": "UUID"
+          }
+        }
+      },
+      "GETInventory_level": {
+        "type": "object",
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "description": "The item variant id"
+          },
+          "store_id": {
+            "type": "string",
+            "description": "The store id"
+          },
+          "in_stock": {
+            "type": "number",
+            "maximum": 9999999.999,
+            "description": "The current stock at the specified store"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when specified stock was calculated"
+          }
+        }
+      },
+      "GETItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "variants": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GETVariant"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "POSTItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "variants": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/POSTVariant"
+                }
+              }
+            }
+          },
+          {
+            "required": [
+              "item_name"
+            ]
+          }
+        ]
+      },
+      "Item": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Read-only internal id of the item. If included in the POST request it will cause an update instead of a creating a new object."
+              },
+              "handle": {
+                "readOnly": true,
+                "type": "string"
+              },
+              "item_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "The item name.",
+                "example": "T-shirt"
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32768,
+                "description": "The item description.",
+                "example": "string"
+              },
+              "reference_id": {
+                "type": "string",
+                "description": "External reference id for the item",
+                "maxLength": 128
+              },
+              "category_id": {
+                "default": null,
+                "type": "string",
+                "format": "uuid",
+                "description": "The category id of the item"
+              },
+              "track_stock": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, the system tracks inventory for this item at all stores. Make sure you don't accidentally disable track stock. If you set `track_stock` to false then all inventory levels of this item are set to 0"
+              },
+              "sold_by_weight": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, a fractional quantity for this item can be specified at the time of a sale (for example 1.5)"
+              },
+              "is_composite": {
+                "type": "boolean",
+                "description": "If true, the item contains a specified quantity of other items. [Learn more](https://help.loyverse.com/help/how-create-composite-item)"
+              },
+              "use_production": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, the system tracks stock not only for its components but also for this item. This property can be set only for composite items. [Learn more](https://help.loyverse.com/help/how-work-production)"
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Component"
+                },
+                "description": "The list of components for the item. [Learn more](https://help.loyverse.com/help/how-create-composite-item)"
+              },
+              "primary_supplier_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "tax_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": "The list of tax ids applied to this item"
+              },
+              "modifiers_ids": {
+                "type": "array",
+                "format": "uuid",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of modifiers ids applied to this item"
+              },
+              "form": {
+                "type": "string",
+                "default": "SQUARE",
+                "enum": [
+                  "SQUARE",
+                  "CIRCLE",
+                  "SUN",
+                  "OCTAGON"
+                ],
+                "description": "The visual form of the item that is displayed on the POS"
+              },
+              "color": {
+                "type": "string",
+                "default": "GREY",
+                "example": "GREY",
+                "description": "One of the predefined colors for the item that is displayed on the POS",
+                "enum": [
+                  "GREY",
+                  "RED",
+                  "PINK",
+                  "ORANGE",
+                  "YELLOW",
+                  "GREEN",
+                  "BLUE",
+                  "PURPLE"
+                ]
+              },
+              "image_url": {
+                "type": "string",
+                "readOnly": true
+              },
+              "option1_name": {
+                "type": "string",
+                "example": "Size",
+                "description": "The name of the first option (for example \"Size\"). [Learn more](https://help.loyverse.com/help/how-use-variants-items)"
+              },
+              "option2_name": {
+                "type": "string",
+                "example": "Color",
+                "description": "The name of the first option (for example \"Color\"). [Learn more](https://help.loyverse.com/help/how-use-variants-items)"
+              },
+              "option3_name": {
+                "type": "string",
+                "example": null,
+                "description": "The name of the first option (for example \"Material\"). [Learn more](https://help.loyverse.com/help/how-use-variants-items)"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/UpdatedAt"
+          },
+          {
+            "$ref": "#/components/schemas/DeletedAt"
+          }
+        ]
+      },
+      "GETVariant": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "variant_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The read only internal id of the variant."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Variant"
+          }
+        ]
+      },
+      "POSTVariant": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "variant_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The read only internal id of the variant. If included in the POST request it will cause an update instead of a creating a new object."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Variant"
+          }
+        ]
+      },
+      "Variant": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The item id this variant is attached to."
+          },
+          "sku": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "The variant sku. It should be unique."
+          },
+          "reference_variant_id": {
+            "type": "string",
+            "description": "External reference id for the variant",
+            "maxLength": 128
+          },
+          "option1_value": {
+            "type": "string",
+            "example": "Large",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "The value of the first option for this variant. Required if option1_name is set for the item this variant is attached to."
+          },
+          "option2_value": {
+            "type": "string",
+            "example": "Green",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "The value of the second option for this variant. Required if option2_name is set for the item this variant is attached to."
+          },
+          "option3_value": {
+            "type": "string",
+            "example": null,
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "The value of the third option for this variant. Required if option3_name is set for the item this variant is attached to."
+          },
+          "barcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "cost": {
+            "type": "number",
+            "default": 0.0,
+            "description": "The variant cost"
+          },
+          "purchase_cost": {
+            "type": "number",
+            "default": 0.0,
+            "description": "The variant purchase cost"
+          },
+          "default_pricing_type": {
+            "description": "The default variant pricing type. If the value is `VARIABLE` than the price is specified at the time of a sale. If there are several stores in the account than the price of the variant in each store is equal to this value by default unless different value is specified in the `stores` array for a particular store.\n",
+            "type": "string",
+            "default": "VARIABLE",
+            "enum": [
+              "FIXED",
+              "VARIABLE"
+            ]
+          },
+          "default_price": {
+            "type": "number",
+            "default": null,
+            "description": "The default variant price (only for `pricing_type: FIXED`) If there are several stores in the account than the price of the variant in each store is equal to this value by default unless different value is specified in the `stores` array for a particular store.\n"
+          },
+          "stores": {
+            "type": "array",
+            "description": "The list of values that are unique for each store",
+            "items": {
+              "$ref": "#/components/schemas/store_override"
+            }
+          },
+          "created_at": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-11-04 00:00:00 UTC",
+            "description": "The time when this resource was created"
+          },
+          "updated_at": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-11-04 00:00:00 UTC",
+            "description": "The time when this resource was created"
+          },
+          "deleted_at": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-11-04 00:00:00 UTC",
+            "description": "The time when this resource was created"
+          }
+        }
+      },
+      "store_override": {
+        "type": "object",
+        "properties": {
+          "store_id": {
+            "type": "string"
+          },
+          "pricing_type": {
+            "type": "string",
+            "description": "The variant pricing type. If the value is `VARIABLE` than the price is specified at the time of a sale. The value is equal to `default_pricing_type` by default\n",
+            "enum": [
+              "FIXED",
+              "VARIABLE"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "description": "The variant price in this store (only if pricing_type in this store is `FIXED`). The value is equal to `default_price` by default"
+          },
+          "available_for_sale": {
+            "type": "boolean",
+            "default": true,
+            "description": "If true, variant is available for sale at this store"
+          },
+          "optimal_stock": {
+            "type": "number",
+            "default": null,
+            "minimum": 0,
+            "maximum": 9999999.999,
+            "description": "The variant optimal stock. This value is used to automatically calculate stock while creating purchase order. [Learn more](https://help.loyverse.com/help/autofill-items-purchase-order)"
+          },
+          "low_stock": {
+            "default": null,
+            "minimum": 0,
+            "maximum": 9999999.999,
+            "type": "number",
+            "description": "The low stock threshold for the variant. If the variant stock is equal or below this threshold, the system shows alert in the back-office and sends email (if enabled). [Learn more](https://help.loyverse.com/help/low-stocks)"
+          }
+        }
+      },
+      "Component": {
+        "type": "object",
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "maximum": 999999.999
+          }
+        }
+      },
+      "PostReceipt": {
+        "type": "object",
+        "properties": {
+          "store_id": {
+            "type": "string",
+            "description": "The store id associated with the receipt"
+          },
+          "employee_id": {
+            "type": "string",
+            "description": "The employee id associated with the receipt"
+          },
+          "order": {
+            "type": "string",
+            "description": "The order name or number associated with the receipt"
+          },
+          "customer_id": {
+            "type": "string",
+            "description": "The customer id associated with the receipt"
+          },
+          "source": {
+            "type": "string",
+            "description": "The name of the the source this receipt comes from. By default it is the name of the application that created the receipt. For receipts created from Loyverse mobile point of sale application the value is \"point of sale\"."
+          },
+          "receipt_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "By default, it matches the created_at value. You can set receipt_date to the date and time in the past when the receipt was created in another system. This value is used in Loyverse back-office reports."
+          },
+          "total_discounts": {
+            "type": "array",
+            "description": "The list of all discounts applied in the receipt. Discounts can be applied in two scopes, RECEIPT or LINE_ITEM. For discount with LINE_ITEM level you must reference to corresponding discount in every line item where this discount is applied. For discounts with RECEIPT level, line_discount for every line item will be generated automatically.\n",
+            "items": {
+              "$ref": "#/components/schemas/PostTotalDiscount"
+            }
+          },
+          "note": {
+            "type": "string",
+            "example": "Some note for the receipt",
+            "description": "The receipt's note"
+          },
+          "line_items": {
+            "type": "array",
+            "description": "The line items included in the receipt",
+            "items": {
+              "$ref": "#/components/schemas/PostLineItem"
+            }
+          },
+          "payments": {
+            "type": "array",
+            "description": "The list of payments. There is a restriction that only one payment can be applied to receipt when using POST request.",
+            "items": {
+              "$ref": "#/components/schemas/Payment"
+            }
+          }
+        }
+      },
+      "PostTotalDiscount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of existing discount"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "RECEIPT",
+              "LINE_ITEM"
+            ],
+            "description": "The level for applying discount. If value is `RECEIPT` than `line_discount` is calculated for every line_item and you don't have to reference this discount in every line_item. If value is `LINE_ITEM` than the discount applies only for line items with a discount reference in their `line_discounts` field."
+          },
+          "percentage": {
+            "type": "number",
+            "description": "The percentage of the discount. For example value 10.55 corresponds to a percentage of 10.55%. Set this value only for discount with type `VARIABLE_PERCENTAGE`"
+          },
+          "money_amount": {
+            "type": "number",
+            "description": "The money amount of the discount. Set this value only for discount with type `VARIABLE_AMOUNT` and `DISCOUNT_BY_POINTS`"
+          }
+        }
+      },
+      "PostTotalTax": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of existing tax"
+          },
+          "uid": {
+            "type": "string",
+            "description": "Unique id that identifies the tax only within this request. You can use this id for referencing this tax in `line_items`"
+          }
+        }
+      },
+      "PostLineItem": {
+        "type": "object",
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "description": "The variant id for this line item"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The number of items that were purchased (or refunded in case of refund)"
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of one item. It includes taxes which type is INCLUDED. It doesn't include discounts, modifiers and taxes which type is ADDED. By default it is equal to the price of the item variant with specified variant_id."
+          },
+          "cost": {
+            "type": "number",
+            "description": "The cost of one item at the moment of transaction. By default it is equal to the cost of the item variant with specified variant_id."
+          },
+          "line_note": {
+            "type": "string",
+            "description": "The line item note"
+          },
+          "line_taxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostLineTax"
+            },
+            "description": "The list of taxes applied to the line item"
+          },
+          "line_discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostLineDiscount"
+            },
+            "description": "The list of discounts applied to the line item"
+          },
+          "line_modifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostLineModifier"
+            },
+            "description": "The list of modifiers applied to the line item"
+          }
+        },
+        "required": [
+          "quantity",
+          "variant_id"
+        ]
+      },
+      "PostLineDiscount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the existing discount."
+          }
+        }
+      },
+      "PostLineTax": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the existing tax."
+          }
+        }
+      },
+      "PostLineModifier": {
+        "type": "object",
+        "properties": {
+          "modifier_option_id": {
+            "type": "string",
+            "description": "The id of existing modifier option"
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the modifier option"
+          }
+        }
+      },
+      "Receipt": {
+        "type": "object",
+        "properties": {
+          "receipt_number": {
+            "readOnly": true,
+            "type": "string",
+            "example": "1-1002",
+            "description": "The internal identifier for the receipt. It is unique."
+          },
+          "note": {
+            "type": "string",
+            "example": "Some note for receipt",
+            "description": "The receipt's note"
+          },
+          "receipt_type": {
+            "readOnly": true,
+            "type": "string",
+            "description": "The type of the receipt",
+            "enum": [
+              "SALE",
+              "REFUND"
+            ]
+          },
+          "refund_for": {
+            "readOnly": true,
+            "type": "string",
+            "description": "The number of a different sales receipt that is associated with this refund. (Only for refund receipts)",
+            "example": "1-1001"
+          },
+          "order": {
+            "type": "string",
+            "description": "The order name or number associated with this receipt"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The autogenerated date and time when the receipt was created in Loyverse."
+          },
+          "receipt_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "By default, it matches the created_at value. You can set receipt_date to the value that is equal to the date and time in the past when the receipt was created in another system."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the receipt was updated."
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this receipt was cancelled"
+          },
+          "source": {
+            "type": "string",
+            "description": "The name of the the source this receipt comes from. By default it is the name of the application that created the receipt. For receipts created from Loyverse mobile point of sale application the value is \"point of sale\"."
+          },
+          "total_money": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total money amount paid by customer (or returned to customer in case of refund). The value includes discounts, taxes, surcharges and tips. The money amount format depends on country of account registration  (for example for Japan there is no decimals in money amounts)",
+            "example": 120.55
+          },
+          "total_tax": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total amount of all taxes (VAT and sales tax) applied in the receipt",
+            "example": 30.0
+          },
+          "points_earned": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total amount of points added to customer's points balance",
+            "example": 2.5
+          },
+          "points_deducted": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total amount of points deducted from customer's points balance (in case of refund). The value is always positive.",
+            "example": 0.0
+          },
+          "points_balance": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The customer's points balance after transaction",
+            "example": 12.5
+          },
+          "customer_id": {
+            "type": "string",
+            "description": "The customer id associated with the receipt"
+          },
+          "total_discount": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total amount of all discounts applied in the receipt (including discount by points). The value is always positive.",
+            "example": 10.5
+          },
+          "employee_id": {
+            "type": "string",
+            "description": "The employee id associated with the receipt"
+          },
+          "store_id": {
+            "type": "string",
+            "description": "The store id where the receipt was paid"
+          },
+          "pos_device_id": {
+            "type": "string",
+            "description": "The POS id where the receipt was paid"
+          },
+          "dining_option": {
+            "type": "string",
+            "example": "To go",
+            "description": "The dining option selected for the receipt"
+          },
+          "total_discounts": {
+            "type": "array",
+            "description": "The list of discounts and it's amounts applied to the receipt.",
+            "items": {
+              "$ref": "#/components/schemas/total_discount"
+            }
+          },
+          "total_taxes": {
+            "type": "array",
+            "description": "An array of tax line objects",
+            "items": {
+              "$ref": "#/components/schemas/total_tax"
+            }
+          },
+          "tip": {
+            "type": "number",
+            "description": "The total tip money amount for the receipt"
+          },
+          "surcharge": {
+            "type": "number",
+            "description": "The total surcharge money amount for the receipt"
+          },
+          "line_items": {
+            "type": "array",
+            "description": "The line items included in the receipt",
+            "items": {
+              "$ref": "#/components/schemas/line_item"
+            }
+          },
+          "payments": {
+            "type": "array",
+            "description": "The list of receipt payments",
+            "items": {
+              "$ref": "#/components/schemas/Payment"
+            }
+          }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "required": [
+          "payment_type_id",
+          "money_amount"
+        ],
+        "properties": {
+          "payment_type_id": {
+            "type": "string"
+          },
+          "name": {
+            "readOnly": true,
+            "type": "string",
+            "example": "Card",
+            "description": "The name of the payment type"
+          },
+          "type": {
+            "readOnly": true,
+            "type": "string",
+            "example": "WORLDPAY"
+          },
+          "money_amount": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total money amount of this payment (including tips and surcharge)"
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this payment was created"
+          },
+          "payment_details": {
+            "readOnly": true,
+            "type": "object",
+            "description": "The payment details for integrated payment types",
+            "properties": {
+              "authorization_code": {
+                "type": "string",
+                "example": "5215651D",
+                "description": "The authorization code associated with the transaction"
+              },
+              "reference_id": {
+                "type": "string",
+                "description": "An id attached to the transaction by the gateway"
+              },
+              "entry_method": {
+                "type": "string",
+                "example": "EMV",
+                "description": "The entry method of the credit card on the terminal (if available)"
+              },
+              "card_company": {
+                "type": "string",
+                "example": "VISA",
+                "description": "The credit card company (if available)"
+              },
+              "card_number": {
+                "type": "string",
+                "example": "•••• •••• •••• 4242",
+                "description": "The masked credit card number"
+              }
+            }
+          }
+        }
+      },
+      "total_discount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The discount id"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the applied discount",
+            "enum": [
+              "FIXED_PERCENT",
+              "FIXED_AMOUNT",
+              "VARIABLE_AMOUNT",
+              "VARIABLE_PERCENT",
+              "DISCOUNT_BY_POINTS"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "example": "Discount1",
+            "description": "The discount name"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "The percentage of the discount. For example value 10.55 corresponds to a percentage of 10.55%. The value is not set for amount based discounts."
+          },
+          "money_amount": {
+            "type": "number",
+            "description": "The total money amount of this discount for the receipt. The value is always positive."
+          }
+        }
+      },
+      "total_tax": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The tax id"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INCLUDED",
+              "ADDED"
+            ],
+            "description": "The tax type"
+          },
+          "name": {
+            "type": "string",
+            "example": "Tax1"
+          },
+          "rate": {
+            "type": "number",
+            "description": "The tax rate. For example, a value of 5.255 corresponds to a percentage of 5.255%",
+            "example": 5.255
+          },
+          "money_amount": {
+            "type": "number",
+            "description": "The total tax amount applied for the receipt"
+          }
+        }
+      },
+      "line_item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique id that identifies this line item in the receipt",
+            "readOnly": true
+          },
+          "item_id": {
+            "type": "string",
+            "description": "The item id for this line item"
+          },
+          "variant_id": {
+            "type": "string",
+            "description": "The variant id for this line item"
+          },
+          "item_name": {
+            "type": "string",
+            "description": "The item name",
+            "example": "T-shirt"
+          },
+          "variant_name": {
+            "type": "string",
+            "description": "The variant name (for example XL / Red)",
+            "example": "XL / Red"
+          },
+          "sku": {
+            "type": "string",
+            "example": 1029,
+            "description": "The variant sku"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The number of items that were purchased (or refunded in case of refund)"
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the one item. It includes taxes which type is INCLUDED. It doesn't include modifiers, discounts and taxes which type is ADDED."
+          },
+          "gross_total_money": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total money amount for this line item including modifiers. It doesn't include discounts and taxes which type is ADDED."
+          },
+          "total_money": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total money amount for this line item after applying discounts and all taxes for this line item"
+          },
+          "cost": {
+            "type": "number",
+            "description": "The cost of the single item at the moment of transaction"
+          },
+          "cost_total": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total cost for this line item at the moment of transaction"
+          },
+          "line_note": {
+            "type": "string",
+            "description": "The line item note"
+          },
+          "line_taxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/line_tax"
+            },
+            "description": "The list of taxes applied to the line item"
+          },
+          "total_discount": {
+            "readOnly": true,
+            "type": "number",
+            "description": "The total discount amount applied to the line item. The value is always positive."
+          },
+          "line_discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/line_discount"
+            },
+            "description": "The list of discounts applied to the line item"
+          },
+          "line_modifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/line_modifier"
+            },
+            "description": "The list of modifiers applied to the line item"
+          }
+        }
+      },
+      "line_modifier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The modifier id"
+          },
+          "modifier_option_id": {
+            "type": "string",
+            "description": "The modifier option id applied to the line item"
+          },
+          "name": {
+            "type": "string",
+            "example": "Toppings",
+            "description": "The modifier name"
+          },
+          "option": {
+            "type": "string",
+            "example": "Cherry",
+            "description": "The name of the modifier option applied to the line item"
+          },
+          "price": {
+            "type": "number",
+            "description": "The base price of a single modifier option"
+          },
+          "money_amount": {
+            "type": "number",
+            "description": "The total money amount of the modifier applied to the line item. It is equal to the price of the modifier option multiplied by the line item's quantity"
+          }
+        }
+      },
+      "line_discount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The discount id"
+          },
+          "type": {
+            "type": "string",
+            "description": "The discount type",
+            "enum": [
+              "FIXED_PERCENT",
+              "FIXED_AMOUNT",
+              "VARIABLE_PERCENT",
+              "VARIABLE_AMOUNT",
+              "DISCOUNT_BY_POINTS"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "example": "Discount1",
+            "description": "The discount name"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "The percentage of the discount. For example value 10.55 corresponds to a percentage of 10.55%. The value is not set for amount based discounts."
+          },
+          "money_amount": {
+            "type": "number",
+            "description": "The money amount of this discount for the line item. The value is always positive."
+          }
+        }
+      },
+      "line_tax": {
+        "type": "object",
+        "properties": {
+          "money_amount": {
+            "type": "number",
+            "description": "The money amount of this tax for the line item"
+          },
+          "id": {
+            "type": "string",
+            "description": "The tax id"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INCLUDED",
+              "ADDED"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "The tax name"
+          },
+          "rate": {
+            "type": "number",
+            "description": "The rate of the tax. For example, a value of \"5.255\" corresponds to a percentage of 5.255%",
+            "example": 5.255
+          }
+        }
+      }
+    }
+  }
+}

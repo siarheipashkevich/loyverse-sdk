@@ -11,9 +11,9 @@ use Pashkevich\Loyverse\Exceptions\ApiException;
 
 class OAuth
 {
-    public const AUTHORIZE_URL = 'https://api.loyverse.com/oauth/authorize';
+    public const string AUTHORIZE_URL = 'https://api.loyverse.com/oauth/authorize';
 
-    public const TOKEN_URL = 'https://api.loyverse.com/oauth/token';
+    public const string TOKEN_URL = 'https://api.loyverse.com/oauth/token';
 
     /**
      * The Guzzle HTTP Client instance.

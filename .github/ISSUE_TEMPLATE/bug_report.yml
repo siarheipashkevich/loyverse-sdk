@@ -1,0 +1,62 @@
+name: Bug report
+description: Report a problem with the SDK
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please remove tokens, secrets and personal data from all logs and payloads.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal code sample and steps.
+      placeholder: |
+        $loyverse = new Loyverse(...);
+        $loyverse->items();
+    validations:
+      required: true
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK version
+      placeholder: 4.2.0
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: 8.4.10
+    validations:
+      required: true
+  - type: input
+    id: guzzle-version
+    attributes:
+      label: Guzzle version
+      placeholder: 8.3.0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error or response
+      description: Include the exception class, status code and sanitized response.
+      render: shell
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed all tokens, secrets and personal data from this report.
+          required: true
+        - label: I searched existing issues before opening this report.
+          required: true
