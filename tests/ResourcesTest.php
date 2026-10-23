@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 class ResourcesTest extends TestCase
 {
-    public function test_modifier_option_exposes_timestamps()
+    public function test_modifier_option_exposes_timestamps(): void
     {
         $option = new ModifierOption([
             'id' => 'option-id',
@@ -39,7 +39,7 @@ class ResourcesTest extends TestCase
         $this->assertNull($option->deletedAt);
     }
 
-    public function test_inventory_exposes_cursor()
+    public function test_inventory_exposes_cursor(): void
     {
         $inventory = new Inventory([
             'inventory_levels' => [],
@@ -50,7 +50,7 @@ class ResourcesTest extends TestCase
         $this->assertSame([], $inventory->inventoryLevels);
     }
 
-    public function test_receipt_hydrates_nested_models()
+    public function test_receipt_hydrates_nested_models(): void
     {
         $receipt = new Receipt([
             'receipt_number' => '1-1',
@@ -129,7 +129,7 @@ class ResourcesTest extends TestCase
         $this->assertSame(2.5, $receipt->surcharge);
     }
 
-    public function test_item_hydrates_components()
+    public function test_item_hydrates_components(): void
     {
         $item = new Item([
             'id' => 'item-id',

@@ -42,11 +42,13 @@ If the project maintainer has any additional requirements, you will find them li
 
 - **Code style** - Run `composer format` before submitting. The project uses [Laravel Pint](https://laravel.com/docs/pint).
 
-- **Static analysis** - Run `composer analyse` before submitting. The project uses PHPStan.
+- **Static analysis** - Run `composer analyse` and `composer analyse-tests` before submitting. The project uses PHPStan.
 
 - **Dependency audit** - Run `composer audit` before submitting.
 
 - **Add tests!** - Your patch won't be accepted if it doesn't have tests. Run `composer test` to execute the suite.
+
+- **Coverage** - Run `composer test-coverage-check` to verify the 80% line coverage threshold.
 
 - **Integration tests** - Copy `tests/Integration/.env.testing.example` to `tests/Integration/.env.testing` and run `composer test-integration` when changing API behavior.
 

@@ -1,5 +1,10 @@
 # Upgrading
 
+## From 4.3.2 to 4.4.0
+
+No breaking changes. This release adds test coverage enforcement, mutation testing, PHPStan
+analysis for tests and runnable examples.
+
 ## From 4.3.1 to 4.3.2
 
 No breaking changes. This patch only cleans up packaging and stale config references.

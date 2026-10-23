@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\{Request, Response, Utils};
 use Mockery;
+use Mockery\MockInterface;
 use Pashkevich\Loyverse\Exceptions\{ConnectionException, HttpTimeoutException, TlsException};
 use Pashkevich\Loyverse\Loyverse;
 use PHPUnit\Framework\TestCase;
@@ -19,9 +20,20 @@ class TransportTest extends TestCase
         Mockery::close();
     }
 
-    public function test_connection_exception_is_wrapped()
+    /**
+     * @return Client&MockInterface
+     */
+    private function mockHttpClient(): Client
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        /** @var Client&MockInterface $client */
+        $client = Mockery::mock(Client::class);
+
+        return $client;
+    }
+
+    public function test_connection_exception_is_wrapped(): void
+    {
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
 
         $http->shouldReceive('request')->once()->with('GET', 'employees', [
             'timeout' => 30,
@@ -32,9 +44,9 @@ class TransportTest extends TestCase
         $loyverse->employees();
     }
 
-    public function test_timeout_is_wrapped()
+    public function test_timeout_is_wrapped(): void
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
 
         $http->shouldReceive('request')->once()->with('GET', 'employees', [
             'timeout' => 30,
@@ -45,9 +57,9 @@ class TransportTest extends TestCase
         $loyverse->employees();
     }
 
-    public function test_tls_error_is_wrapped()
+    public function test_tls_error_is_wrapped(): void
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
 
         $http->shouldReceive('request')->once()->with('GET', 'employees', [
             'timeout' => 30,
@@ -58,9 +70,9 @@ class TransportTest extends TestCase
         $loyverse->employees();
     }
 
-    public function test_custom_base_uri_is_used()
+    public function test_custom_base_uri_is_used(): void
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
         $loyverse->setBaseUri('https://example.test/v1.0');
 
         $http->shouldReceive('request')->once()->with('GET', 'https://example.test/v1.0/employees', [
@@ -77,9 +89,9 @@ class TransportTest extends TestCase
         $this->assertSame('https://example.test/v1.0/', $loyverse->getBaseUri());
     }
 
-    public function test_custom_headers_and_connect_timeout_are_applied()
+    public function test_custom_headers_and_connect_timeout_are_applied(): void
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
         $loyverse->setHeader('X-Test', 'yes')->setConnectTimeout(5);
 
         $http->shouldReceive('request')->once()->with('GET', 'employees', [
@@ -98,9 +110,9 @@ class TransportTest extends TestCase
         $this->assertSame(['X-Test' => 'yes'], $loyverse->getHeaders());
     }
 
-    public function test_set_timeout_is_passed_to_request()
+    public function test_set_timeout_is_passed_to_request(): void
     {
-        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $http = $this->mockHttpClient());
         $loyverse->setTimeout(120);
 
         $http->shouldReceive('request')->once()->with('GET', 'employees', [
@@ -117,14 +129,14 @@ class TransportTest extends TestCase
         $this->assertSame(120, $loyverse->getTimeout());
     }
 
-    public function test_empty_base_uri_is_rejected()
+    public function test_empty_base_uri_is_rejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        new Loyverse('123', Mockery::mock(Client::class))->setBaseUri(' ');
+        new Loyverse('123', $this->mockHttpClient())->setBaseUri(' ');
     }
 
-    public function test_user_agent_is_set_on_the_client()
+    public function test_user_agent_is_set_on_the_client(): void
     {
         $loyverse = new Loyverse('123');
 
@@ -133,7 +145,7 @@ class TransportTest extends TestCase
         $this->assertStringStartsWith('loyverse-sdk/'.Loyverse::VERSION, $headers['User-Agent']);
     }
 
-    public function test_fake_client_returns_queued_responses()
+    public function test_fake_client_returns_queued_responses(): void
     {
         $loyverse = Loyverse::fake([
             new Response(200, [], '{"categories": [], "cursor": null}'),

@@ -15,7 +15,7 @@ class OAuthTest extends TestCase
 {
     use FakesHttpRequests;
 
-    public function test_builds_authorization_url()
+    public function test_builds_authorization_url(): void
     {
         $oauth = new OAuth($this->fakeHttpClient());
 
@@ -37,7 +37,7 @@ class OAuthTest extends TestCase
         $this->assertSame('ITEMS_READ RECEIPTS_READ', $query['scope']);
     }
 
-    public function test_exchanges_code_for_access_token()
+    public function test_exchanges_code_for_access_token(): void
     {
         $oauth = new OAuth($this->fakeHttpClient());
 
@@ -72,7 +72,7 @@ class OAuthTest extends TestCase
         $this->assertFalse($token->isExpired());
     }
 
-    public function test_refreshes_access_token()
+    public function test_refreshes_access_token(): void
     {
         $oauth = new OAuth($this->fakeHttpClient());
 
@@ -95,7 +95,7 @@ class OAuthTest extends TestCase
         $this->assertNull($token->refreshToken);
     }
 
-    public function test_throws_exception_on_failed_token_request()
+    public function test_throws_exception_on_failed_token_request(): void
     {
         $oauth = new OAuth($this->fakeHttpClient());
 
@@ -121,13 +121,13 @@ class OAuthTest extends TestCase
         }
     }
 
-    public function test_scope_enum_exposes_values()
+    public function test_scope_enum_exposes_values(): void
     {
         $this->assertSame('ITEMS_READ', Scope::ITEMS_READ->value);
         $this->assertContains('ITEMS_READ', Scope::values());
     }
 
-    public function test_access_token_exposes_scopes_expiration_and_id_token_claims()
+    public function test_access_token_exposes_scopes_expiration_and_id_token_claims(): void
     {
         $payload = rtrim(strtr(base64_encode(json_encode([
             'sub' => 'user-id',

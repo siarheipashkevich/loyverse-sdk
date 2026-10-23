@@ -2,6 +2,20 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.4.0 - 2026-10-23
+
+### Added
+
+- PHPStan configuration for the test suite.
+- Coverage check with an 80% line coverage threshold.
+- Nightly mutation testing with Infection.
+- Runnable examples for merchant, items, inventory, receipts, refunds, webhooks and OAuth.
+
+### Changed
+
+- CI now runs PHPStan on tests and enforces coverage.
+- Composer dist archives exclude the new development tooling.
+
 ## 4.3.2 - 2026-10-23
 
 ### Changed

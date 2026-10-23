@@ -12,7 +12,7 @@ class RequestTest extends TestCase
 {
     use FakesHttpRequests;
 
-    public function test_list_request()
+    public function test_list_request(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 
@@ -27,7 +27,7 @@ class RequestTest extends TestCase
         $this->assertNull($page['cursor']);
     }
 
-    public function test_query_parameters_are_sent()
+    public function test_query_parameters_are_sent(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 
@@ -41,7 +41,7 @@ class RequestTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function test_create_request()
+    public function test_create_request(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 
@@ -55,7 +55,7 @@ class RequestTest extends TestCase
         $this->assertSame('Fruits', $category->name);
     }
 
-    public function test_raw_image_request()
+    public function test_raw_image_request(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 
@@ -66,7 +66,7 @@ class RequestTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function test_delete_request()
+    public function test_delete_request(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 

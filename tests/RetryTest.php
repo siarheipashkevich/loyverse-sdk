@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class RetryTest extends TestCase
 {
-    public function test_retry_on_rate_limit_uses_retry_after()
+    public function test_retry_on_rate_limit_uses_retry_after(): void
     {
         $loyverse = Loyverse::fake();
 
@@ -40,7 +40,7 @@ class RetryTest extends TestCase
         $this->assertSame([2], $delays);
     }
 
-    public function test_retry_on_rate_limit_throws_after_max_attempts()
+    public function test_retry_on_rate_limit_throws_after_max_attempts(): void
     {
         $this->expectException(RateLimitedException::class);
 

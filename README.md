@@ -36,6 +36,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Variants](#managing-variants)
     - [Managing Webhooks](#managing-webhooks)
     - [Fake Client](#fake-client)
+- [Examples](examples/README.md)
 - [Upgrading](UPGRADING.md)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -588,6 +589,8 @@ handling.
 ``` bash
 composer test
 composer analyse
+composer analyse-tests
+composer test-coverage-check
 composer format-test
 composer audit
 ```
@@ -603,6 +606,9 @@ The suite includes a contract test that checks all endpoints from the committed 
 OpenAPI snapshot, an endpoint test for every SDK action method and a method coverage test.
 A scheduled GitHub Actions workflow compares that snapshot with the live specification and
 fails when the API changes.
+
+Coverage is enforced at 80% line coverage. Mutation testing runs nightly with Infection
+(`composer infection`).
 
 ### Contributing
 

@@ -29,7 +29,7 @@ abstract class IntegrationTestCase extends TestCase
             return;
         }
 
-        $config = static::parseEnv($envFile);
+        $config = self::parseEnv($envFile);
 
         $token = $config['LOYVERSE_API_TOKEN'] ?? '';
 
@@ -64,6 +64,9 @@ abstract class IntegrationTestCase extends TestCase
         return static::$loyverse;
     }
 
+    /**
+     * @return array<string, string>
+     */
     private static function parseEnv(string $path): array
     {
         $config = [];
