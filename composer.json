@@ -48,7 +48,7 @@
         "test-coverage-check": "vendor/bin/phpunit --coverage-clover build/coverage.xml && php scripts/coverage-check.php build/coverage.xml 80",
         "analyse": "vendor/bin/phpstan analyse",
         "analyse-tests": "vendor/bin/phpstan analyse -c phpstan-tests.neon.dist",
-        "infection": "vendor/bin/infection --threads=4 --min-msi=60 --min-covered-msi=70",
+        "infection": "php -d auto_prepend_file= vendor/bin/infection --threads=4 --min-msi=60 --min-covered-msi=70",
         "format": "vendor/bin/pint",
         "format-test": "vendor/bin/pint --test"
     },

@@ -2,6 +2,21 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.5.0 - 2026-10-23
+
+### Added
+
+- Opt-in `Paginator` via `Loyverse::page()` with `lazy()`, `lazyPages()`, `nextPage()`,
+  `toArray()` and JSON serialization.
+- DTOs: `CreateReceiptData`, `RefundReceiptData`, `InventoryUpdate` and `CreateItemData`.
+- Examples for the paginator and receipt DTO.
+
+### Changed
+
+- Resource hydration now skips `null` for non-nullable typed properties and coerces
+  scalar values to the declared property type.
+- Unknown fields remain available as dynamic properties.
+
 ## 4.4.0 - 2026-10-23
 
 ### Added

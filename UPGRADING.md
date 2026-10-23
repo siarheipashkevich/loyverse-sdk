@@ -1,5 +1,16 @@
 # Upgrading
 
+## From 4.4.0 to 4.5.0
+
+No breaking changes. New additions:
+
+- `Loyverse::page()` returns an opt-in `Paginator` object.
+- DTOs in `Pashkevich\Loyverse\Data` for receipts, refunds, inventory and items.
+- Resource hydration now skips `null` for non-nullable properties and coerces scalar values
+  to the declared property type. Unknown fields remain dynamic.
+
+Existing list methods and array payloads keep working.
+
 ## From 4.3.2 to 4.4.0
 
 No breaking changes. This release adds test coverage enforcement, mutation testing, PHPStan

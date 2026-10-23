@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Data\CreateItemData;
 use Pashkevich\Loyverse\Loyverse;
 
 class Item extends Resource
@@ -173,8 +174,12 @@ class Item extends Resource
      *
      * @param array<string, mixed> $data
      */
-    public function update(array $data): Item
+    public function update(array|CreateItemData $data): Item
     {
+        if ($data instanceof CreateItemData) {
+            $data = $data->toArray();
+        }
+
         return $this->client()->createItem(array_merge($data, ['id' => $this->id]));
     }
 

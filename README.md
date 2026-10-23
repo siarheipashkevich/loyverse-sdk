@@ -15,6 +15,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [OAuth](#oauth)
     - [Pagination](#pagination)
     - [Enums](#enums)
+    - [Data Transfer Objects](#data-transfer-objects)
     - [Handling Errors](#handling-errors)
     - [Retries](#retries)
     - [Webhook Signatures](#webhook-signatures)
@@ -52,7 +53,7 @@ PHP **8.4** or newer and Guzzle **8** are required. To install the SDK in your p
 require the package via composer:
 
 ```bash
-composer require pashkevich/loyverse-sdk:^4.3
+composer require pashkevich/loyverse-sdk:^4.5
 ```
 
 ### Basic Usage
@@ -204,6 +205,24 @@ foreach ($loyverse->paginate(function (array $parameters) use ($loyverse) {
 `paginate()` automatically passes the cursor returned by the previous page and stops when
 the cursor is empty. It also stops if the API returns the same cursor twice.
 
+If you prefer a page object, use the opt-in `page()` method:
+
+``` php
+$page = $loyverse->page('items', ['limit' => 250]);
+
+$page->items();
+$page->cursor();
+$page->hasMorePages();
+$page->nextPage();
+$page->toArray();
+
+foreach ($page->lazy() as $item) {
+    echo $item->itemName;
+}
+```
+
+Existing list methods still return arrays, so this is fully backward compatible.
+
 ### Enums
 
 Common API values are available as enums:
@@ -220,6 +239,32 @@ WebhookEvent::ITEMS_UPDATE->value;
 
 Each enum also provides `values()`. `Scope` lives in the root namespace for backwards
 compatibility.
+
+### Data Transfer Objects
+
+Complex requests can be built with DTOs instead of arrays:
+
+``` php
+use Pashkevich\Loyverse\Data\{CreateItemData, CreateReceiptData, InventoryUpdate, RefundReceiptData};
+
+$receipt = $loyverse->createReceipt(new CreateReceiptData(
+    storeId: STORE_ID,
+    lineItems: [['variant_id' => VARIANT_ID, 'quantity' => 1]],
+    payments: [['payment_type_id' => PAYMENT_TYPE_ID, 'money_amount' => 10.0]],
+));
+
+$refund = $loyverse->createReceiptRefund(RECEIPT_NUMBER, new RefundReceiptData(
+    lineItems: [['id' => LINE_ITEM_ID, 'quantity' => 1]],
+));
+
+$inventory = $loyverse->updateInventory(new InventoryUpdate([
+    ['variant_id' => VARIANT_ID, 'store_id' => STORE_ID, 'stock_after' => 5],
+]));
+
+$item = $loyverse->createItem(new CreateItemData('Item name', color: 'GREEN'));
+```
+
+Arrays remain fully supported, so DTOs are opt-in.
 
 ### Handling Errors
 

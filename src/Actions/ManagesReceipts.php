@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Actions;
 
+use Pashkevich\Loyverse\Data\CreateReceiptData;
+use Pashkevich\Loyverse\Data\RefundReceiptData;
 use Pashkevich\Loyverse\Resources\Receipt;
 
 trait ManagesReceipts
@@ -30,20 +32,28 @@ trait ManagesReceipts
     /**
      * Create a sales receipt.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>|CreateReceiptData $data
      */
-    public function createReceipt(array $data): Receipt
+    public function createReceipt(array|CreateReceiptData $data): Receipt
     {
+        if ($data instanceof CreateReceiptData) {
+            $data = $data->toArray();
+        }
+
         return $this->resource($this->post('receipts', $data), Receipt::class);
     }
 
     /**
      * Create a refund receipt.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>|RefundReceiptData $data
      */
-    public function createReceiptRefund(string $receiptNumber, array $data): Receipt
+    public function createReceiptRefund(string $receiptNumber, array|RefundReceiptData $data): Receipt
     {
+        if ($data instanceof RefundReceiptData) {
+            $data = $data->toArray();
+        }
+
         return $this->resource($this->post("receipts/$receiptNumber/refund", $data), Receipt::class);
     }
 }

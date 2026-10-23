@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Actions;
 
+use Pashkevich\Loyverse\Data\CreateItemData;
 use Pashkevich\Loyverse\Resources\Item;
 
 trait ManagesItems
@@ -50,10 +51,14 @@ trait ManagesItems
     /**
      * Create or update a single item.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>|CreateItemData $data
      */
-    public function createItem(array $data): Item
+    public function createItem(array|CreateItemData $data): Item
     {
+        if ($data instanceof CreateItemData) {
+            $data = $data->toArray();
+        }
+
         return $this->resource($this->post('items', $data), Item::class);
     }
 
