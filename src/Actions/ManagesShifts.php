@@ -15,16 +15,11 @@ trait ManagesShifts
      * Get a list of shifts.
      *
      * @param array $parameters
-     * @return array{shifts: Shift[], cursor: string}
+     * @return array{shifts: Shift[], cursor: string|null}
      */
     public function shifts(array $parameters = []): array
     {
-        $response = $this->get('shifts', $parameters);
-
-        return [
-            'shifts' => $this->transformCollection($response['shifts'], Shift::class),
-            'cursor' => $response['cursor'],
-        ];
+        return $this->transformPage($this->get('shifts', $parameters), 'shifts', Shift::class);
     }
 
     /**

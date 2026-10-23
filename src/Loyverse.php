@@ -2,6 +2,7 @@
 
 namespace Pashkevich\Loyverse;
 
+use Generator;
 use GuzzleHttp\Client;
 
 /**
@@ -81,6 +82,72 @@ class Loyverse
         return array_map(function ($data) use ($class, $extraData) {
             return new $class($data + $extraData, $this);
         }, $collection);
+    }
+
+    /**
+     * Transform a page response into a list of resources and a cursor.
+     *
+     * @param array $response
+     * @param string $key
+     * @param string $class
+     * @return array
+     */
+    protected function transformPage(array $response, string $key, string $class): array
+    {
+        return [
+            $key => $this->transformCollection($response[$key] ?? [], $class),
+            'cursor' => $response['cursor'] ?? null,
+        ];
+    }
+
+    /**
+     * Iterate over all pages returned by the given callback.
+     *
+     * The callback receives the current query parameters and must return a page
+     * array with a list of resources and a cursor.
+     *
+     * @param callable $fetch
+     * @param array $parameters
+     * @return Generator
+     */
+    public function paginate(callable $fetch, array $parameters = []): Generator
+    {
+        $cursor = null;
+        $seen = [];
+
+        do {
+            $pageParameters = $parameters;
+
+            if ($cursor !== null) {
+                $pageParameters['cursor'] = $cursor;
+            }
+
+            $page = $fetch($pageParameters);
+
+            foreach ($page as $key => $value) {
+                if ($key === 'cursor' || !is_array($value)) {
+                    continue;
+                }
+
+                foreach ($value as $resource) {
+                    yield $resource;
+                }
+            }
+
+            $cursor = $page['cursor'] ?? null;
+
+            if ($cursor === '') {
+                $cursor = null;
+            }
+
+            if ($cursor !== null) {
+                if (isset($seen[$cursor])) {
+                    break;
+                }
+
+                $seen[$cursor] = true;
+            }
+        } while ($cursor !== null);
     }
 
     /**

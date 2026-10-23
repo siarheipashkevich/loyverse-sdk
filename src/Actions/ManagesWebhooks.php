@@ -15,11 +15,11 @@ trait ManagesWebhooks
      * Get a list of webhooks.
      *
      * @param array $parameters
-     * @return Webhook[]
+     * @return array{webhooks: Webhook[], cursor: string|null}
      */
     public function webhooks(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('webhooks', $parameters)['webhooks'], Webhook::class);
+        return $this->transformPage($this->get('webhooks', $parameters), 'webhooks', Webhook::class);
     }
 
     /**

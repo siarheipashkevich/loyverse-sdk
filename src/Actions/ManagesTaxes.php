@@ -15,11 +15,11 @@ trait ManagesTaxes
      * Get a list of taxes.
      *
      * @param array $parameters
-     * @return Tax[]
+     * @return array{taxes: Tax[], cursor: string|null}
      */
     public function taxes(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('taxes', $parameters)['taxes'], Tax::class);
+        return $this->transformPage($this->get('taxes', $parameters), 'taxes', Tax::class);
     }
 
     /**

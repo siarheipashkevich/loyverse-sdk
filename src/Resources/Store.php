@@ -40,9 +40,9 @@ class Store extends Resource
     /**
      * The state of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $state;
+    public ?string $state = null;
 
     /**
      * The postal code of the store.
@@ -54,9 +54,9 @@ class Store extends Resource
     /**
      * The country of the store.
      *
-     * @var string
+     * @var string|null
      */
-    public string $country;
+    public ?string $country = null;
 
     /**
      * The phone number of the store.

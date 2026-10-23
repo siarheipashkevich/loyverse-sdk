@@ -15,11 +15,11 @@ trait ManagesModifiers
      * Get a list of modifiers.
      *
      * @param array $parameters
-     * @return Modifier[]
+     * @return array{modifiers: Modifier[], cursor: string|null}
      */
     public function modifiers(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('modifiers', $parameters)['modifiers'], Modifier::class);
+        return $this->transformPage($this->get('modifiers', $parameters), 'modifiers', Modifier::class);
     }
 
     /**

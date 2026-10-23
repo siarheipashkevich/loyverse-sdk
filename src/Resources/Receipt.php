@@ -2,6 +2,8 @@
 
 namespace Pashkevich\Loyverse\Resources;
 
+use Pashkevich\Loyverse\Loyverse;
+
 /**
  * Class Receipt
  *
@@ -161,42 +163,73 @@ class Receipt extends Resource
      *
      * @var array
      */
-    public array $totalDiscounts;
+    public array $totalDiscounts = [];
 
     /**
      * An array of tax line objects.
      *
      * @var array
      */
-    public array $totalTaxes;
+    public array $totalTaxes = [];
 
     /**
      * The total tip money amount for the receipt.
      *
-     * @var int
+     * @var float
      */
-    public int $tip;
+    public float $tip = 0.0;
 
     /**
      * The total surcharge money amount for the receipt.
      *
-     * @var int
+     * @var float
      */
-    public int $surcharge;
+    public float $surcharge = 0.0;
 
     /**
      * The line items included in the receipt.
      *
      * @var array
      */
-    public array $lineItems;
+    public array $lineItems = [];
 
     /**
      * The list of receipt payments.
      *
      * @var array
      */
-    public array $payments;
+    public array $payments = [];
+
+    /**
+     * Receipt constructor.
+     *
+     * @param array $attributes
+     * @param Loyverse|null $loyverse
+     */
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
+    {
+        parent::__construct($attributes, $loyverse);
+
+        $this->totalDiscounts = $this->transformCollection(
+            $this->totalDiscounts ?: [],
+            ReceiptTotalDiscount::class,
+        );
+
+        $this->totalTaxes = $this->transformCollection(
+            $this->totalTaxes ?: [],
+            ReceiptTotalTax::class,
+        );
+
+        $this->lineItems = $this->transformCollection(
+            $this->lineItems ?: [],
+            ReceiptLineItem::class,
+        );
+
+        $this->payments = $this->transformCollection(
+            $this->payments ?: [],
+            ReceiptPayment::class,
+        );
+    }
 
     /**
      * Create a refund for the given receipt.

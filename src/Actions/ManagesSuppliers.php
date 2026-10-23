@@ -15,11 +15,11 @@ trait ManagesSuppliers
      * Get a list of suppliers.
      *
      * @param array $parameters
-     * @return Supplier[]
+     * @return array{suppliers: Supplier[], cursor: string|null}
      */
     public function suppliers(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('suppliers', $parameters)['suppliers'], Supplier::class);
+        return $this->transformPage($this->get('suppliers', $parameters), 'suppliers', Supplier::class);
     }
 
     /**

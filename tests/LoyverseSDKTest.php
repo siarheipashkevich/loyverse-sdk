@@ -7,7 +7,34 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\{Utils, Response};
 use Pashkevich\Loyverse\{Loyverse, Exceptions};
-use Pashkevich\Loyverse\Resources\{Inventory, Item, ModifierOption, Variant};
+use Pashkevich\Loyverse\Resources\{
+    Category,
+    Customer,
+    Discount,
+    Employee,
+    Inventory,
+    InventoryLevel,
+    Item,
+    ItemComponent,
+    Modifier,
+    ModifierOption,
+    PaymentType,
+    PosDevice,
+    Receipt,
+    ReceiptLineDiscount,
+    ReceiptLineItem,
+    ReceiptLineModifier,
+    ReceiptLineTax,
+    ReceiptPayment,
+    ReceiptTotalDiscount,
+    ReceiptTotalTax,
+    Shift,
+    Store,
+    Supplier,
+    Tax,
+    Variant,
+    Webhook,
+};
 
 /**
  * Class LoyverseSDKTest
@@ -469,5 +496,263 @@ class LoyverseSDKTest extends TestCase
         } catch (Exceptions\RateLimitedException $exception) {
             $this->assertSame(120, $exception->getRetryAfter());
         }
+    }
+
+    /**
+     * @dataProvider listMethodsProvider
+     */
+    public function test_list_methods_return_pages_with_cursor(
+        string $method,
+        string $path,
+        string $key,
+        string $class
+    ) {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('GET', $path, [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(json_encode([
+            $key => [['id' => 'resource-id']],
+            'cursor' => 'next-cursor',
+        ])));
+
+        $page = $loyverse->{$method}();
+
+        $this->assertArrayHasKey($key, $page);
+        $this->assertArrayHasKey('cursor', $page);
+        $this->assertSame('next-cursor', $page['cursor']);
+        $this->assertCount(1, $page[$key]);
+        $this->assertInstanceOf($class, $page[$key][0]);
+    }
+
+    public function listMethodsProvider(): array
+    {
+        return [
+            'categories' => ['categories', 'categories', 'categories', Category::class],
+            'customers' => ['customers', 'customers', 'customers', Customer::class],
+            'discounts' => ['discounts', 'discounts', 'discounts', Discount::class],
+            'employees' => ['employees', 'employees', 'employees', Employee::class],
+            'inventory' => ['inventory', 'inventory', 'inventory_levels', InventoryLevel::class],
+            'items' => ['items', 'items', 'items', Item::class],
+            'modifiers' => ['modifiers', 'modifiers', 'modifiers', Modifier::class],
+            'payment types' => ['paymentTypes', 'payment_types', 'payment_types', PaymentType::class],
+            'pos devices' => ['posDevices', 'pos_devices', 'pos_devices', PosDevice::class],
+            'receipts' => ['receipts', 'receipts', 'receipts', Receipt::class],
+            'shifts' => ['shifts', 'shifts', 'shifts', Shift::class],
+            'stores' => ['stores', 'stores', 'stores', Store::class],
+            'suppliers' => ['suppliers', 'suppliers', 'suppliers', Supplier::class],
+            'taxes' => ['taxes', 'taxes', 'taxes', Tax::class],
+            'variants' => ['variants', 'variants', 'variants', Variant::class],
+            'webhooks' => ['webhooks', 'webhooks', 'webhooks', Webhook::class],
+        ];
+    }
+
+    public function test_list_methods_return_null_cursor_when_missing()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+
+        $http->shouldReceive('request')->once()->with('GET', 'discounts', [
+            'timeout' => 30,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"discounts": [{"id": "discount-id"}]}'
+        ));
+
+        $page = $loyverse->discounts();
+
+        $this->assertNull($page['cursor']);
+        $this->assertCount(1, $page['discounts']);
+    }
+
+    public function test_receipt_hydrates_nested_models()
+    {
+        $receipt = new Receipt([
+            'receipt_number' => '1-1',
+            'tip' => 1.5,
+            'surcharge' => 2.5,
+            'total_discounts' => [[
+                'id' => 'discount-id',
+                'type' => 'FIXED_PERCENT',
+                'name' => 'Discount',
+                'percentage' => 10.5,
+                'money_amount' => 1.25,
+            ]],
+            'total_taxes' => [[
+                'id' => 'tax-id',
+                'type' => 'INCLUDED',
+                'name' => 'Tax',
+                'rate' => 5.5,
+                'money_amount' => 0.75,
+            ]],
+            'line_items' => [[
+                'id' => 'line-id',
+                'item_id' => 'item-id',
+                'variant_id' => 'variant-id',
+                'item_name' => 'Item',
+                'variant_name' => 'Large',
+                'sku' => 'SKU',
+                'quantity' => 2.0,
+                'price' => 10.0,
+                'gross_total_money' => 20.0,
+                'total_money' => 19.0,
+                'cost' => 5.0,
+                'cost_total' => 10.0,
+                'line_note' => null,
+                'line_taxes' => [[
+                    'money_amount' => 0.5,
+                    'id' => 'line-tax-id',
+                    'type' => 'INCLUDED',
+                    'name' => 'Tax',
+                    'rate' => 5.0,
+                ]],
+                'total_discount' => 1.0,
+                'line_discounts' => [[
+                    'id' => 'line-discount-id',
+                    'type' => 'FIXED_AMOUNT',
+                    'name' => 'Line discount',
+                    'percentage' => null,
+                    'money_amount' => 1.0,
+                ]],
+                'line_modifiers' => [[
+                    'id' => 'modifier-id',
+                    'modifier_option_id' => 'option-id',
+                    'name' => 'Modifier',
+                    'option' => 'Option',
+                    'price' => 0.5,
+                    'money_amount' => 1.0,
+                ]],
+            ]],
+            'payments' => [[
+                'payment_type_id' => 'payment-type-id',
+                'name' => 'Cash',
+                'type' => 'CASH',
+                'money_amount' => 19.0,
+                'paid_at' => '2020-01-01T00:00:00.000Z',
+                'payment_details' => null,
+            ]],
+        ]);
+
+        $this->assertInstanceOf(ReceiptTotalDiscount::class, $receipt->totalDiscounts[0]);
+        $this->assertInstanceOf(ReceiptTotalTax::class, $receipt->totalTaxes[0]);
+        $this->assertInstanceOf(ReceiptLineItem::class, $receipt->lineItems[0]);
+        $this->assertInstanceOf(ReceiptLineTax::class, $receipt->lineItems[0]->lineTaxes[0]);
+        $this->assertInstanceOf(ReceiptLineDiscount::class, $receipt->lineItems[0]->lineDiscounts[0]);
+        $this->assertInstanceOf(ReceiptLineModifier::class, $receipt->lineItems[0]->lineModifiers[0]);
+        $this->assertInstanceOf(ReceiptPayment::class, $receipt->payments[0]);
+        $this->assertSame(1.5, $receipt->tip);
+        $this->assertSame(2.5, $receipt->surcharge);
+    }
+
+    public function test_item_hydrates_components()
+    {
+        $item = new Item([
+            'id' => 'item-id',
+            'components' => [[
+                'variant_id' => 'component-variant-id',
+                'quantity' => 2.5,
+            ]],
+        ]);
+
+        $this->assertInstanceOf(ItemComponent::class, $item->components[0]);
+        $this->assertSame('component-variant-id', $item->components[0]->variantId);
+        $this->assertSame(2.5, $item->components[0]->quantity);
+    }
+
+    public function test_paginate_iterates_all_pages()
+    {
+        $loyverse = new Loyverse('123', Mockery::mock(Client::class));
+
+        $calls = [];
+
+        $pages = [
+            ['items' => ['first', 'second'], 'cursor' => 'next'],
+            ['items' => ['third'], 'cursor' => null],
+        ];
+
+        $resources = iterator_to_array($loyverse->paginate(
+            function (array $parameters) use (&$calls, &$pages) {
+                $calls[] = $parameters;
+
+                return array_shift($pages);
+            },
+            ['limit' => 250]
+        ));
+
+        $this->assertSame(['first', 'second', 'third'], $resources);
+        $this->assertSame([
+            ['limit' => 250],
+            ['limit' => 250, 'cursor' => 'next'],
+        ], $calls);
+    }
+
+    public function test_paginate_stops_when_cursor_repeats()
+    {
+        $loyverse = new Loyverse('123', Mockery::mock(Client::class));
+
+        $pages = [
+            ['items' => ['first'], 'cursor' => 'same'],
+            ['items' => ['second'], 'cursor' => 'same'],
+        ];
+
+        $resources = iterator_to_array($loyverse->paginate(
+            function () use (&$pages) {
+                return array_shift($pages);
+            }
+        ));
+
+        $this->assertSame(['first', 'second'], $resources);
+    }
+
+    public function test_retry_on_rate_limit_uses_retry_after()
+    {
+        $loyverse = new Loyverse('123', Mockery::mock(Client::class));
+
+        $attempts = 0;
+        $delays = [];
+
+        $result = $loyverse->retryOnRateLimit(
+            function () use (&$attempts) {
+                $attempts++;
+
+                if ($attempts === 1) {
+                    throw (new Exceptions\RateLimitedException())
+                        ->setContext(429, [], 'RATE_LIMITED', '2');
+                }
+
+                return 'ok';
+            },
+            3,
+            1,
+            function (int $delay) use (&$delays) {
+                $delays[] = $delay;
+            }
+        );
+
+        $this->assertSame('ok', $result);
+        $this->assertSame(2, $attempts);
+        $this->assertSame([2], $delays);
+    }
+
+    public function test_retry_on_rate_limit_throws_after_max_attempts()
+    {
+        $this->expectException(Exceptions\RateLimitedException::class);
+
+        $loyverse = new Loyverse('123', Mockery::mock(Client::class));
+
+        $loyverse->retryOnRateLimit(
+            function () {
+                throw (new Exceptions\RateLimitedException())
+                    ->setContext(429, [], 'RATE_LIMITED', '1');
+            },
+            2,
+            1,
+            function () {
+            }
+        );
     }
 }

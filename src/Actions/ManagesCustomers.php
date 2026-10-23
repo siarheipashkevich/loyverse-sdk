@@ -15,11 +15,11 @@ trait ManagesCustomers
      * Get a list of customers.
      *
      * @param array $parameters
-     * @return Customer[]
+     * @return array{customers: Customer[], cursor: string|null}
      */
     public function customers(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('customers', $parameters)['customers'], Customer::class);
+        return $this->transformPage($this->get('customers', $parameters), 'customers', Customer::class);
     }
 
     /**

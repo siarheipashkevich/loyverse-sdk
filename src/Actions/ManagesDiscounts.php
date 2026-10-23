@@ -15,11 +15,11 @@ trait ManagesDiscounts
      * Get a list of discounts.
      *
      * @param array $parameters
-     * @return Discount[]
+     * @return array{discounts: Discount[], cursor: string|null}
      */
     public function discounts(array $parameters = []): array
     {
-        return $this->transformCollection($this->get('discounts', $parameters)['discounts'], Discount::class);
+        return $this->transformPage($this->get('discounts', $parameters), 'discounts', Discount::class);
     }
 
     /**
