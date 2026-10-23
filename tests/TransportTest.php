@@ -98,11 +98,30 @@ class TransportTest extends TestCase
         $this->assertSame(['X-Test' => 'yes'], $loyverse->getHeaders());
     }
 
+    public function test_set_timeout_is_passed_to_request()
+    {
+        $loyverse = new Loyverse('123', $http = Mockery::mock(Client::class));
+        $loyverse->setTimeout(120);
+
+        $http->shouldReceive('request')->once()->with('GET', 'employees', [
+            'timeout' => 120,
+        ])->andReturn($response = Mockery::mock(Response::class));
+
+        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
+        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
+            '{"employees": [], "cursor": null}'
+        ));
+
+        $loyverse->employees();
+
+        $this->assertSame(120, $loyverse->getTimeout());
+    }
+
     public function test_empty_base_uri_is_rejected()
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new Loyverse('123', Mockery::mock(Client::class)))->setBaseUri(' ');
+        new Loyverse('123', Mockery::mock(Client::class))->setBaseUri(' ');
     }
 
     public function test_user_agent_is_set_on_the_client()

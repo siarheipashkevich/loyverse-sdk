@@ -2,6 +2,19 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.3.1 - 2026-10-23
+
+### Changed
+
+- Split the monolithic test suite into focused test classes.
+- Migrated HTTP and OAuth tests to the `FakesHttpRequests` trait.
+- Pint now removes redundant parentheses around `new` expressions via
+  `new_expression_parentheses`.
+
+### Removed
+
+- Obsolete `.styleci.yml`; code style is handled by Pint.
+
 ## 4.3.0 - 2026-10-23
 
 ### Added

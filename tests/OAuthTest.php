@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Tests;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
-use Mockery;
 use Pashkevich\Loyverse\AccessToken;
 use Pashkevich\Loyverse\Exceptions\ApiException;
 use Pashkevich\Loyverse\OAuth;
@@ -16,14 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class OAuthTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-    }
+    use FakesHttpRequests;
 
     public function test_builds_authorization_url()
     {
-        $oauth = new OAuth(Mockery::mock(Client::class));
+        $oauth = new OAuth($this->fakeHttpClient());
 
         $url = $oauth->authorizationUrl(
             'client-id',
@@ -45,9 +39,9 @@ class OAuthTest extends TestCase
 
     public function test_exchanges_code_for_access_token()
     {
-        $client = Mockery::mock(Client::class);
+        $oauth = new OAuth($this->fakeHttpClient());
 
-        $client->shouldReceive('request')->once()->with('POST', OAuth::TOKEN_URL, [
+        $this->expectRequest('POST', OAuth::TOKEN_URL, [
             'form_params' => [
                 'client_id' => 'client-id',
                 'client_secret' => 'client-secret',
@@ -55,10 +49,7 @@ class OAuthTest extends TestCase
                 'code' => 'authorization-code',
                 'grant_type' => 'authorization_code',
             ],
-        ])->andReturn($response = Mockery::mock(Response::class));
-
-        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
-        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(json_encode([
+        ], new Response(200, [], json_encode([
             'access_token' => 'access-token',
             'token_type' => 'Bearer',
             'expires_in' => 43200,
@@ -66,7 +57,7 @@ class OAuthTest extends TestCase
             'scope' => 'ITEMS_READ RECEIPTS_READ',
         ])));
 
-        $token = (new OAuth($client))->exchangeCode(
+        $token = $oauth->exchangeCode(
             'client-id',
             'client-secret',
             'authorization-code',
@@ -83,25 +74,22 @@ class OAuthTest extends TestCase
 
     public function test_refreshes_access_token()
     {
-        $client = Mockery::mock(Client::class);
+        $oauth = new OAuth($this->fakeHttpClient());
 
-        $client->shouldReceive('request')->once()->with('POST', OAuth::TOKEN_URL, [
+        $this->expectRequest('POST', OAuth::TOKEN_URL, [
             'form_params' => [
                 'client_id' => 'client-id',
                 'client_secret' => 'client-secret',
                 'refresh_token' => 'refresh-token',
                 'grant_type' => 'refresh_token',
             ],
-        ])->andReturn($response = Mockery::mock(Response::class));
-
-        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
-        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(json_encode([
+        ], new Response(200, [], json_encode([
             'access_token' => 'new-access-token',
             'token_type' => 'Bearer',
             'expires_in' => 43200,
         ])));
 
-        $token = (new OAuth($client))->refreshToken('client-id', 'client-secret', 'refresh-token');
+        $token = $oauth->refreshToken('client-id', 'client-secret', 'refresh-token');
 
         $this->assertSame('new-access-token', $token->accessToken);
         $this->assertNull($token->refreshToken);
@@ -109,25 +97,22 @@ class OAuthTest extends TestCase
 
     public function test_throws_exception_on_failed_token_request()
     {
-        $client = Mockery::mock(Client::class);
+        $oauth = new OAuth($this->fakeHttpClient());
 
-        $client->shouldReceive('request')->once()->with('POST', OAuth::TOKEN_URL, [
+        $this->expectRequest('POST', OAuth::TOKEN_URL, [
             'form_params' => [
                 'client_id' => 'client-id',
                 'client_secret' => 'client-secret',
                 'refresh_token' => 'invalid-refresh-token',
                 'grant_type' => 'refresh_token',
             ],
-        ])->andReturn($response = Mockery::mock(Response::class));
-
-        $response->shouldReceive('getStatusCode')->once()->andReturn(400);
-        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(json_encode([
+        ], new Response(400, [], json_encode([
             'error' => 'invalid_grant',
             'error_description' => 'The refresh token is invalid.',
         ])));
 
         try {
-            (new OAuth($client))->refreshToken('client-id', 'client-secret', 'invalid-refresh-token');
+            $oauth->refreshToken('client-id', 'client-secret', 'invalid-refresh-token');
             $this->fail('Expected ApiException to be thrown.');
         } catch (ApiException $exception) {
             $this->assertSame(400, $exception->getStatus());

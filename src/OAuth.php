@@ -136,7 +136,7 @@ class OAuth
 
             $code = isset($error['error']) && is_scalar($error['error']) ? (string) $error['error'] : null;
 
-            throw (new ApiException($message))->setContext($status, [], $code);
+            throw new ApiException($message)->setContext($status, [], $code);
         }
 
         if (! is_array($data) || ! isset($data['access_token'])) {
