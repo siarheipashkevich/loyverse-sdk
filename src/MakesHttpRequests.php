@@ -142,7 +142,7 @@ trait MakesHttpRequests
             default => Exceptions\UnknownException::class,
         };
 
-        $exception = new $class;
+        $exception = new $class();
 
         throw $exception->setContext($status, $errors, $code, $retryAfter);
     }
