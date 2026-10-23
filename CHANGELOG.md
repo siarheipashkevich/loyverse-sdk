@@ -2,6 +2,12 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.1.1 - 2026-10-23
+
+### Changed
+
+- Normalized PHPDoc alignment with single spacing using Pint's `phpdoc_align` rule.
+
 ## 4.1.0 - 2026-10-23
 
 ### Changed
