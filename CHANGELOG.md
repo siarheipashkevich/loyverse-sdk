@@ -2,6 +2,14 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.1.0 - 2026-10-23
+
+### Changed
+
+- Removed redundant class, trait and enum docblocks that only repeated the symbol name.
+- `AccessToken` is now declared as a `readonly` class.
+- Pint now uses the PSR-12 preset with `single_line_empty_body` enabled.
+
 ## 4.0.0 - 2026-10-23
 
 ### Added
