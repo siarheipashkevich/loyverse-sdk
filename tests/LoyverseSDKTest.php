@@ -805,8 +805,7 @@ class LoyverseSDKTest extends TestCase
             },
             2,
             1,
-            function () {
-            }
+            function () {}
         );
     }
 }

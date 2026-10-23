@@ -17,8 +17,7 @@ final readonly class AccessToken
         public ?string $scope,
         public ?string $idToken,
         public int $createdAt,
-    ) {
-    }
+    ) {}
 
     /**
      * Create a token from an API response.
