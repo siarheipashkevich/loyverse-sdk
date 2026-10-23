@@ -72,6 +72,33 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --no-progress
 
+      - name: Run PHPStan on tests
+        run: vendor/bin/phpstan analyse -c phpstan-tests.neon.dist --no-progress
+
+  coverage:
+    runs-on: ubuntu-latest
+
+    name: Coverage
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: dom, curl, libxml, mbstring, zip
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: pcov
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress
+
+      - name: Check coverage
+        run: composer test-coverage-check
+
   pint:
     runs-on: ubuntu-latest
 

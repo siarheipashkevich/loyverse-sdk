@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class EnumsTest extends TestCase
 {
-    public function test_webhook_enums()
+    public function test_webhook_enums(): void
     {
         $this->assertSame([
             'inventory_levels.update',
@@ -32,7 +32,7 @@ class EnumsTest extends TestCase
         $this->assertSame(['ENABLED', 'DISABLED'], WebhookStatus::values());
     }
 
-    public function test_api_value_enums()
+    public function test_api_value_enums(): void
     {
         $this->assertSame(['SALE', 'REFUND'], ReceiptType::values());
         $this->assertSame(['INCLUDED', 'ADDED'], TaxType::values());

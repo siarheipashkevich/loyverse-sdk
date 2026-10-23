@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class PaginationTest extends TestCase
 {
-    public function test_paginate_iterates_all_pages()
+    public function test_paginate_iterates_all_pages(): void
     {
         $loyverse = Loyverse::fake();
 
@@ -36,7 +36,7 @@ class PaginationTest extends TestCase
         ], $calls);
     }
 
-    public function test_paginate_stops_when_cursor_repeats()
+    public function test_paginate_stops_when_cursor_repeats(): void
     {
         $loyverse = Loyverse::fake();
 

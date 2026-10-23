@@ -13,7 +13,7 @@ class CrudTest extends TestCase
 {
     use FakesHttpRequests;
 
-    public function test_single_resource_is_returned()
+    public function test_single_resource_is_returned(): void
     {
         $loyverse = $this->loyverse();
 
@@ -29,7 +29,7 @@ class CrudTest extends TestCase
         $this->assertSame('Fruits', $category->name);
     }
 
-    public function test_resource_is_created()
+    public function test_resource_is_created(): void
     {
         $loyverse = $this->loyverse();
 
@@ -45,7 +45,7 @@ class CrudTest extends TestCase
         $this->assertSame('Fruits', $category->name);
     }
 
-    public function test_resource_is_deleted()
+    public function test_resource_is_deleted(): void
     {
         $loyverse = $this->loyverse();
 
@@ -54,7 +54,7 @@ class CrudTest extends TestCase
         $this->assertSame([], $loyverse->deleteCategory('category-id'));
     }
 
-    public function test_item_image_is_uploaded()
+    public function test_item_image_is_uploaded(): void
     {
         $loyverse = $this->loyverse();
 
@@ -65,7 +65,7 @@ class CrudTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function test_item_image_is_deleted()
+    public function test_item_image_is_deleted(): void
     {
         $loyverse = $this->loyverse();
 
@@ -74,7 +74,7 @@ class CrudTest extends TestCase
         $this->assertSame([], $loyverse->deleteItemImage('item-id'));
     }
 
-    public function test_variant_update_uses_variant_id()
+    public function test_variant_update_uses_variant_id(): void
     {
         $loyverse = $this->loyverse();
 
@@ -90,7 +90,7 @@ class CrudTest extends TestCase
         $this->assertInstanceOf(Variant::class, $updated);
     }
 
-    public function test_item_resource_delegates_image_methods()
+    public function test_item_resource_delegates_image_methods(): void
     {
         $loyverse = $this->loyverse();
 

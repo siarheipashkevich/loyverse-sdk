@@ -13,7 +13,7 @@ class OAuthTokenStoreTest extends TestCase
 {
     use FakesHttpRequests;
 
-    public function test_array_token_store()
+    public function test_array_token_store(): void
     {
         $store = new ArrayTokenStore();
         $token = $this->token('access-token');
@@ -27,7 +27,7 @@ class OAuthTokenStoreTest extends TestCase
         $this->assertNull($store->get());
     }
 
-    public function test_access_token_can_be_set_on_the_client()
+    public function test_access_token_can_be_set_on_the_client(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
         $token = $this->token('access-token');
@@ -37,7 +37,7 @@ class OAuthTokenStoreTest extends TestCase
         $this->assertSame($token, $loyverse->getAccessToken());
     }
 
-    public function test_expired_token_is_refreshed_before_request()
+    public function test_expired_token_is_refreshed_before_request(): void
     {
         $client = $this->fakeHttpClient();
         $loyverse = new Loyverse('123', $client);
@@ -65,7 +65,7 @@ class OAuthTokenStoreTest extends TestCase
         $this->assertSame('new-token', $loyverse->getAccessToken()?->accessToken);
     }
 
-    public function test_token_is_refreshed_and_request_is_retried_after_401()
+    public function test_token_is_refreshed_and_request_is_retried_after_401(): void
     {
         $client = $this->fakeHttpClient();
         $loyverse = new Loyverse('123', $client);

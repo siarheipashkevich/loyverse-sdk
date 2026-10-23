@@ -76,7 +76,7 @@ class ContractTest extends TestCase
         'DELETE /webhooks/{webhook_id}' => 'deleteWebhook',
     ];
 
-    public function test_all_documented_endpoints_are_covered()
+    public function test_all_documented_endpoints_are_covered(): void
     {
         $spec = json_decode(
             file_get_contents(__DIR__.'/Fixtures/openapi.json'),
@@ -103,7 +103,7 @@ class ContractTest extends TestCase
         $this->assertSame($expected, $documented);
     }
 
-    public function test_every_documented_endpoint_has_an_sdk_method()
+    public function test_every_documented_endpoint_has_an_sdk_method(): void
     {
         $loyverse = new ReflectionClass(Loyverse::class);
 

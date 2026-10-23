@@ -6,8 +6,11 @@
 /.editorconfig              export-ignore
 /.github                    export-ignore
 /.gitignore                 export-ignore
+/infection.json5            export-ignore
 /pint.json                  export-ignore
+/phpstan-tests.neon.dist    export-ignore
 /phpstan.neon.dist          export-ignore
 /phpunit-integration.xml    export-ignore
 /phpunit.xml.dist           export-ignore
+/scripts                    export-ignore
 /tests                      export-ignore

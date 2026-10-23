@@ -11,7 +11,7 @@ use ReflectionMethod;
 
 class MethodCoverageTest extends TestCase
 {
-    public function test_every_action_method_has_an_endpoint_test()
+    public function test_every_action_method_has_an_endpoint_test(): void
     {
         $actionMethods = $this->actionMethods();
         $coveredMethods = array_keys(EndpointTest::endpointProvider());

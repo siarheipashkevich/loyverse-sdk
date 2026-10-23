@@ -15,7 +15,7 @@ class ErrorHandlingTest extends TestCase
     use FakesHttpRequests;
 
     #[DataProvider('apiErrorProvider')]
-    public function test_api_errors_are_mapped(string $code, int $status, string $exception)
+    public function test_api_errors_are_mapped(string $code, int $status, string $exception): void
     {
         $loyverse = $this->loyverse();
 
@@ -28,6 +28,9 @@ class ErrorHandlingTest extends TestCase
         $loyverse->employees();
     }
 
+    /**
+     * @return array<string, array{0: string, 1: int, 2: class-string<\Throwable>}>
+     */
     public static function apiErrorProvider(): array
     {
         return [
@@ -48,7 +51,7 @@ class ErrorHandlingTest extends TestCase
         ];
     }
 
-    public function test_unknown_exception()
+    public function test_unknown_exception(): void
     {
         $loyverse = $this->loyverse();
 
@@ -59,7 +62,7 @@ class ErrorHandlingTest extends TestCase
         $loyverse->employees();
     }
 
-    public function test_exception_exposes_error_context()
+    public function test_exception_exposes_error_context(): void
     {
         $loyverse = $this->loyverse();
 
@@ -83,7 +86,7 @@ class ErrorHandlingTest extends TestCase
         }
     }
 
-    public function test_rate_limited_exception_exposes_headers()
+    public function test_rate_limited_exception_exposes_headers(): void
     {
         $loyverse = $this->loyverse();
 

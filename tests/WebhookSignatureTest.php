@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class WebhookSignatureTest extends TestCase
 {
-    public function test_computes_and_verifies_signature()
+    public function test_computes_and_verifies_signature(): void
     {
         $payload = '{"type":"items.update"}';
         $secret = 'client-secret';
@@ -20,7 +20,7 @@ class WebhookSignatureTest extends TestCase
         $this->assertTrue(WebhookSignature::verify($payload, $signature, $secret));
     }
 
-    public function test_rejects_invalid_signature()
+    public function test_rejects_invalid_signature(): void
     {
         $this->assertFalse(WebhookSignature::verify('payload', 'invalid-signature', 'client-secret'));
     }

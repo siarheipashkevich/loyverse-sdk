@@ -25,6 +25,7 @@
         "guzzlehttp/guzzle": "^8.0"
     },
     "require-dev": {
+        "infection/infection": "^0.35",
         "laravel/pint": "^1.32",
         "mockery/mockery": "^1.6",
         "phpstan/phpstan": "^2.3",
@@ -44,12 +45,18 @@
         "test": "vendor/bin/phpunit",
         "test-integration": "vendor/bin/phpunit -c phpunit-integration.xml",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "test-coverage-check": "vendor/bin/phpunit --coverage-clover build/coverage.xml && php scripts/coverage-check.php build/coverage.xml 80",
         "analyse": "vendor/bin/phpstan analyse",
+        "analyse-tests": "vendor/bin/phpstan analyse -c phpstan-tests.neon.dist",
+        "infection": "vendor/bin/infection --threads=4 --min-msi=60 --min-covered-msi=70",
         "format": "vendor/bin/pint",
         "format-test": "vendor/bin/pint --test"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "extra": {
         "branch-alias": {

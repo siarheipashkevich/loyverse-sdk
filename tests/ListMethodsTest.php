@@ -37,7 +37,7 @@ class ListMethodsTest extends TestCase
         string $path,
         string $key,
         string $class
-    ) {
+    ): void {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 
         $this->expectRequest('GET', $path, [], new Response(200, [], json_encode([
@@ -54,6 +54,9 @@ class ListMethodsTest extends TestCase
         $this->assertInstanceOf($class, $page[$key][0]);
     }
 
+    /**
+     * @return array<string, array{0: string, 1: string, 2: string, 3: class-string<\Pashkevich\Loyverse\Resources\Resource>}>
+     */
     public static function listMethodsProvider(): array
     {
         return [
@@ -76,7 +79,7 @@ class ListMethodsTest extends TestCase
         ];
     }
 
-    public function test_list_methods_return_null_cursor_when_missing()
+    public function test_list_methods_return_null_cursor_when_missing(): void
     {
         $loyverse = new Loyverse('123', $this->fakeHttpClient());
 

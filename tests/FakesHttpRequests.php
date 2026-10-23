@@ -24,6 +24,9 @@ trait FakesHttpRequests
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function expectRequest(
         string $method,
         string $uri,
@@ -41,6 +44,9 @@ trait FakesHttpRequests
         });
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function requestOptions(RequestInterface $request): array
     {
         $options = [];

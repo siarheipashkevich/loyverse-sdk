@@ -12,8 +12,11 @@ use PHPUnit\Framework\TestCase;
 
 class EndpointTest extends TestCase
 {
+    /**
+     * @param array<int, mixed> $arguments
+     */
     #[DataProvider('endpointProvider')]
-    public function test_endpoint_method(string $method, array $arguments, string $body, bool $returnsVoid = false)
+    public function test_endpoint_method(string $method, array $arguments, string $body, bool $returnsVoid = false): void
     {
         $loyverse = Loyverse::fake([
             new Response(200, [], $body),
@@ -31,13 +34,14 @@ class EndpointTest extends TestCase
 
         $this->assertNotNull($result);
 
-        if (is_array($result)) {
-            $this->assertIsArray($result);
-        } else {
+        if (! is_array($result)) {
             $this->assertInstanceOf(Resource::class, $result);
         }
     }
 
+    /**
+     * @return array<string, array{0: string, 1: array<int, mixed>, 2: string, 3?: bool}>
+     */
     public static function endpointProvider(): array
     {
         return [

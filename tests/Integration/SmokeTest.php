@@ -6,7 +6,7 @@ namespace Pashkevich\Loyverse\Tests\Integration;
 
 class SmokeTest extends IntegrationTestCase
 {
-    public function test_merchant()
+    public function test_merchant(): void
     {
         $merchant = $this->loyverse()->merchant();
 
@@ -14,7 +14,7 @@ class SmokeTest extends IntegrationTestCase
         $this->assertNotSame('', $merchant->businessName);
     }
 
-    public function test_categories()
+    public function test_categories(): void
     {
         $page = $this->loyverse()->categories(['limit' => 1]);
 
@@ -22,7 +22,7 @@ class SmokeTest extends IntegrationTestCase
         $this->assertArrayHasKey('cursor', $page);
     }
 
-    public function test_stores()
+    public function test_stores(): void
     {
         $page = $this->loyverse()->stores(['limit' => 1]);
 
