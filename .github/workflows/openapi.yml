@@ -35,7 +35,13 @@ jobs:
               end
             end
 
-            puts JSON.generate(canonical(YAML.load_file(ARGV[0])))
+            document = if YAML.respond_to?(:unsafe_load_file)
+              YAML.unsafe_load_file(ARGV[0])
+            else
+              YAML.load_file(ARGV[0])
+            end
+
+            puts JSON.generate(canonical(document))
           ' /tmp/openapi.yaml > /tmp/latest.json
 
           ruby -rjson -e '
