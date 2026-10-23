@@ -28,6 +28,7 @@ create an API token through [Loyverse](https://loyverse.com) itself.
     - [Managing Taxes](#managing-taxes)
     - [Managing Variants](#managing-variants)
     - [Managing Webhooks](#managing-webhooks)
+    - [Handling Errors](#handling-errors)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Security Vulnerabilities](#security)
@@ -83,7 +84,7 @@ These parameters will be used in the POST request sent to Loyverse servers, you 
 parameters needed for each action on
 [Loyverse's official API documentation](https://developer.loyverse.com/docs).
 
-You can also set the desired timeout value:
+You can also set the desired timeout value. The timeout is applied to every HTTP request:
 
 ``` php
 $loyverse->setTimeout(120)->createCategory(array $data);
@@ -158,6 +159,8 @@ $loyverse->items(array $parameters);
 $loyverse->item(string $itemId);
 $loyverse->createItem(array $data);
 $loyverse->deleteItem(string $itemId);
+$loyverse->uploadItemImage(string $itemId, string $contents, string $contentType = 'image/png');
+$loyverse->deleteItemImage(string $itemId);
 ```
 
 On a `Item` instance you may also call:
@@ -165,7 +168,18 @@ On a `Item` instance you may also call:
 ``` php
 $item->update(array $data);
 $item->delete();
+$item->uploadImage(string $contents, string $contentType = 'image/png');
+$item->deleteImage();
 ```
+
+Upload an image from a file:
+
+``` php
+$loyverse->uploadItemImage(ITEM_ID, file_get_contents('/path/to/image.png'));
+```
+
+The default content type is `image/png`. You can pass another supported content type
+as the third argument if needed.
 
 ### Managing Merchants
 
@@ -303,6 +317,36 @@ On a `Webhook` instance you may also call:
 ``` php
 $webhook->update(array $data);
 $webhook->delete();
+```
+
+### Handling Errors
+
+All API errors are represented by exceptions that extend
+`Pashkevich\Loyverse\Exceptions\ApiException`. The exception exposes the HTTP status,
+the error code and the details returned by the API:
+
+``` php
+use Pashkevich\Loyverse\Exceptions\ApiException;
+
+try {
+    $loyverse->item('missing-item-id');
+} catch (ApiException $exception) {
+    $exception->getStatus();     // 404
+    $exception->getErrorCode();  // "NOT_FOUND"
+    $exception->getDetails();    // "The resource was not found"
+    $exception->getField();      // null or the field related to the error
+    $exception->getErrors();     // the full list of errors
+}
+```
+
+For rate limited requests you can also read the delay before retrying:
+
+``` php
+try {
+    $loyverse->items();
+} catch (Pashkevich\Loyverse\Exceptions\RateLimitedException $exception) {
+    $exception->getRetryAfter(); // seconds, or null when the header is missing
+}
 ```
 
 ### Testing

@@ -69,6 +69,36 @@ trait MakesHttpRequests
     }
 
     /**
+     * Make a request with a raw body to Loyverse servers and return the response.
+     *
+     * @param string $verb
+     * @param string $uri
+     * @param string $body
+     * @param array $headers
+     * @return mixed
+     */
+    public function requestRaw(string $verb, string $uri, string $body, array $headers = [])
+    {
+        return $this->request($verb, $uri, [
+            'body' => $body,
+            'headers' => $headers,
+        ]);
+    }
+
+    /**
+     * Make a POST request with a raw body to Loyverse servers and return the response.
+     *
+     * @param string $uri
+     * @param string $body
+     * @param array $headers
+     * @return mixed
+     */
+    public function postRaw(string $uri, string $body, array $headers = [])
+    {
+        return $this->requestRaw('POST', $uri, $body, $headers);
+    }
+
+    /**
      * Make request to Loyverse servers and return the response.
      *
      * @param string $verb
@@ -78,15 +108,23 @@ trait MakesHttpRequests
      */
     protected function request(string $verb, string $uri, array $options = [])
     {
+        if (!array_key_exists('timeout', $options) && isset($this->timeout)) {
+            $options['timeout'] = $this->timeout;
+        }
+
         $response = $this->guzzle->request($verb, $uri, $options);
 
-        if ($response->getStatusCode() != 200) {
+        $status = $response->getStatusCode();
+
+        if ($status < 200 || $status >= 300) {
             $this->handleRequestError($response);
         }
 
         $responseBody = (string)$response->getBody();
 
-        return json_decode($responseBody, true) ?: $responseBody;
+        $decoded = json_decode($responseBody, true);
+
+        return json_last_error() === JSON_ERROR_NONE ? $decoded : $responseBody;
     }
 
     /**
@@ -97,58 +135,45 @@ trait MakesHttpRequests
      */
     protected function handleRequestError(ResponseInterface $response)
     {
-        $errors = json_decode((string)$response->getBody(), true)['errors'] ?? [];
+        $body = json_decode((string)$response->getBody(), true);
+
+        $errors = is_array($body) && isset($body['errors']) && is_array($body['errors'])
+            ? $body['errors']
+            : [];
 
         $error = $errors[0] ?? [];
 
-        $code = $error['code'] ?? null;
+        $code = isset($error['code']) ? (string)$error['code'] : null;
 
-        switch ($code) {
-            case 'INTERNAL_SERVER_ERROR':
-                throw new Exceptions\InternalServerException();
+        $status = $response->getStatusCode();
 
-            case 'BAD_REQUEST':
-                throw new Exceptions\BadRequestException();
+        $retryAfter = $code === 'RATE_LIMITED' ? $response->getHeaderLine('Retry-After') : null;
 
-            case 'INCORRECT_VALUE_TYPE':
-                throw new Exceptions\IncorrectValueTypeException();
+        $exceptions = [
+            'INTERNAL_SERVER_ERROR' => Exceptions\InternalServerException::class,
+            'BAD_REQUEST' => Exceptions\BadRequestException::class,
+            'INCORRECT_VALUE_TYPE' => Exceptions\IncorrectValueTypeException::class,
+            'MISSING_REQUIRED_PARAMETER' => Exceptions\MissingRequiredParameterException::class,
+            'INVALID_VALUE' => Exceptions\InvalidValueException::class,
+            'INVALID_RANGE' => Exceptions\InvalidRangeException::class,
+            'INVALID_CURSOR' => Exceptions\InvalidCursorException::class,
+            'CONFLICTING_PARAMETERS' => Exceptions\ConflictingParametersException::class,
+            'UNAUTHORIZED' => Exceptions\UnauthorizedException::class,
+            'PAYMENT_REQUIRED' => Exceptions\PaymentRequiredException::class,
+            'FORBIDDEN' => Exceptions\ForbiddenException::class,
+            'NOT_FOUND' => Exceptions\NotFoundException::class,
+            'UNSUPPORTED_MEDIA_TYPE' => Exceptions\UnsupportedMediaTypeException::class,
+            'RATE_LIMITED' => Exceptions\RateLimitedException::class,
+        ];
 
-            case 'MISSING_REQUIRED_PARAMETER':
-                throw new Exceptions\MissingRequiredParameterException();
+        $class = $code !== null && isset($exceptions[$code])
+            ? $exceptions[$code]
+            : Exceptions\UnknownException::class;
 
-            case 'INVALID_VALUE':
-                throw new Exceptions\InvalidValueException();
+        /** @var Exceptions\ApiException $exception */
+        $exception = new $class();
 
-            case 'INVALID_RANGE':
-                throw new Exceptions\InvalidRangeException();
-
-            case 'INVALID_CURSOR':
-                throw new Exceptions\InvalidCursorException();
-
-            case 'CONFLICTING_PARAMETERS':
-                throw new Exceptions\ConflictingParametersException();
-
-            case 'UNAUTHORIZED':
-                throw new Exceptions\UnauthorizedException();
-
-            case 'PAYMENT_REQUIRED':
-                throw new Exceptions\PaymentRequiredException();
-
-            case 'FORBIDDEN':
-                throw new Exceptions\ForbiddenException();
-
-            case 'NOT_FOUND':
-                throw new Exceptions\NotFoundException();
-
-            case 'UNSUPPORTED_MEDIA_TYPE':
-                throw new Exceptions\UnsupportedMediaTypeException();
-
-            case 'RATE_LIMITED':
-                throw new Exceptions\RateLimitedException();
-
-            default:
-                throw new Exceptions\UnknownException();
-        }
+        throw $exception->setContext($status, $errors, $code, $retryAfter);
     }
 
     /**

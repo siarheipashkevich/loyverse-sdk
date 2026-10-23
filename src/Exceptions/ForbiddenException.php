@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class ForbiddenException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class ForbiddenException extends Exception
+class ForbiddenException extends ApiException
 {
     /**
      * ForbiddenException constructor.

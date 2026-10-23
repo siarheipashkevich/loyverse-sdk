@@ -179,7 +179,7 @@ class Shift extends Resource
      * @param array $attributes
      * @param Loyverse|null $loyverse
      */
-    public function __construct(array $attributes, Loyverse $loyverse = null)
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
 

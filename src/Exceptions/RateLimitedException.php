@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class RateLimitedException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class RateLimitedException extends Exception
+class RateLimitedException extends ApiException
 {
     /**
      * RateLimitedException constructor.

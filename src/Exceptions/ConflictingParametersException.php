@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class ConflictingParametersException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class ConflictingParametersException extends Exception
+class ConflictingParametersException extends ApiException
 {
     /**
      * ConflictingParametersException constructor.

@@ -129,7 +129,7 @@ class Variant extends Resource
      * @param array $attributes
      * @param Loyverse|null $loyverse
      */
-    public function __construct(array $attributes, Loyverse $loyverse = null)
+    public function __construct(array $attributes, ?Loyverse $loyverse = null)
     {
         parent::__construct($attributes, $loyverse);
 
@@ -144,7 +144,7 @@ class Variant extends Resource
      */
     public function update(array $data): Variant
     {
-        return $this->loyverse->createVariant(array_merge($data, ['id' => $this->variantId]));
+        return $this->loyverse->createVariant(array_merge($data, ['variant_id' => $this->variantId]));
     }
 
     /**

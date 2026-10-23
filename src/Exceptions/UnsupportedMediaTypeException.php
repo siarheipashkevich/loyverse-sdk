@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class UnsupportedMediaTypeException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class UnsupportedMediaTypeException extends Exception
+class UnsupportedMediaTypeException extends ApiException
 {
     /**
      * UnsupportedMediaTypeException constructor.

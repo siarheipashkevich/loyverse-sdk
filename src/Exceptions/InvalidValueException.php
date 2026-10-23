@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class InvalidValueException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class InvalidValueException extends Exception
+class InvalidValueException extends ApiException
 {
     /**
      * InvalidValueException constructor.

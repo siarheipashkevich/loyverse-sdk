@@ -2,14 +2,20 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class UnknownException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class UnknownException extends Exception
+class UnknownException extends ApiException
 {
-
+    /**
+     * UnknownException constructor.
+     *
+     * @param string $message
+     */
+    public function __construct(string $message = 'An unknown error occurred.')
+    {
+        parent::__construct($message);
+    }
 }

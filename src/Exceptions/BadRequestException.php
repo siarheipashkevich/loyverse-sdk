@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class BadRequestException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class BadRequestException extends Exception
+class BadRequestException extends ApiException
 {
     /**
      * BadRequestException constructor.

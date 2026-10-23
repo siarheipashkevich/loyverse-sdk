@@ -2,14 +2,12 @@
 
 namespace Pashkevich\Loyverse\Exceptions;
 
-use Exception;
-
 /**
  * Class NotFoundException
  *
  * @package Pashkevich\Loyverse\Exceptions
  */
-class NotFoundException extends Exception
+class NotFoundException extends ApiException
 {
     /**
      * NotFoundException constructor.
