@@ -35,7 +35,7 @@ class MethodCoverageTest extends TestCase
                 continue;
             }
 
-            foreach ((new ReflectionClass($trait))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            foreach (new ReflectionClass($trait)->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $methods[$method->getName()] = true;
             }
         }

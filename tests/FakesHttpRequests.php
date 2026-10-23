@@ -31,8 +31,10 @@ trait FakesHttpRequests
         ResponseInterface $response
     ): void {
         $this->mockHandler?->append(function (RequestInterface $request) use ($method, $uri, $options, $response) {
+            $expectedPath = parse_url($uri, PHP_URL_PATH) ?: $uri;
+
             $this->assertSame($method, $request->getMethod());
-            $this->assertSame($uri, $request->getUri()->getPath());
+            $this->assertSame(ltrim($expectedPath, '/'), ltrim($request->getUri()->getPath(), '/'));
             $this->assertEquals($options, $this->requestOptions($request));
 
             return $response;
@@ -46,12 +48,18 @@ trait FakesHttpRequests
         $body = (string) $request->getBody();
 
         if ($body !== '') {
-            $decoded = json_decode($body, true);
+            $contentType = $request->getHeaderLine('Content-Type');
 
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $options['json'] = $decoded;
+            if (str_contains($contentType, 'application/x-www-form-urlencoded')) {
+                parse_str($body, $options['form_params']);
             } else {
-                $options['body'] = $body;
+                $decoded = json_decode($body, true);
+
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $options['json'] = $decoded;
+                } else {
+                    $options['body'] = $body;
+                }
             }
         }
 

@@ -6,6 +6,9 @@
         "phpdoc_align": {
             "align": "left",
             "spacing": 1
+        },
+        "new_expression_parentheses": {
+            "use_parentheses": false
         }
     }
 }

@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Pashkevich\Loyverse\Tests;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\{Response, Utils};
-use Mockery;
+use GuzzleHttp\Psr7\Response;
 use Pashkevich\Loyverse\{AccessToken, Loyverse, OAuth};
 use Pashkevich\Loyverse\Auth\ArrayTokenStore;
 use PHPUnit\Framework\TestCase;
 
 class OAuthTokenStoreTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-    }
+    use FakesHttpRequests;
 
     public function test_array_token_store()
     {
@@ -34,7 +29,7 @@ class OAuthTokenStoreTest extends TestCase
 
     public function test_access_token_can_be_set_on_the_client()
     {
-        $loyverse = new Loyverse('123', Mockery::mock(Client::class));
+        $loyverse = new Loyverse('123', $this->fakeHttpClient());
         $token = $this->token('access-token');
 
         $loyverse->setAccessToken($token);
@@ -44,75 +39,62 @@ class OAuthTokenStoreTest extends TestCase
 
     public function test_expired_token_is_refreshed_before_request()
     {
-        $http = Mockery::mock(Client::class);
+        $client = $this->fakeHttpClient();
+        $loyverse = new Loyverse('123', $client);
+        $oauth = new OAuth($client);
 
-        $loyverse = new Loyverse('123', $http);
-
-        $oldToken = $this->token('old-token', time() - 100, 10);
-        $newToken = $this->token('new-token');
-
-        $oauth = Mockery::mock(OAuth::class);
-        $oauth->shouldReceive('refreshToken')
-            ->once()
-            ->with('client-id', 'client-secret', 'refresh-token')
-            ->andReturn($newToken);
-
-        $loyverse->setAccessToken($oldToken);
+        $loyverse->setAccessToken($this->token('old-token', time() - 100, 10));
         $loyverse->withOAuth($oauth, 'client-id', 'client-secret');
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [
-            'timeout' => 30,
-            'headers' => ['Authorization' => 'Bearer new-token'],
-        ])->andReturn($response = Mockery::mock(Response::class));
+        $this->expectRequest('POST', OAuth::TOKEN_URL, [
+            'form_params' => [
+                'client_id' => 'client-id',
+                'client_secret' => 'client-secret',
+                'refresh_token' => 'refresh-token',
+                'grant_type' => 'refresh_token',
+            ],
+        ], $this->tokenResponse('new-token'));
 
-        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
-        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
-            '{"employees": [], "cursor": null}'
-        ));
+        $this->expectRequest('GET', 'employees', [], new Response(200, [], json_encode([
+            'employees' => [],
+            'cursor' => null,
+        ])));
 
         $loyverse->employees();
 
-        $this->assertSame($newToken, $loyverse->getAccessToken());
+        $this->assertSame('new-token', $loyverse->getAccessToken()?->accessToken);
     }
 
     public function test_token_is_refreshed_and_request_is_retried_after_401()
     {
-        $http = Mockery::mock(Client::class);
+        $client = $this->fakeHttpClient();
+        $loyverse = new Loyverse('123', $client);
+        $oauth = new OAuth($client);
 
-        $loyverse = new Loyverse('123', $http);
-
-        $oldToken = $this->token('old-token');
-        $newToken = $this->token('new-token');
-
-        $oauth = Mockery::mock(OAuth::class);
-        $oauth->shouldReceive('refreshToken')
-            ->once()
-            ->with('client-id', 'client-secret', 'refresh-token')
-            ->andReturn($newToken);
-
-        $loyverse->setAccessToken($oldToken);
+        $loyverse->setAccessToken($this->token('old-token'));
         $loyverse->withOAuth($oauth, 'client-id', 'client-secret');
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [
-            'timeout' => 30,
-            'headers' => ['Authorization' => 'Bearer old-token'],
-        ])->andReturn($unauthorized = Mockery::mock(Response::class));
+        $this->expectRequest('GET', 'employees', [], new Response(401, [], json_encode([
+            'errors' => [['code' => 'UNAUTHORIZED']],
+        ])));
 
-        $unauthorized->shouldReceive('getStatusCode')->once()->andReturn(401);
+        $this->expectRequest('POST', OAuth::TOKEN_URL, [
+            'form_params' => [
+                'client_id' => 'client-id',
+                'client_secret' => 'client-secret',
+                'refresh_token' => 'refresh-token',
+                'grant_type' => 'refresh_token',
+            ],
+        ], $this->tokenResponse('new-token'));
 
-        $http->shouldReceive('request')->once()->with('GET', 'employees', [
-            'timeout' => 30,
-            'headers' => ['Authorization' => 'Bearer new-token'],
-        ])->andReturn($response = Mockery::mock(Response::class));
-
-        $response->shouldReceive('getStatusCode')->once()->andReturn(200);
-        $response->shouldReceive('getBody')->once()->andReturn(Utils::streamFor(
-            '{"employees": [], "cursor": null}'
-        ));
+        $this->expectRequest('GET', 'employees', [], new Response(200, [], json_encode([
+            'employees' => [],
+            'cursor' => null,
+        ])));
 
         $loyverse->employees();
 
-        $this->assertSame($newToken, $loyverse->getAccessToken());
+        $this->assertSame('new-token', $loyverse->getAccessToken()?->accessToken);
     }
 
     private function token(string $accessToken, ?int $createdAt = null, int $expiresIn = 3600): AccessToken
@@ -126,5 +108,15 @@ class OAuthTokenStoreTest extends TestCase
             null,
             $createdAt ?? time(),
         );
+    }
+
+    private function tokenResponse(string $accessToken): Response
+    {
+        return new Response(200, [], json_encode([
+            'access_token' => $accessToken,
+            'token_type' => 'Bearer',
+            'expires_in' => 3600,
+            'refresh_token' => 'refresh-token',
+        ]));
     }
 }

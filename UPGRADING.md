@@ -1,5 +1,9 @@
 # Upgrading
 
+## From 4.3.0 to 4.3.1
+
+No breaking changes. This patch only refactors the test suite and Pint configuration.
+
 ## From 4.2 to 4.3
 
 No breaking changes. New additions:
