@@ -10,6 +10,6 @@ enum ReceiptType: string
 {
     use HasValues;
 
-    case SALE = 'SALE';
-    case REFUND = 'REFUND';
+    case Sale = 'SALE';
+    case Refund = 'REFUND';
 }

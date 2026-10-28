@@ -10,8 +10,8 @@ enum ItemForm: string
 {
     use HasValues;
 
-    case SQUARE = 'SQUARE';
-    case CIRCLE = 'CIRCLE';
-    case SUN = 'SUN';
-    case OCTAGON = 'OCTAGON';
+    case Square = 'SQUARE';
+    case Circle = 'CIRCLE';
+    case Sun = 'SUN';
+    case Octagon = 'OCTAGON';
 }

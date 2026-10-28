@@ -24,7 +24,7 @@ echo $oauth->authorizationUrl(
     $clientId,
     $redirectUri,
     $state,
-    [Scope::ITEMS_READ, Scope::RECEIPTS_READ]
+    [Scope::ItemsRead, Scope::ReceiptsRead]
 ).PHP_EOL;
 
 if ($code !== false && $code !== '') {

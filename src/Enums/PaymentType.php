@@ -10,24 +10,24 @@ enum PaymentType: string
 {
     use HasValues;
 
-    case CASH = 'CASH';
-    case NONINTEGRATEDCARD = 'NONINTEGRATEDCARD';
-    case CHECK = 'CHECK';
-    case WORLDPAY = 'WORLDPAY';
-    case COINEY = 'COINEY';
-    case IZETTLE = 'IZETTLE';
-    case SUMUP = 'SUMUP';
-    case TYRO = 'TYRO';
-    case CHECURITY = 'CHECURITY';
-    case SMARTPAY = 'SMARTPAY';
-    case YOCO = 'YOCO';
-    case NICEPAY = 'NICEPAY';
-    case PAYGATE = 'PAYGATE';
-    case EZETAP = 'EZETAP';
-    case FIRSTDATA = 'FIRSTDATA';
-    case SOFTBANK = 'SOFTBANK';
-    case ONEPAY = 'ONEPAY';
-    case KICC = 'KICC';
-    case MERCADOPAGO = 'MERCADOPAGO';
-    case OTHER = 'OTHER';
+    case Cash = 'CASH';
+    case NonIntegratedCard = 'NONINTEGRATEDCARD';
+    case Check = 'CHECK';
+    case Worldpay = 'WORLDPAY';
+    case Coiney = 'COINEY';
+    case IZettle = 'IZETTLE';
+    case SumUp = 'SUMUP';
+    case Tyro = 'TYRO';
+    case Checurity = 'CHECURITY';
+    case SmartPay = 'SMARTPAY';
+    case Yoco = 'YOCO';
+    case NicePay = 'NICEPAY';
+    case PayGate = 'PAYGATE';
+    case Ezetap = 'EZETAP';
+    case FirstData = 'FIRSTDATA';
+    case SoftBank = 'SOFTBANK';
+    case OnePay = 'ONEPAY';
+    case Kicc = 'KICC';
+    case MercadoPago = 'MERCADOPAGO';
+    case Other = 'OTHER';
 }

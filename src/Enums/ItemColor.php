@@ -10,12 +10,12 @@ enum ItemColor: string
 {
     use HasValues;
 
-    case GREY = 'GREY';
-    case RED = 'RED';
-    case PINK = 'PINK';
-    case ORANGE = 'ORANGE';
-    case YELLOW = 'YELLOW';
-    case GREEN = 'GREEN';
-    case BLUE = 'BLUE';
-    case PURPLE = 'PURPLE';
+    case Grey = 'GREY';
+    case Red = 'RED';
+    case Pink = 'PINK';
+    case Orange = 'ORANGE';
+    case Yellow = 'YELLOW';
+    case Green = 'GREEN';
+    case Blue = 'BLUE';
+    case Purple = 'PURPLE';
 }

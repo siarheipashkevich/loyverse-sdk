@@ -6,26 +6,26 @@ namespace Pashkevich\Loyverse;
 
 enum Scope: string
 {
-    case CUSTOMERS_READ = 'CUSTOMERS_READ';
-    case CUSTOMERS_WRITE = 'CUSTOMERS_WRITE';
-    case EMPLOYEES_READ = 'EMPLOYEES_READ';
-    case ITEMS_READ = 'ITEMS_READ';
-    case INVENTORY_READ = 'INVENTORY_READ';
-    case INVENTORY_WRITE = 'INVENTORY_WRITE';
-    case ITEMS_WRITE = 'ITEMS_WRITE';
-    case MERCHANT_READ = 'MERCHANT_READ';
-    case PAYMENT_TYPES_READ = 'PAYMENT_TYPES_READ';
-    case POS_DEVICES_READ = 'POS_DEVICES_READ';
-    case POS_DEVICES_WRITE = 'POS_DEVICES_WRITE';
-    case RECEIPTS_READ = 'RECEIPTS_READ';
-    case RECEIPTS_WRITE = 'RECEIPTS_WRITE';
-    case SHIFTS_READ = 'SHIFTS_READ';
-    case STORES_READ = 'STORES_READ';
-    case SUPPLIERS_READ = 'SUPPLIERS_READ';
-    case SUPPLIERS_WRITE = 'SUPPLIERS_WRITE';
-    case TAXES_READ = 'TAXES_READ';
-    case TAXES_WRITE = 'TAXES_WRITE';
-    case OPENID = 'OPENID';
+    case CustomersRead = 'CUSTOMERS_READ';
+    case CustomersWrite = 'CUSTOMERS_WRITE';
+    case EmployeesRead = 'EMPLOYEES_READ';
+    case ItemsRead = 'ITEMS_READ';
+    case InventoryRead = 'INVENTORY_READ';
+    case InventoryWrite = 'INVENTORY_WRITE';
+    case ItemsWrite = 'ITEMS_WRITE';
+    case MerchantRead = 'MERCHANT_READ';
+    case PaymentTypesRead = 'PAYMENT_TYPES_READ';
+    case PosDevicesRead = 'POS_DEVICES_READ';
+    case PosDevicesWrite = 'POS_DEVICES_WRITE';
+    case ReceiptsRead = 'RECEIPTS_READ';
+    case ReceiptsWrite = 'RECEIPTS_WRITE';
+    case ShiftsRead = 'SHIFTS_READ';
+    case StoresRead = 'STORES_READ';
+    case SuppliersRead = 'SUPPLIERS_READ';
+    case SuppliersWrite = 'SUPPLIERS_WRITE';
+    case TaxesRead = 'TAXES_READ';
+    case TaxesWrite = 'TAXES_WRITE';
+    case OpenId = 'OPENID';
 
     /**
      * Get all scope values.

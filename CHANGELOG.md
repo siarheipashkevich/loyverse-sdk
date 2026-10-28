@@ -2,6 +2,19 @@
 
 All notable changes to `loyverse-sdk` will be documented in this file
 
+## 4.6.0 - 2026-10-28
+
+### Changed
+
+- **Breaking:** enum case names now use PascalCase, as required by PER Coding Style 3.1:
+  `Scope::ItemsRead`, `ReceiptType::Sale`, `PaymentType::Cash`, `WebhookEvent::ItemsUpdate`
+  and so on.
+- **Breaking:** `Scope::OPENID` is now `Scope::OpenId`; `PaymentType::NONINTEGRATEDCARD`
+  is now `PaymentType::NonIntegratedCard`.
+
+Enum values are unchanged, so HTTP payloads and `from()`/`tryFrom()` keep working. See
+`UPGRADING.md` for the full list of renamed cases.
+
 ## 4.5.0 - 2026-10-23
 
 ### Added

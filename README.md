@@ -142,7 +142,7 @@ $url = $oauth->authorizationUrl(
     CLIENT_ID,
     REDIRECT_URI,
     $state,
-    [Scope::ITEMS_READ, Scope::RECEIPTS_READ]
+    [Scope::ItemsRead, Scope::ReceiptsRead]
 );
 ```
 
@@ -230,15 +230,16 @@ Common API values are available as enums:
 ``` php
 use Pashkevich\Loyverse\Enums\{DiscountType, ItemColor, ReceiptType, TaxType, WebhookEvent};
 
-ReceiptType::SALE->value;
-TaxType::INCLUDED->value;
-DiscountType::FIXED_PERCENT->value;
-ItemColor::GREEN->value;
-WebhookEvent::ITEMS_UPDATE->value;
+ReceiptType::Sale->value;
+TaxType::Included->value;
+DiscountType::FixedPercent->value;
+ItemColor::Green->value;
+WebhookEvent::ItemsUpdate->value;
 ```
 
-Each enum also provides `values()`. `Scope` lives in the root namespace for backwards
-compatibility.
+Case names use PascalCase as required by PER Coding Style 3.1; `->value` keeps the exact
+string expected by the API. Each enum also provides `values()`. `Scope` lives in the root
+namespace for backwards compatibility.
 
 ### Data Transfer Objects
 

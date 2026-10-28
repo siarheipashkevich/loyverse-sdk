@@ -15,6 +15,7 @@ use Pashkevich\Loyverse\Enums\{
     WebhookEvent,
     WebhookStatus
 };
+use Pashkevich\Loyverse\Scope;
 use PHPUnit\Framework\TestCase;
 
 class EnumsTest extends TestCase
@@ -57,5 +58,29 @@ class EnumsTest extends TestCase
         ], ItemColor::values());
         $this->assertContains('CASH', PaymentType::values());
         $this->assertContains('OTHER', PaymentType::values());
+    }
+
+    public function test_enum_case_names_use_pascal_case(): void
+    {
+        $cases = [
+            ...CashMovementType::cases(),
+            ...DiscountType::cases(),
+            ...ItemColor::cases(),
+            ...ItemForm::cases(),
+            ...PaymentType::cases(),
+            ...ReceiptType::cases(),
+            ...TaxType::cases(),
+            ...WebhookEvent::cases(),
+            ...WebhookStatus::cases(),
+            ...Scope::cases(),
+        ];
+
+        foreach ($cases as $case) {
+            $this->assertMatchesRegularExpression(
+                '/^[A-Z][A-Za-z0-9]*$/',
+                $case->name,
+                sprintf('%s::%s is not PascalCase.', $case::class, $case->name),
+            );
+        }
     }
 }

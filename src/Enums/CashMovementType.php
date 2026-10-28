@@ -10,6 +10,6 @@ enum CashMovementType: string
 {
     use HasValues;
 
-    case PAY_IN = 'PAY_IN';
-    case PAY_OUT = 'PAY_OUT';
+    case PayIn = 'PAY_IN';
+    case PayOut = 'PAY_OUT';
 }

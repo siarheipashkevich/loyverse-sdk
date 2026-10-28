@@ -10,6 +10,6 @@ enum WebhookStatus: string
 {
     use HasValues;
 
-    case ENABLED = 'ENABLED';
-    case DISABLED = 'DISABLED';
+    case Enabled = 'ENABLED';
+    case Disabled = 'DISABLED';
 }

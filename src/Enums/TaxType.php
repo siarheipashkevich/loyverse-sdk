@@ -10,6 +10,6 @@ enum TaxType: string
 {
     use HasValues;
 
-    case INCLUDED = 'INCLUDED';
-    case ADDED = 'ADDED';
+    case Included = 'INCLUDED';
+    case Added = 'ADDED';
 }

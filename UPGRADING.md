@@ -1,5 +1,30 @@
 # Upgrading
 
+## From 4.5.0 to 4.6.0
+
+Enum case names now follow PER Coding Style 3.1 (PascalCase). Values are unchanged, but
+every reference to a case must be renamed:
+
+| Before                           | After                            |
+|----------------------------------|----------------------------------|
+| `Scope::ITEMS_READ`              | `Scope::ItemsRead`               |
+| `Scope::POS_DEVICES_READ`        | `Scope::PosDevicesRead`          |
+| `Scope::OPENID`                  | `Scope::OpenId`                  |
+| `ReceiptType::SALE`              | `ReceiptType::Sale`              |
+| `TaxType::INCLUDED`              | `TaxType::Included`              |
+| `DiscountType::FIXED_PERCENT`    | `DiscountType::FixedPercent`     |
+| `ItemColor::GREEN`               | `ItemColor::Green`               |
+| `ItemForm::SQUARE`               | `ItemForm::Square`               |
+| `CashMovementType::PAY_IN`       | `CashMovementType::PayIn`        |
+| `PaymentType::CASH`              | `PaymentType::Cash`              |
+| `PaymentType::NONINTEGRATEDCARD` | `PaymentType::NonIntegratedCard` |
+| `WebhookEvent::ITEMS_UPDATE`     | `WebhookEvent::ItemsUpdate`      |
+| `WebhookStatus::ENABLED`         | `WebhookStatus::Enabled`         |
+
+The pattern is mechanical: split the old name on `_`, lowercase the rest of each part and
+capitalize the first letter, keeping established brand capitalization (`SumUp`, `PayGate`,
+`FirstData`, `MercadoPago`). `values()` and `->value` are unaffected.
+
 ## From 4.4.0 to 4.5.0
 
 No breaking changes. New additions:
@@ -70,8 +95,10 @@ After:
 ``` php
 use Pashkevich\Loyverse\Scope;
 
-$scopes = [Scope::ITEMS_READ, Scope::RECEIPTS_READ];
+$scopes = [Scope::ItemsRead, Scope::ReceiptsRead];
 ```
+
+Since 4.6.0 the enum cases use PascalCase; see the 4.5.0 → 4.6.0 section above.
 
 `authorizationUrl()` also accepts plain strings.
 

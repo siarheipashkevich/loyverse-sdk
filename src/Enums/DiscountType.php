@@ -10,9 +10,9 @@ enum DiscountType: string
 {
     use HasValues;
 
-    case FIXED_PERCENT = 'FIXED_PERCENT';
-    case FIXED_AMOUNT = 'FIXED_AMOUNT';
-    case VARIABLE_PERCENT = 'VARIABLE_PERCENT';
-    case VARIABLE_AMOUNT = 'VARIABLE_AMOUNT';
-    case DISCOUNT_BY_POINTS = 'DISCOUNT_BY_POINTS';
+    case FixedPercent = 'FIXED_PERCENT';
+    case FixedAmount = 'FIXED_AMOUNT';
+    case VariablePercent = 'VARIABLE_PERCENT';
+    case VariableAmount = 'VARIABLE_AMOUNT';
+    case DiscountByPoints = 'DISCOUNT_BY_POINTS';
 }

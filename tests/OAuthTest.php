@@ -23,7 +23,7 @@ class OAuthTest extends TestCase
             'client-id',
             'https://example.com/callback',
             'state-value',
-            [Scope::ITEMS_READ, Scope::RECEIPTS_READ]
+            [Scope::ItemsRead, Scope::ReceiptsRead]
         );
 
         $this->assertStringStartsWith(OAuth::AUTHORIZE_URL, $url);
@@ -123,7 +123,7 @@ class OAuthTest extends TestCase
 
     public function test_scope_enum_exposes_values(): void
     {
-        $this->assertSame('ITEMS_READ', Scope::ITEMS_READ->value);
+        $this->assertSame('ITEMS_READ', Scope::ItemsRead->value);
         $this->assertContains('ITEMS_READ', Scope::values());
     }
 
